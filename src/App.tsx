@@ -1,12 +1,21 @@
 import React from "react";
 import GlobalStyle from "./GlobalStyle";
+import { Switch, Route, BrowserRouter, Redirect } from "react-router-dom";
+
+import GlobalNavBar from "components/GlobalNavBar";
+import MyPage from "./pages/MyPage";
 
 const App = () => {
   return (
-    <div>
+    <BrowserRouter>
       <GlobalStyle />
+      <GlobalNavBar />
+      <Switch>
+        <Route path="/mypage" exact component={MyPage} />
+        <Redirect path="*" to="/" />
+      </Switch>
       <div>musicward-client</div>
-    </div>
+    </BrowserRouter>
   );
 };
 
