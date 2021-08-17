@@ -81,6 +81,46 @@ const Main = () => {
         <LaunchPadBg>
           <Launpad>
             <LaunpadInner>
+              <LaunchpadFilter>
+                <CategoryFilter>
+                  <Icon
+                    src={ChampionIcon}
+                    width={34}
+                    height={34}
+                    marginRight={10}
+                  />
+                  <Icon
+                    src={ChampionIcon}
+                    width={34}
+                    height={34}
+                    marginRight={10}
+                  />
+                  <Icon
+                    src={ChampionIcon}
+                    width={34}
+                    height={34}
+                    marginRight={10}
+                  />
+                  <Icon
+                    src={ChampionIcon}
+                    width={34}
+                    height={34}
+                    marginRight={10}
+                  />
+                  <Icon
+                    src={ChampionIcon}
+                    width={34}
+                    height={34}
+                    marginRight={10}
+                  />
+                  <Icon
+                    src={ChampionIcon}
+                    width={34}
+                    height={34}
+                    marginRight={10}
+                  />
+                </CategoryFilter>
+              </LaunchpadFilter>
               {[...Array(6)].map((w) => {
                 return (
                   <ItemWrapper key={w}>
@@ -312,11 +352,21 @@ const LaunpadInner = styled.div`
   );
   margin: 0 auto;
   border-radius: 20px;
-  padding: 100px 50px 60px;
+  padding: 20px 50px 60px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+`;
+
+const LaunchpadFilter = styled.div`
+  height: 60px;
+  width: 100%;
+  border-bottom: 1px solid #64583a;
+`;
+
+const CategoryFilter = styled.div`
+  display: flex;
 `;
 
 const LaunchpadItem = styled.div`
