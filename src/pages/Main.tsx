@@ -7,6 +7,7 @@ import WardIcon from "assets/img/ward-icon.png";
 import SliderPrevArrow from "assets/img/slider-prev-arrow.png";
 import SliderNextArrow from "assets/img/slider-next-arrow.png";
 import SliderSampleImg from "assets/img/slider-sample-img.png";
+import LaunchpadBg from "assets/img/launchpad-bg.png";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -77,11 +78,25 @@ const Main = () => {
         </SliderWrapper>
       </PlayListSection>
       <LaunchpadSection>
-        <div></div>
+        <LaunchPadBg>
+          <Launpad>
+            <LaunpadInner>
+              {[...Array(6)].map((w) => {
+                return (
+                  <ItemWrapper key={w}>
+                    {[...Array(8)].map((i) => {
+                      return <LaunchpadItem key={i}></LaunchpadItem>;
+                    })}
+                  </ItemWrapper>
+                );
+              })}
+            </LaunpadInner>
+          </Launpad>
+        </LaunchPadBg>
       </LaunchpadSection>
-      <LankingSection>
-        <div></div>
-      </LankingSection>
+      <RankingSection>
+        <RankingCategory></RankingCategory>
+      </RankingSection>
     </>
   );
 };
@@ -252,6 +267,84 @@ const Divider = styled.hr`
   border: 0;
 `;
 
-const LaunchpadSection = styled.section``;
+const LaunchpadSection = styled.section`
+  margin-top: 200px;
+`;
 
-const LankingSection = styled.section``;
+const LaunchPadBg = styled.div`
+  background-image: url(${LaunchpadBg});
+  width: 1102px;
+  height: 865px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  margin: 0 auto;
+`;
+
+const Launpad = styled.div`
+  width: 890px;
+  height: 750px;
+  background: conic-gradient(
+    #755c28,
+    #d3bf89,
+    #817347,
+    #433915,
+    #817347,
+    #d3bf89,
+    #755c28
+  );
+  margin: 0 auto;
+  border-radius: 20px;
+  padding-top: 4px;
+  box-sizing: border-box;
+`;
+
+const LaunpadInner = styled.div`
+  width: 882px;
+  height: 742px;
+  background: conic-gradient(
+    #0c1c2d,
+    #0d1f32,
+    #0e2235,
+    #000204,
+    #0e2235,
+    #0d1f32,
+    #0c1c2d
+  );
+  margin: 0 auto;
+  border-radius: 20px;
+  padding: 100px 50px 60px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`;
+
+const LaunchpadItem = styled.div`
+  width: 75px;
+  height: 75px;
+  background-color: gray;
+  border-radius: 5px;
+  border: 1px solid #73592c;
+`;
+
+const ItemWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+//28
+//75
+
+const RankingSection = styled.section`
+  height: 1780px;
+  width: 100%;
+  background: linear-gradient(#010407, #9fa6dc);
+`;
+
+const RankingCategory = styled.div`
+  height: 120px;
+  border-bottom: 1px solid #73592c;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
