@@ -12,8 +12,8 @@ const App = () => {
       <GlobalStyle />
       <GlobalNavBar />
       <Switch>
-        <Route path="/" exact component={Main} />
         <Route path="/mypage" exact component={MyPage} />
+        <Route path="/" exact component={Main} />
         <Redirect path="*" to="/" />
       </Switch>
     </BrowserRouter>
