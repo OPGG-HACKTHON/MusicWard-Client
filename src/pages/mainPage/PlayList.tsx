@@ -45,7 +45,7 @@ const PlayList = () => {
           slidesToShow={5}
           slidesToScroll={5}
           variableWidth
-          customPaging={(p) => <a>{p}</a>}
+          customPaging={() => <div className="slick-dots" />}
           prevArrow={<SliderArrow type="prev" />}
           nextArrow={<SliderArrow type="next" />}
         >
@@ -124,7 +124,6 @@ const GradientSection = styled.div`
   );
   backdrop-filter: blur(2px);
 `;
-
 const TextWrapper = styled.div`
   z-index: 11;
   position: absolute;
@@ -169,8 +168,25 @@ const SliderWrapper = styled.div`
   z-index: 12;
   bottom: -175px;
   left: calc(50% - 610px);
+  .slick-dots.slick-thumb {
+    display: flex !important;
+    flex-direction: row;
+    justify-content: center;
+    padding: 0 22px;
+    box-sizing: border-box;
+  }
+  .slick-dots.slick-thumb li {
+    flex: 1;
+    transition: all 1s ease-in-out;
+    will-change: width;
+    margin: 0;
+    height: 4px;
+    border-bottom: 1px solid #bb8c3c;
+  }
+  .slick-dots.slick-thumb li.slick-active {
+    background: linear-gradient(90deg, #bb8c3c 0%, #73592c 100%);
+  }
 `;
-
 const SliderItem = styled.div`
   position: relative;
   width: 200px !important;
@@ -221,7 +237,6 @@ const ItemWrappder = styled.div`
   right: 15px;
   left: 15px;
 `;
-
 const Title = styled.div`
   font-size: 18px;
   font-weight: bold;

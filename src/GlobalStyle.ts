@@ -11,6 +11,7 @@ const GlobalStyle = createGlobalStyle`
     text-rendering: optimizeLegibility;
     color: white  ;
     background: #010407;
+    min-width: 1300px;
   }
 
   button {

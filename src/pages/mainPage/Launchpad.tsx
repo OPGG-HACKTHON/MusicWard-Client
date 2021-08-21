@@ -7,6 +7,8 @@ import Marksmen from "assets/img/i-marksmen.png";
 import Supports from "assets/img/i-supports.png";
 import Tanks from "assets/img/i-tanks.png";
 import LaunchpadBg from "assets/img/launchpad-bg.png";
+import SelectArrow from "assets/img/select-arrow.svg";
+import InputSearch from "assets/img/input-search.svg";
 
 import { Icon } from "./PlayList";
 
@@ -112,7 +114,7 @@ const LaunpadInner = styled.div`
   );
   margin: 0 auto;
   border-radius: 20px;
-  padding: 20px 50px 60px;
+  padding: 20px 35px 60px 50px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -121,7 +123,7 @@ const LaunpadInner = styled.div`
 
 const LaunchpadFilter = styled.div`
   height: 60px;
-  width: 100%;
+  width: calc(100% - 15px);
   border-bottom: 1px solid #64583a;
   display: flex;
   justify-content: space-between;
@@ -143,10 +145,11 @@ const Select = styled.select`
   border: 2px solid #9b8a61;
   box-shadow: none;
   border-radius: 4px;
-  background-color: #12191c;
   color: #f4ecd987;
   font-size: 14px;
   padding-left: 10px;
+  appearance: none;
+  background: url(${SelectArrow}) no-repeat right 9px center #12191c;
 `;
 
 const Input = styled.input`
@@ -155,17 +158,17 @@ const Input = styled.input`
   border: 2px solid #9b8a61;
   box-shadow: none;
   border-radius: 4px;
-  background-color: #12191c;
   color: #f4ecd987;
   font-size: 14px;
   padding-left: 25px;
   box-sizing: border-box;
+  background: url(${InputSearch}) no-repeat right 9px center #12191c;
 `;
 
 const LaunchpadItem = styled.div`
   width: 75px;
   height: 75px;
-  background-color: gray;
+  background: radial-gradient(50% 50% at 50% 50%, #8488a0 0%, #40414f 100%);
   border-radius: 5px;
   border: 1px solid #73592c;
 `;
@@ -174,6 +177,7 @@ const ItemWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   margin-bottom: 24px;
+  margin-right: 10px;
 `;
 
 const LaunchpadWrapper = styled.div`
@@ -182,5 +186,15 @@ const LaunchpadWrapper = styled.div`
   margin-top: 25px;
   ${ItemWrapper}:last-child {
     margin-bottom: 0;
+  }
+  ::-webkit-scrollbar {
+    width: 5px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #36362d;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #c9ac6a 0%, #72572a 100%);
+    border: solid 1px #36362d;
   }
 `;
