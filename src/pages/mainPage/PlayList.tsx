@@ -6,10 +6,9 @@ import "slick-carousel/slick/slick-theme.css";
 
 import BackgroundImg from "assets/img/background-img.svg";
 import ChampionIcon from "assets/img/i-fighters.png";
-import WardIcon from "assets/img/ward-icon.png";
 import SliderPrevArrow from "assets/img/slider-prev-arrow.png";
 import SliderNextArrow from "assets/img/slider-next-arrow.png";
-import SliderSampleImg from "assets/img/slider-sample-img.png";
+import PlayListItem from "components/PlayListItem";
 
 const PlayList = () => {
   const [name] = useState("가렌 Garen");
@@ -23,6 +22,10 @@ const PlayList = () => {
         title: `데마시아의 힘을 느껴보자${index}`,
         listCount: index,
         wardCount: index * 10,
+        imgUrl:
+          index % 2 === 0
+            ? "https://i.ytimg.com/vi/veRIGU--tec/maxresdefault.jpg"
+            : "https://i.scdn.co/image/ab67616d0000b2736fa6b0d2a6f7e50c4b45939f",
       };
     })
   );
@@ -50,26 +53,13 @@ const PlayList = () => {
           nextArrow={<SliderArrow type="next" />}
         >
           {PlayList.map((i, index) => (
-            <SliderItem key={`slider-item-${index}`}>
-              <SliderItemBox>
-                <SliderItemGradient>
-                  <ItemWrappder>
-                    <Title>{i.title}</Title>
-                    <CountWrapper>
-                      <Count>{i.listCount}곡</Count>
-                      <Divider />
-                      <Icon
-                        src={WardIcon}
-                        width={13}
-                        height={14}
-                        marginRight={2}
-                      />
-                      <Count>{i.wardCount}</Count>
-                    </CountWrapper>
-                  </ItemWrappder>
-                </SliderItemGradient>
-              </SliderItemBox>
-            </SliderItem>
+            <PlayListItem
+              key={`slider-item-${index}`}
+              title={i.title}
+              listCount={i.listCount}
+              wardCount={i.wardCount}
+              imgUrl={i.imgUrl}
+            />
           ))}
         </Slider>
       </SliderWrapper>
@@ -186,76 +176,4 @@ const SliderWrapper = styled.div`
   .slick-dots.slick-thumb li.slick-active {
     background: linear-gradient(90deg, #bb8c3c 0%, #73592c 100%);
   }
-`;
-const SliderItem = styled.div`
-  position: relative;
-  width: 200px !important;
-  height: 200px;
-  background: conic-gradient(
-    #755c28,
-    #d3bf89,
-    #817347,
-    #433915,
-    #817347,
-    #d3bf89,
-    #755c28
-  );
-  padding: 12px;
-  box-sizing: border-box;
-  margin: 0 22px;
-`;
-
-const SliderItemBox = styled.div`
-  position: absolute;
-  top: 5px;
-  left: 5px;
-  width: 190px;
-  height: 190px;
-  background-image: url(${SliderSampleImg});
-  background-repeat: no-repeat;
-  background-size: cover;
-`;
-
-const SliderItemGradient = styled.div`
-  position: absolute;
-  height: 130px;
-  width: 100%;
-  bottom: 0;
-  left: 0;
-  background: linear-gradient(
-    to bottom,
-    rgba(20, 20, 20, 0) 5%,
-    rgba(20, 20, 20, 0.25) 35%,
-    rgba(20, 20, 20, 0.5) 55%,
-    rgba(20, 20, 20, 0.75) 75%,
-    rgba(20, 20, 20, 1) 100%
-  );
-`;
-const ItemWrappder = styled.div`
-  position: absolute;
-  bottom: 15px;
-  right: 15px;
-  left: 15px;
-`;
-const Title = styled.div`
-  font-size: 18px;
-  font-weight: bold;
-`;
-const CountWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  margin-top: 7px;
-`;
-const Count = styled.div`
-  font-size: 12px;
-  font-weight: medium;
-  opacity: 0.6;
-`;
-const Divider = styled.hr`
-  height: 13px;
-  width: 1px;
-  background-color: #666666;
-  opacity: 0.5;
-  margin: 0 10px;
-  border: 0;
 `;
