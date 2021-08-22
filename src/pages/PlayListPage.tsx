@@ -70,6 +70,7 @@ const PlayListPage = () => {
       </Middle>
 
       <Bottom>
+        <OtherPlayListHr />
         <LeftButtonImg src={LeftButton} />
         <OtherPlayLists>
           <OtherPlayList>
@@ -192,8 +193,8 @@ const PlayListTitle = styled.div`
 
 const PlayListHr = styled.hr`
   width: 100%;
+  margin: 20px 0;
   opacity: 0.5;
-
   border: 1px solid #bb8c3c;
   transform: rotate(180deg);
 `;
@@ -275,21 +276,27 @@ const Bottom = styled.section`
 
 const LeftButtonImg = styled.img`
   position: absolute;
-  display: flex;
-  align-items: center;
-  top: 4vw;
+  top: 6vw;
   left: -2vw;
 `;
 
 const RightButtonImg = styled.img`
   position: absolute;
-  top: 4vw;
+  top: 6vw;
   right: -2vw;
 `;
 
 const OtherPlayLists = styled.div`
   display: flex;
   justify-content: space-between;
+`;
+
+const OtherPlayListHr = styled.hr`
+  width: 98.5%;
+  margin-bottom: 30px;
+  opacity: 0.5;
+  border: 1px solid #bb8c3c;
+  transform: rotate(180deg);
 `;
 
 const OtherPlayList = styled.div`
