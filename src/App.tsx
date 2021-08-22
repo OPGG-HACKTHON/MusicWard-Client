@@ -4,7 +4,7 @@ import { Switch, Route, BrowserRouter, Redirect } from "react-router-dom";
 
 import GlobalNavBar from "components/GlobalNavBar";
 import MyPage from "pages/MyPage";
-import PlayListPage from "pages/PlayListPage";
+import PlayListPage from "pages/playListPage/PlayListPage";
 
 const App = () => {
   return (
