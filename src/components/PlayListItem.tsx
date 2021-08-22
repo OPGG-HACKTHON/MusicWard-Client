@@ -4,7 +4,7 @@ import styled from "styled-components";
 import WardIcon from "assets/img/ward-icon.png";
 import { Icon } from "pages/mainPage/PlayList";
 
-interface PlayListItemProps {
+export interface PlayListItemProps {
   title: string;
   listCount: number;
   wardCount: number;
