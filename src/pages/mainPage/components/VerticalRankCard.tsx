@@ -40,15 +40,15 @@ const VerticalRankCard: FC<RankCardProps> = ({
       <SubTitle isFirstPlace={isFirstPlace}>{subTitle}</SubTitle>
       <RankInfoWrapper isFirstPlace={isFirstPlace}>
         <InfoBoxWrapper isFirstPlace={isFirstPlace}>
-          <InfoBox isFirstPlace={isFirstPlace}>
+          <InfoBox>
             <div>조회수</div>
             <div>{hitCount}</div>
           </InfoBox>
-          <InfoBox isFirstPlace={isFirstPlace}>
+          <InfoBox>
             <div>와드수</div>
             <div>{wardCount}</div>
           </InfoBox>
-          <InfoBox isFirstPlace={isFirstPlace}>
+          <InfoBox>
             <div>댓글수</div>
             <div>{reviewCount}</div>
           </InfoBox>
@@ -95,7 +95,7 @@ const ProfileWrapper = styled.div<{ isFirstPlace: boolean }>`
   width: ${({ isFirstPlace }) => (isFirstPlace ? "164px" : "136px")};
   height: ${({ isFirstPlace }) => (isFirstPlace ? "162px" : "134px")};
   left: ${({ isFirstPlace }) => `calc(50% - ${isFirstPlace ? 82 : 68}px)`};
-  top: ${({ isFirstPlace }) => (isFirstPlace ? "70px" : "56px")};
+  top: ${({ isFirstPlace }) => (isFirstPlace ? "74px" : "56px")};
 `;
 const Profile = styled.div<{ isFirstPlace: boolean }>`
   background-image: url(${RannkProfile});
@@ -105,15 +105,17 @@ const Profile = styled.div<{ isFirstPlace: boolean }>`
   width: ${({ isFirstPlace }) => (isFirstPlace ? "156px" : "126px")};
   height: ${({ isFirstPlace }) => (isFirstPlace ? "156px" : "126px")};
   left: ${({ isFirstPlace }) => `calc(50% - ${isFirstPlace ? 77 : 62}px)`};
-  top: ${({ isFirstPlace }) => (isFirstPlace ? "72px" : "59px")};
+  top: ${({ isFirstPlace }) => (isFirstPlace ? "76px" : "59px")};
 `;
 
 const Title = styled.div<{ isFirstPlace: boolean }>`
   position: absolute;
   font-weight: bold;
   text-align: center;
-  font-size: ${({ isFirstPlace }) => (isFirstPlace ? "26px" : "24px")};
-  bottom: ${({ isFirstPlace }) => (isFirstPlace ? "190px" : "152px")};
+  font-size: 28px;
+  line-height: 41px;
+  letter-spacing: -0.01em;
+  bottom: ${({ isFirstPlace }) => (isFirstPlace ? "182px" : "142px")};
   left: ${({ isFirstPlace }) => `calc(50% - ${isFirstPlace ? 175 : 140}px)`};
   width: ${({ isFirstPlace }) => (isFirstPlace ? "350px" : "280px")};
 `;
@@ -123,8 +125,10 @@ const SubTitle = styled.div<{ isFirstPlace: boolean }>`
   color: #c9ab6a;
   opacity: 0.6;
   text-align: center;
-  font-size: ${({ isFirstPlace }) => (isFirstPlace ? "20px" : "18px")};
-  bottom: ${({ isFirstPlace }) => (isFirstPlace ? "154px" : "120px")};
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 26px;
+  bottom: ${({ isFirstPlace }) => (isFirstPlace ? "154px" : "116px")};
   left: ${({ isFirstPlace }) => `calc(50% - ${isFirstPlace ? 175 : 140}px)`};
   width: ${({ isFirstPlace }) => (isFirstPlace ? "350px" : "280px")};
 `;
@@ -138,18 +142,21 @@ const InfoBoxWrapper = styled.div<{ isFirstPlace: boolean }>`
 
 const RankInfoWrapper = styled.div<{ isFirstPlace: boolean }>`
   position: absolute;
-  bottom: ${({ isFirstPlace }) => (isFirstPlace ? "20px" : "18px")};
+  bottom: ${({ isFirstPlace }) => (isFirstPlace ? "20px" : "10px")};
   width: 100%;
 `;
 
-const InfoBox = styled.div<{ isFirstPlace: boolean }>`
+const InfoBox = styled.div`
   div:first-child {
-    font-size: ${({ isFirstPlace }) => (isFirstPlace ? "16px" : "14px")};
+    font-size: 16px;
     font-weight: 300;
-    opacity: 0.8;
+    letter-spacing: -0.01em;
+    line-height: 24px;
+    opacity: 0.87;
   }
   div:last-child {
-    font-size: ${({ isFirstPlace }) => (isFirstPlace ? "22px" : "16px")};
+    font-size: 22px;
     font-weight: bold;
+    line-height: 32px;
   }
 `;

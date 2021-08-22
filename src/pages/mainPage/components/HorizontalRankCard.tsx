@@ -56,10 +56,12 @@ const RankingCard = styled.div`
 const Rank = styled.div`
   position: absolute;
   color: #c9ab6a;
-  font-size: 25px;
-  font-weight: bold;
-  top: 38px;
+  top: 34px;
   left: 110px;
+  font-weight: bold;
+  font-size: 28px;
+  line-height: 41px;
+  letter-spacing: -0.01em;
 `;
 
 const ProfileWrapper = styled.div`
@@ -89,18 +91,22 @@ const Profile = styled.div`
 
 const Title = styled.div`
   position: absolute;
-  font-size: 26px;
-  font-weight: bold;
   top: 38px;
   left: 280px;
+  font-weight: bold;
+  font-size: 28px;
+  line-height: 41px;
+  letter-spacing: -0.01em;
 `;
 
 const SubTitle = styled.div`
   position: absolute;
-  font-size: 20px;
   color: #c9ab6a;
-  top: 43px;
+  top: 48px;
   left: 380px;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 26px;
 `;
 
 const InfoBoxWrapper = styled.div`
@@ -114,12 +120,15 @@ const InfoBoxWrapper = styled.div`
 
 const InfoBox = styled.div`
   div:first-child {
-    font-size: 16px;
+    opacity: 0.7;
     font-weight: 300;
-    opacity: 0.8;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: -0.01em;
   }
   div:last-child {
-    font-size: 22px;
     font-weight: bold;
+    font-size: 22px;
+    line-height: 32px;
   }
 `;

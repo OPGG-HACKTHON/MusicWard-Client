@@ -1,14 +1,32 @@
-import React from "react";
+import React, { useState, useCallback } from "react";
 import styled from "styled-components";
 import HorizontalRankCard from "./components/HorizontalRankCard";
 import VerticalRankCardProps from "./components/VerticalRankCard";
 
 const Ranking = () => {
+  const [category, setCategory] = useState("champion");
+  const handleChange = useCallback((e) => {
+    setCategory(e.target.id);
+  }, []);
   return (
     <RankingSection>
       <RankingCategory>
-        <Category active>챔피언</Category>
-        <Category>플레이리스트</Category>
+        <CategoryInput
+          checked={category === "champion"}
+          type="radio"
+          id="champion"
+          name="category"
+          onChange={handleChange}
+        />
+        <Category htmlFor="champion">챔피온</Category>
+        <CategoryInput
+          checked={category === "playlist"}
+          type="radio"
+          id="playlist"
+          name="category"
+          onChange={handleChange}
+        />
+        <Category htmlFor="playlist">플레이리스트</Category>
       </RankingCategory>
       <TopRankingCardWrapper>
         <VerticalRankCardProps
@@ -61,17 +79,27 @@ const RankingSection = styled.section`
   background: linear-gradient(#010407, #9fa6dc);
 `;
 
-const Category = styled.div<{ active?: boolean }>`
+const CategoryInput = styled.input`
+  display: none;
+`;
+
+const Category = styled.label`
+  cursor: pointer;
   font-size: 28px;
-  font-weight: ${({ active }) => (active ? "bold" : "normal")};
+  font-weight: normal;
   padding: 0 35px;
   border-image: linear-gradient(to right, #bb8c3c 0%, #73592c 100%);
-  border-image-width: 0 0 ${({ active }) => (active ? "4px" : "0")} 0;
+  border-image-width: 0 0 0 0;
   border-style: solid;
   border-image-slice: 1;
   border-left: none;
   border-right: none;
-  opacity: ${({ active }) => (active ? 1 : 0.7)};
+  opacity: 0.7;
+  input:checked + & {
+    font-weight: bold;
+    border-image-width: 0 0 4px 0;
+    opacity: 1;
+  }
 `;
 
 const RankingCategory = styled.div`
