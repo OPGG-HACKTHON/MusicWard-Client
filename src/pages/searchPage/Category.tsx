@@ -6,10 +6,10 @@ import SelectArrow from "assets/img/select-arrow.svg";
 import InputSearch from "assets/img/input-search.svg";
 import PlayListItem from "components/PlayListItem";
 
-const options = [
+export const options = [
   { value: "summoner", text: "소환사명" },
   { value: "tag", text: "태그" },
-  { value: "champion", text: "챔피언명" },
+  { value: "champion", text: "챔피언명" },
   { value: "playlist", text: "플레이리스트명" },
 ];
 

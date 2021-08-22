@@ -5,13 +5,7 @@ import queryString from "query-string";
 import SelectArrow from "assets/img/select-arrow.svg";
 import InputSearch from "assets/img/input-search.svg";
 import SearchResultList from "./components/SearchResultList";
-
-const options = [
-  { value: "summoner", text: "소환사명" },
-  { value: "tag", text: "태그" },
-  { value: "champion", text: "챔피언명" },
-  { value: "playlist", text: "플레이리스트명" },
-];
+import { options } from "./Category";
 
 const ResultList = () => {
   const history = useHistory();
@@ -63,7 +57,8 @@ const ResultList = () => {
     <Wrapper>
       <SearchWrapper>
         <SearchDescription>
-          {options.filter((i) => i.value === type)[0].text}을 검색한 결과입니다.
+          {options.filter((i) => i.value === type)[0].text}
+          {type === "tag" ? "를" : "을"} 검색한 결과입니다.
         </SearchDescription>
         <SearchBar>
           <Select value={searchType} onChange={handleChangeSelect}>
@@ -112,6 +107,7 @@ const SearchWrapper = styled.div`
   margin-top: 44px;
   margin-bottom: 40px;
 `;
+
 const Wrapper = styled.div`
   width: 1220px;
   margin: 0 auto;
@@ -144,7 +140,7 @@ const Select = styled.select`
   appearance: none;
   background: url(${SelectArrow}) no-repeat right 21px center #2c2c2c;
   background-size: 8px;
-  padding-left: 30px;
+  padding-left: 21px;
   color: #f4ecd987;
   font-style: normal;
   font-weight: 500;
