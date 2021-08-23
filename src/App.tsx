@@ -3,7 +3,7 @@ import GlobalStyle from "./GlobalStyle";
 import { Switch, Route, BrowserRouter, Redirect } from "react-router-dom";
 
 import GlobalNavBar from "components/GlobalNavBar";
-import MyPage from "./pages/MyPage";
+import MyPage from "./pages/myPage/MyPage";
 
 const App = () => {
   return (
