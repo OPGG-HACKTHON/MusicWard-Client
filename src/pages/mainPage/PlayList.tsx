@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import BackgroundImg from "assets/img/background-img.svg";
-import ChampionIcon from "assets/img/i-fighters.png";
+import ChampionIcon from "assets/icon/i-fighters.png";
 import Carousel from "components/Carousel";
 
 const PlayList = () => {

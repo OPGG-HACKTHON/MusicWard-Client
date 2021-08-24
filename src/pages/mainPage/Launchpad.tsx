@@ -1,14 +1,14 @@
 import React from "react";
 import styled from "styled-components";
-import Fighters from "assets/img/i-fighters.png";
-import Assassins from "assets/img/i-assassins.png";
-import Mages from "assets/img/i-mages.png";
-import Marksmen from "assets/img/i-marksmen.png";
-import Supports from "assets/img/i-supports.png";
-import Tanks from "assets/img/i-tanks.png";
+import Fighters from "assets/icon/i-fighters.png";
+import Assassins from "assets/icon/i-assassins.png";
+import Mages from "assets/icon/i-mages.png";
+import Marksmen from "assets/icon/i-marksmen.png";
+import Supports from "assets/icon/i-supports.png";
+import Tanks from "assets/icon/i-tanks.png";
 import LaunchpadBg from "assets/img/launchpad-bg.png";
-import SelectArrow from "assets/img/select-arrow.svg";
-import InputSearch from "assets/img/input-search.svg";
+import SelectArrow from "assets/icon/i-select.svg";
+import InputSearch from "assets/icon/i-search.svg";
 
 import { Icon } from "./PlayList";
 

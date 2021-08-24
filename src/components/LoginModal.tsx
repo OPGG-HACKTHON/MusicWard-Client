@@ -2,8 +2,8 @@ import React, { FC } from "react";
 import LoginModalBg from "assets/img/login-modal.svg";
 import styled from "styled-components";
 import LogoImg from "assets/img/logo.svg";
-import Spotify from "assets/img/i-spotify.svg";
-import Google from "assets/img/i-google.svg";
+import Spotify from "assets/icon/i-spotify.svg";
+import Google from "assets/icon/i-google.svg";
 
 export interface ModalProps {
   onClose?: () => void;

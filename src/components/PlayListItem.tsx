@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import styled from "styled-components";
 
-import WardIcon from "assets/img/ward-icon.png";
+import Ward from "assets/icon/i-ward.png";
 import { Icon } from "pages/mainPage/PlayList";
 
 export interface PlayListItemProps {
@@ -26,7 +26,7 @@ const PlayListItem: FC<PlayListItemProps> = ({
             <CountWrapper>
               <Count>{listCount}곡</Count>
               <Divider />
-              <Icon src={WardIcon} width={13} height={14} marginRight={2} />
+              <Icon src={Ward} width={13} height={14} marginRight={2} />
               <Count>{wardCount}</Count>
             </CountWrapper>
           </ItemWrappder>

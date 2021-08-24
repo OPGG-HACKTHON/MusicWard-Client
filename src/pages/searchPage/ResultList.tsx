@@ -2,8 +2,8 @@ import React, { useState, useCallback } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import queryString from "query-string";
-import SelectArrow from "assets/img/select-arrow.svg";
-import InputSearch from "assets/img/input-search.svg";
+import SelectArrow from "assets/icon/i-select.svg";
+import InputSearch from "assets/icon/i-search.svg";
 import SearchResultList from "./components/SearchResultList";
 import { options } from "./Category";
 

@@ -2,8 +2,8 @@ import React, { useState, useCallback } from "react";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 
-import SelectArrow from "assets/img/select-arrow.svg";
-import InputSearch from "assets/img/input-search.svg";
+import SelectArrow from "assets/icon/i-select.svg";
+import InputSearch from "assets/icon/i-search.svg";
 import PlayListItem from "components/PlayListItem";
 
 export const options = [
