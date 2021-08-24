@@ -51,7 +51,6 @@ const Carousel: FC<SliderProps> = ({
 export default Carousel;
 
 const SliderWrapper = styled.div<{ position: string }>`
-  /* height: 300px; */
   width: 1220px;
   position: ${({ position }) => position};
   z-index: 12;

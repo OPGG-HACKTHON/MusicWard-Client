@@ -12,7 +12,6 @@ import ArchivePage from "pages/archivePage/ArchivePage";
 import { MainPage } from "./pages/mainPage";
 import { SearchCategory, SearchResultList } from "pages/searchPage";
 
-
 const App = () => {
   return (
     <BrowserRouter>
@@ -22,13 +21,10 @@ const App = () => {
         <Route path="/search/list" component={SearchResultList} />
         <Route path="/search" component={SearchCategory} />
         <Route path="/mypage" exact component={MyPage} />
-
         <Route path="/editpage" exact component={EditPage} />
         <Route path="/playlist" exact component={PlayListPage} />
         <Route path="/archive" exact component={ArchivePage} />
-
         <Route path="/" exact component={MainPage} />
-
         <Redirect path="*" to="/" />
       </Switch>
     </BrowserRouter>

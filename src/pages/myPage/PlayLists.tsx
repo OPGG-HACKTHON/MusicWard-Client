@@ -1,19 +1,29 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import styled from "styled-components";
 import PlayListSample from "assets/img/mypage/play-list-sample.png";
 import DeleteButton from "assets/img/mypage/delete-button.png";
 import Ward from "assets/img/mypage/ward.png";
 import PlayYoutube from "assets/img/mypage/play-youtube.png";
 import PlaySpotify from "assets/img/mypage/play-spotify.png";
+import PlayListAddModal from "components/PlayListAddModal";
 
 const PlayLists = () => {
+  // FIXME: 임시로 플레이리스트 생성 모달 표출
+  const [showModal, setShowModal] = useState(false);
+  const openModal = useCallback(() => {
+    setShowModal(true);
+  }, [setShowModal]);
+  const handleClose = useCallback(() => {
+    setShowModal(false);
+  }, [setShowModal]);
   return (
     <Container>
+      {showModal && <PlayListAddModal onClose={handleClose} />}
       <Line />
       <MainText>업로드한 플레이리스트</MainText>
       <Lists>
         <Rows>
-          <Item>
+          <Item onClick={openModal}>
             <Delete src={DeleteButton} />
             <Info>
               <img

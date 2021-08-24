@@ -1,8 +1,10 @@
-import React, { FC } from "react";
+import React, { FC, useCallback } from "react";
 import styled from "styled-components";
 
 import Ward from "assets/icon/i-ward.png";
 import { Icon } from "pages/mainPage/PlayList";
+
+import { useHistory } from "react-router-dom";
 
 export interface PlayListItemProps {
   title: string;
@@ -17,8 +19,15 @@ const PlayListItem: FC<PlayListItemProps> = ({
   wardCount,
   imgUrl,
 }) => {
+  const history = useHistory();
+  // FIXME: 임시로 플레이리스트 페이지로 이동
+  const goPlayList = useCallback(() => {
+    history.push({
+      pathname: "/playlist",
+    });
+  }, []);
   return (
-    <SliderItem>
+    <SliderItem onClick={goPlayList}>
       <SliderItemBox imgUrl={imgUrl}>
         <SliderItemGradient>
           <ItemWrappder>

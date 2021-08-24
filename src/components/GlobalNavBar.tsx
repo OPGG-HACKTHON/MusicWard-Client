@@ -4,19 +4,20 @@ import styled from "styled-components";
 import LoginModal from "./LoginModal";
 
 const GlobalNavBar = () => {
-  const login = false;
+  const [login, setLogin] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const openModal = useCallback(() => {
     setShowModal(true);
   }, [setShowModal]);
   const handleClose = useCallback(() => {
     setShowModal(false);
+    setLogin(true);
   }, [setShowModal]);
   return (
     <>
       <GNB>
         <Menu to="/">랭킹</Menu>
-        <Menu to="/">보관함</Menu>
+        <Menu to="/archive">보관함</Menu>
         <Menu to="/">
           <Icon />
           Music Ward
