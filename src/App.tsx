@@ -3,8 +3,10 @@ import GlobalStyle from "./GlobalStyle";
 import { Switch, Route, BrowserRouter, Redirect } from "react-router-dom";
 
 import GlobalNavBar from "components/GlobalNavBar";
-import MyPage from "pages/MyPage";
+import MyPage from "pages/myPage/MyPage";
+import EditPage from "pages/myPage/EditPage";
 import PlayListPage from "pages/playListPage/PlayListPage";
+import ArchivePage from "pages/archivePage/ArchivePage";
 
 const App = () => {
   return (
@@ -15,6 +17,7 @@ const App = () => {
         <Route path="/mypage" exact component={MyPage} />
         <Route path="/editpage" exact component={EditPage} />
         <Route path="/playlist" exact component={PlayListPage} />
+        <Route path="/archive" exact component={ArchivePage} />
         <Redirect path="*" to="/" />
       </Switch>
       <div>musicward-client</div>
