@@ -1,19 +1,37 @@
-import React from "react";
+import React, { useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import LoginModal from "./LoginModal";
 
 const GlobalNavBar = () => {
+  const login = false;
+  const [showModal, setShowModal] = useState(false);
+  const openModal = useCallback(() => {
+    setShowModal(true);
+  }, [setShowModal]);
+  const handleClose = useCallback(() => {
+    setShowModal(false);
+  }, [setShowModal]);
   return (
-    <GNB>
-      <Menu to="/">랭킹</Menu>
-      <Menu to="/">보관함</Menu>
-      <Menu to="/">
-        <Icon />
-        Music Ward
-      </Menu>
-      <Menu to="/search">검색</Menu>
-      <Menu to="/mypage">마이페이지</Menu>
-    </GNB>
+    <>
+      <GNB>
+        <Menu to="/">랭킹</Menu>
+        <Menu to="/">보관함</Menu>
+        <Menu to="/">
+          <Icon />
+          Music Ward
+        </Menu>
+        <Menu to="/search">검색</Menu>
+        {login ? (
+          <Menu to="/mypage">마이페이지</Menu>
+        ) : (
+          <Menu to="#" onClick={openModal}>
+            로그인
+          </Menu>
+        )}
+      </GNB>
+      {showModal && <LoginModal onClose={handleClose} />}
+    </>
   );
 };
 
