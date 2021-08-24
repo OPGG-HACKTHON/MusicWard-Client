@@ -1,31 +1,23 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { useHistory } from "react-router-dom";
 import UserIcon from "components/user/UserIcon";
 
-import PlayYoutube from "assets/img/mypage/play-youtube.png";
-import PlaySpotify from "assets/img/mypage/play-spotify.png";
+import EditYoutube from "assets/img/mypage/edit-youtube.png";
+import EditSpotify from "assets/img/mypage/edit-spotify.png";
 import GoogleAccount from "assets/img/mypage/google-account.png";
 
-const UserInfo = () => {
+const EditPage = () => {
   const [userId] = useState("와드깔고승리하자");
   const [userEmail] = useState("rPwjd@lol.lol");
 
-  const history = useHistory();
   const clickToEdit = () => {
-    history.push({
-      pathname: "/editpage",
-    });
+    console.log("수정완료클릭");
   };
 
   return (
     <Container>
       <UserIcon />
       <MyInfoBox>
-        <div>
-          <img style={{ width: "40px", marginRight: "1vw" }} src={PlayYoutube} />
-          <img style={{ width: "40px" }} src={PlaySpotify} />
-        </div>
         <MyId>{userId}</MyId>
         <MyInfoLine />
         <MyInfoAccount>
@@ -37,20 +29,32 @@ const UserInfo = () => {
           <UserEmail>{userEmail}</UserEmail>
         </MyInfoAccount>
       </MyInfoBox>
+      <EditBox>
+        <EditTitle>닉네임</EditTitle>
+        <Nickname />
+      </EditBox>
+      <EditBox>
+        <EditTitle>연동플랫폼</EditTitle>
+        <SpotifyButton>
+          <img src={EditSpotify} />
+        </SpotifyButton>
+        <YoutubeButton>
+          <img src={EditYoutube} />
+        </YoutubeButton>
+      </EditBox>
+      <BottomLine />
       <Functions>
-        <FunctionButton onClick={clickToEdit}>수정</FunctionButton>
-        <FunctionButton>로그아웃</FunctionButton>
+        <FunctionButton onClick={clickToEdit}>수정완료</FunctionButton>
+        <FunctionButton>회원탈퇴</FunctionButton>
       </Functions>
     </Container>
   );
 };
 
 const Container = styled.section`
-  height: 20vw;
-  position: relative;
-  display: flex;
-  margin: 5vw 10% 0;
-  background: #010407;
+  width: auto;
+  margin: 10vw 30% 0 30%;
+  text-align: center;
 `;
 
 const MyInfoBox = styled.section`
@@ -74,7 +78,6 @@ const MyInfoLine = styled.hr`
   display: inline-block;
   width: 240px;
   height: 0px;
-  margin-left: 0;
 
   opacity: 0.8;
   /* gold/primary */
@@ -84,7 +87,7 @@ const MyInfoLine = styled.hr`
 
 const MyInfoAccount = styled.div`
   display: flex;
-  justify-content: left;
+  justify-content: center;
 
   font-family: Noto Sans KR;
   font-style: normal;
@@ -103,6 +106,73 @@ const UserEmail = styled.div`
   font-size: 16px;
   line-height: 24px;
   color: #ffffff;
+`;
+
+const EditBox = styled.div`
+  display: flex;
+`;
+
+const EditTitle = styled.div`
+  width: 100px;
+  margin-right: 20px;
+  font-family: Noto Sans KR;
+  font-style: normal;
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 24px;
+  text-align: right;
+  color: #ffffff;
+`;
+
+const Nickname = styled.input`
+  width: 375px;
+  height: 45px;
+  margin-bottom: 23px;
+  background: #12191c;
+  /* gold/deepdark */
+  border: 2px solid #64583a;
+  box-sizing: border-box;
+  border-radius: 3px;
+`;
+
+const SpotifyButton = styled.div`
+  width: 180px;
+  height: 45px;
+  margin-right: 15px;
+  background: #12191c;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  /* gold/deepdark */
+  border: 2px solid #64583a;
+  box-sizing: border-box;
+  border-radius: 3px;
+`;
+
+const YoutubeButton = styled.div`
+  width: 180px;
+  height: 45px;
+  background: #5f6cbb;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  /* gold/deepdark */
+  border: 2px solid #64583a;
+  box-sizing: border-box;
+  border-radius: 3px;
+`;
+
+const BottomLine = styled.hr`
+  margin: 100px 0 40px -50%;
+  width: 200%;
+  opacity: 0.5;
+  /* gold/primary */
+  border: 1px solid #bb8c3c;
+  transform: rotate(180deg);
 `;
 
 const Functions = styled.section`
@@ -129,4 +199,4 @@ const FunctionButton = styled.div`
   opacity: 0.8;
 `;
 
-export default UserInfo;
+export default EditPage;
