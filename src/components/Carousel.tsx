@@ -63,6 +63,7 @@ const SliderWrapper = styled.div<{ position: string }>`
     justify-content: center;
     padding: 0 22px;
     box-sizing: border-box;
+    bottom: -65px;
   }
   .slick-dots.slick-thumb li {
     flex: 1;
