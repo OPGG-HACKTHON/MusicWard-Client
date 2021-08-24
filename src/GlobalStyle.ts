@@ -10,7 +10,8 @@ const GlobalStyle = createGlobalStyle`
     font-size: 16px;
     text-rendering: optimizeLegibility;
     color: white  ;
-    background: black;
+    background: #010407;
+    min-width: 1300px;
   }
 
   button {
