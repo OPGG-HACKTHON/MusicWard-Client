@@ -23,7 +23,10 @@ const UserInfo = () => {
       <UserIcon />
       <MyInfoBox>
         <div>
-          <img style={{ width: "40px", marginRight: "1vw" }} src={PlayYoutube} />
+          <img
+            style={{ width: "40px", marginRight: "1vw" }}
+            src={PlayYoutube}
+          />
           <img style={{ width: "40px" }} src={PlaySpotify} />
         </div>
         <MyId>{userId}</MyId>
