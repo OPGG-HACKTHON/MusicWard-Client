@@ -23,8 +23,9 @@ module.exports = {
     "prettier/prettier": [
       "error",
       {
-        endOfLine: 'auto',
-      }
+        endOfLine: "auto",
+      },
     ],
+    "react/prop-types": "off",
   },
 };
