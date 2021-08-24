@@ -13,6 +13,7 @@ const App = () => {
       <GlobalNavBar />
       <Switch>
         <Route path="/mypage" exact component={MyPage} />
+        <Route path="/editpage" exact component={EditPage} />
         <Route path="/playlist" exact component={PlayListPage} />
         <Redirect path="*" to="/" />
       </Switch>
