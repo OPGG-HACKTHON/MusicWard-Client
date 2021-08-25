@@ -2,6 +2,7 @@ import React, { useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import LoginModal from "./LoginModal";
+import LogoImg from "assets/img/logo.svg";
 
 const GlobalNavBar = () => {
   const [login, setLogin] = useState(false);
@@ -19,8 +20,7 @@ const GlobalNavBar = () => {
         <Menu to="/">랭킹</Menu>
         <Menu to="/archive">보관함</Menu>
         <Menu to="/">
-          <Icon />
-          Music Ward
+          <Logo />
         </Menu>
         <Menu to="/search">검색</Menu>
         {login ? (
@@ -56,12 +56,12 @@ const Menu = styled(Link)`
   color: #fff;
 `;
 
-const Icon = styled.div`
-  width: 24px;
+const Logo = styled.div`
+  background-image: url(${LogoImg});
+  width: 147px;
   height: 24px;
-  background-color: #c4c4c4;
-  border-radius: 20px;
-  margin-right: 10px;
+  background-repeat: no-repeat;
+  background-size: contain;
 `;
 
 export default GlobalNavBar;
