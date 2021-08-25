@@ -72,9 +72,12 @@ const TextWrapper = styled.div`
   display: flex;
   flex-direction: column;
   max-height: 480px;
-  max-width: 479px;
   top: 130px;
-  left: 130px;
+  left: calc(50% - 588px);
+  width: 1176px;
+  margin-right: auto;
+  padding-right: 720px;
+  box-sizing: border-box;
 `;
 export const Icon = styled.img<{
   width: number;
