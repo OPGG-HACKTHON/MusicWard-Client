@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import RightButton from "assets/img/playlistpage/list-arrow-right.png";
 import LeftButton from "assets/img/playlistpage/list-arrow-left.png";

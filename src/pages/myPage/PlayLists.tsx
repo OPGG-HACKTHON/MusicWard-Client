@@ -4,7 +4,7 @@ import PlayListSample from "assets/img/mypage/play-list-sample.png";
 import DeleteButton from "assets/img/mypage/delete-button.png";
 import Ward from "assets/img/mypage/ward.png";
 import PlayYoutube from "assets/img/mypage/play-youtube.png";
-import PlaySpotify from "assets/img/mypage/play-spotify.png";
+// import PlaySpotify from "assets/img/mypage/play-spotify.png";
 import PlayListAddModal from "components/PlayListAddModal";
 
 const PlayLists = () => {
@@ -178,7 +178,7 @@ const Item = styled.div`
   position: relative;
   width: 246px;
   height: 247px;
-  background-img: url(${PlayListSample});
+  background-image: url(${PlayListSample});
   border: 5px solid;
   border-image-source: linear-gradient(
     from 180deg at 50% 50%,
