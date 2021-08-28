@@ -1,15 +1,22 @@
 import React from "react";
 import styled from "styled-components";
 
-const Champion = () => {
+type IProps = {
+  tags?: [];
+};
+
+const Champion = ({ tags }: IProps) => {
+  console.log(tags, "태그출력");
   return (
     <Container>
       <Tags>
+        {tags?.forEach((tag: any) => {
+          console.log(tag);
+          return <TagButton>{tag}</TagButton>;
+        })}
         <TagButton>#가렌</TagButton>
         <TagButton>#데마시아</TagButton>
         <TagButton>#매드무비</TagButton>
-        <TagButton>#전사</TagButton>
-        <TagButton>#가요</TagButton>
       </Tags>
 
       <Functions>

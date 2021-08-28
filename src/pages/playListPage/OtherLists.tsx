@@ -1,10 +1,19 @@
 import React from "react";
 import styled from "styled-components";
-import RightButton from "assets/img/playlistpage/list-arrow-right.png";
-import LeftButton from "assets/img/playlistpage/list-arrow-left.png";
+import RightButton from "assets/img/playlistpage/list-arrow-right.svg";
+import LeftButton from "assets/img/playlistpage/list-arrow-left.svg";
 import OtherListImageSample from "assets/img/playlistpage/other-list-image-sample.png";
 
-const OtherLists = () => {
+type IProps = {
+  others?: {
+    tracks: {
+      total: number;
+      items: [];
+    };
+  };
+};
+
+const OtherLists = ({ others }: IProps) => {
   return (
     <Container>
       <OtherPlayListHr />

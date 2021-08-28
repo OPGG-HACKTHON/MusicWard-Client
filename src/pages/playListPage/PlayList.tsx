@@ -1,28 +1,45 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
-import Thumbnail from "assets/img/playlistpage/thumbnail.png";
-import ThumbnailImageSample from "assets/img/playlistpage/thumbnail-image-sample.png";
+import ThumbnailEdge from "assets/img/playlistpage/thumbnail-edge.svg";
 import PlayButton from "assets/img/playlistpage/play-button.png";
 
-const PlayList = () => {
-  const [title] = useState("데마시아의 힘을 느껴보자");
-  const [description] = useState(`
-    가렌은 불굴의 선봉대를 이끄는 고결하고 자긍심 강한 전사다. 
-    선봉대 내에서 인망이 두터울 뿐 아니라 심지어 적에게도 존경을 받지만, 
-    그가 대대로 데마시아와 데마시아의 이상을
-    `);
+type IProps = {
+  playInfo?: {
+    title: string;
+    description: string;
+    external_url: string;
+    image: {
+      url: string;
+      width: number;
+      height: number;
+    };
+    comments: {
+      total: number;
+      items: [];
+    };
+  };
+};
 
+const PlayList = ({ playInfo }: IProps) => {
   return (
     <Container>
       <PlayListInfo>
-        <PlayListTitle>{title}</PlayListTitle>
+        <PlayListTitle>{playInfo?.title}</PlayListTitle>
         <PlayListHr />
-        <PlayListDescription>{description}</PlayListDescription>
+        <PlayListDescription>{playInfo?.description}</PlayListDescription>
       </PlayListInfo>
 
       <PlayListThumbnail>
-        <img src={Thumbnail} style={{ position: "absolute" }}></img>
-        <img src={ThumbnailImageSample} style={{ position: "absolute" }}></img>
+        <img src={ThumbnailEdge} style={{ position: "absolute" }}></img>
+        <img
+          src={playInfo?.image.url}
+          style={{
+            position: "absolute",
+            width: playInfo?.image.width,
+            height: playInfo?.image.height,
+            display: "none",
+          }}
+        ></img>
         <img
           src={PlayButton}
           style={{ position: "absolute", top: "50%", left: "50%" }}
@@ -34,15 +51,9 @@ const PlayList = () => {
           <HideText>숨기기</HideText>
           <CommentText>댓글</CommentText>
         </CommentTitle>
-        <Comment>댓글이얌</Comment>
-        <Comment>댓글이얌댓글이얌댓글이얌댓글이얌댓글이얌</Comment>
-        <Comment>댓글이얌</Comment>
-        <Comment>댓글이얌</Comment>
-        <Comment>댓글이얌</Comment>
-        <Comment>댓글이얌</Comment>
-        <Comment>
-          댓글이얌댓글이얌댓글이얌댓글이얌댓글이얌댓글이얌댓글이얌댓글
-        </Comment>
+        {playInfo?.comments.items.map((item: any) => (
+          <Comment key={item.comment_id}>{item.content}</Comment>
+        ))}
       </PlayListComments>
     </Container>
   );
