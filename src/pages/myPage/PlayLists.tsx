@@ -9,21 +9,23 @@ import PlayListAddModal from "components/PlayListAddModal";
 
 const PlayLists = () => {
   // FIXME: 임시로 플레이리스트 생성 모달 표출
-  const [showModal, setShowModal] = useState(false);
-  const openModal = useCallback(() => {
-    setShowModal(true);
-  }, [setShowModal]);
-  const handleClose = useCallback(() => {
-    setShowModal(false);
-  }, [setShowModal]);
+  const [openModal, setOpenModal] = useState<boolean>(false);
+
+  const handleOpenModal = useCallback(
+    (state: boolean) => () => {
+      setOpenModal(state);
+    },
+    [setOpenModal]
+  );
+
   return (
     <Container>
-      {showModal && <PlayListAddModal onClose={handleClose} />}
+      {openModal && <PlayListAddModal onClose={handleOpenModal(false)} />}
       <Line />
       <MainText>업로드한 플레이리스트</MainText>
       <Lists>
         <Rows>
-          <Item onClick={openModal}>
+          <Item onClick={handleOpenModal(true)}>
             <Delete src={DeleteButton} />
             <Info>
               <img
