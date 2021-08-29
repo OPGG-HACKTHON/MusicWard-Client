@@ -1,29 +1,45 @@
-import React, { FC } from "react";
+import React from "react";
 import LoginModalBg from "assets/img/login-modal.svg";
 import styled from "styled-components";
 import LogoImg from "assets/img/logo.svg";
 import Spotify from "assets/icon/i-spotify.svg";
 import Google from "assets/icon/i-google.svg";
+import { useCallback } from "react";
+import { useRecoilState } from "recoil";
+import { modalState } from "recoil/modal";
+import { auth, authType } from "recoil/auth";
 
-export interface ModalProps {
-  onClose?: () => void;
-}
+const LoginModal = () => {
+  const [openModal, setOpenModal] = useRecoilState<boolean>(modalState);
+  const [, setLogin] = useRecoilState<authType>(auth);
+  const handleClose = useCallback(() => {
+    setOpenModal(false);
+  }, [setOpenModal]);
 
-const LoginModal: FC<ModalProps> = ({ onClose }) => {
+  // FIXME: 임시 로그인
+  const handleLogin = useCallback(() => {
+    setLogin({ token: "1111", id: "1111", name: "1111", email: "1111" });
+    handleClose();
+  }, []);
+
   return (
-    <Wrapper>
-      <ModalWrapper>
-        <CloseBtn onClick={onClose} />
-        <ModalContent>
-          <Logo />
-          <Text>연동 서비스로 간편 로그인하세요.</Text>
-          <LoginButton isGoogle type="button">
-            Google 연동하기
-          </LoginButton>
-          <LoginButton type="button">spotify 연동하기</LoginButton>
-        </ModalContent>
-      </ModalWrapper>
-    </Wrapper>
+    <>
+      {openModal && (
+        <Wrapper>
+          <ModalWrapper>
+            <CloseBtn onClick={handleClose} />
+            <ModalContent>
+              <Logo />
+              <Text>연동 서비스로 간편 로그인하세요.</Text>
+              <LoginButton isGoogle type="button" onClick={handleLogin}>
+                Google 연동하기
+              </LoginButton>
+              <LoginButton type="button">spotify 연동하기</LoginButton>
+            </ModalContent>
+          </ModalWrapper>
+        </Wrapper>
+      )}
+    </>
   );
 };
 
