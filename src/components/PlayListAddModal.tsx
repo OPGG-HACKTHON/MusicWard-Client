@@ -1,10 +1,11 @@
 import React, { FC, useCallback } from "react";
 import PlayListModalBg from "assets/img/playlist-modal.svg";
 import styled from "styled-components";
-import { CloseBtn, ModalProps, Wrapper } from "./LoginModal";
+import { CloseBtn, Wrapper } from "./LoginModal";
 
-interface PlayListAddModalProps extends ModalProps {
+interface PlayListAddModalProps {
   Link?: string;
+  onClose: () => void;
 }
 
 const PlayListAddModal: FC<PlayListAddModalProps> = ({ onClose, Link }) => {
