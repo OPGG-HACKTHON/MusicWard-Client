@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC } from "react";
 import styled from "styled-components";
 import Fighters from "assets/icon/i-fighters.png";
 import Assassins from "assets/icon/i-assassins.png";
@@ -11,9 +11,31 @@ import SelectArrow from "assets/icon/i-select.svg";
 import InputSearch from "assets/icon/i-search.svg";
 
 import { Icon } from "./PlayList";
+import { Champion } from "./Main";
 
-const Launchpad = () => {
+type ChampionList = {
+  champion_id: number;
+  english_name: string;
+  name: string;
+  position: Array<string>;
+  image_url: string;
+};
+
+interface LaunchpadProps {
+  list: Array<ChampionList>;
+  selectedChampion: Champion;
+  onChange: (id: number) => void;
+}
+
+const Launchpad: FC<LaunchpadProps> = ({
+  list,
+  selectedChampion,
+  onChange,
+}) => {
   const IconArr = [Tanks, Fighters, Assassins, Mages, Marksmen, Supports];
+  const handleClick = (id: number) => () => {
+    onChange(id);
+  };
   return (
     <LaunchpadSection>
       <LaunchPadBg>
@@ -44,12 +66,13 @@ const Launchpad = () => {
               </RightFilter>
             </LaunchpadFilter>
             <LaunchpadWrapper>
-              {[...Array(16)].map((w) => (
-                <ItemWrapper key={w}>
-                  {[...Array(8)].map((i) => (
-                    <LaunchpadItem key={i}></LaunchpadItem>
-                  ))}
-                </ItemWrapper>
+              {list.map((i) => (
+                <LaunchpadItem
+                  key={i.champion_id}
+                  url={i.image_url}
+                  selected={i.champion_id === selectedChampion.champion_id}
+                  onClick={handleClick(Number(i.champion_id))}
+                />
               ))}
             </LaunchpadWrapper>
           </LaunpadInner>
@@ -165,12 +188,20 @@ const Input = styled.input`
   background: url(${InputSearch}) no-repeat right 9px center #12191c;
 `;
 
-const LaunchpadItem = styled.div`
+const LaunchpadItem = styled.div<{ url: string; selected: boolean }>`
   width: 75px;
   height: 75px;
   background: radial-gradient(50% 50% at 50% 50%, #8488a0 0%, #40414f 100%);
   border-radius: 5px;
   border: 1px solid #73592c;
+  background-image: url(${({ url }) => url});
+  background-size: cover;
+  background-repeat: no-repeat;
+  margin-right: 22px;
+  margin-bottom: 22px;
+  opacity: ${({ selected }) => (selected ? "1" : "0.2")};
+  filter: ${({ selected }) =>
+    selected ? "drop-shadow(0px 0px 22px #C89236)" : ""};
 `;
 
 const ItemWrapper = styled.div`
@@ -181,6 +212,8 @@ const ItemWrapper = styled.div`
 `;
 
 const LaunchpadWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
   height: 100%;
   overflow: auto;
   margin-top: 25px;
