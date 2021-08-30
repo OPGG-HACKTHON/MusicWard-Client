@@ -36,7 +36,6 @@ const Main = () => {
     setChampionList(data.data.champion_list);
   };
   const getChampion = async (id: number) => {
-    console.log("호출");
     const { data } = await axios({
       url: `https://server.music-ward.com/champion/${id}`,
       method: "get",

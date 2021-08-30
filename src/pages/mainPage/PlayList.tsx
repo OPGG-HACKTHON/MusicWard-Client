@@ -8,6 +8,8 @@ import Support from "assets/icon/i-supports.png";
 import Tank from "assets/icon/i-tanks.png";
 import Carousel from "components/Carousel";
 import { Champion } from "./Main";
+import axios from "axios";
+import { useEffect } from "react";
 
 const MaxString = 300;
 const IconObj: Record<string, string> = {
@@ -23,7 +25,7 @@ interface PlayListProps {
 }
 
 const PlayList: FC<PlayListProps> = ({ champion }) => {
-  const [playList] = useState(
+  const [playList, setPlayList] = useState(
     [...Array(15)].map((i, index) => {
       return {
         title: `데마시아의 힘을 느껴보자${index}`,
@@ -36,6 +38,38 @@ const PlayList: FC<PlayListProps> = ({ champion }) => {
       };
     })
   );
+  const getPlayList = async () => {
+    const { data } = await axios({
+      url: "https://server.music-ward.com/playlists",
+      method: "get",
+      params: {
+        page: 0,
+        size: 5,
+        champion_name: champion.name,
+      },
+    });
+    if (data.data.length > 0) {
+      const arr = data.data.map(
+        (i: {
+          title: string;
+          view: string;
+          wards: { total: string };
+          image: { url: string };
+        }) => {
+          return {
+            title: i.title,
+            listCount: i.view,
+            wardCount: i.wards.total,
+            imgUrl: i.image.url,
+          };
+        }
+      );
+      setPlayList(arr);
+    }
+  };
+  useEffect(() => {
+    getPlayList();
+  }, [champion]);
   return (
     <PlayListSection url={champion.profile_image_url}>
       <GradientSection />
