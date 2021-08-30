@@ -25,7 +25,20 @@ type IProps = {
   others: {
     tracks: {
       total: number;
-      items: [];
+      items: [
+        {
+          artists: string;
+          id: number;
+          image: {
+            url: string;
+            width: number;
+            height: number;
+          };
+          original_id: string;
+          preview_url: string;
+          title: string;
+        }
+      ];
     };
   };
 };

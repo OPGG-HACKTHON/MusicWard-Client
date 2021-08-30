@@ -6,17 +6,12 @@ type IProps = {
 };
 
 const Champion = ({ tags }: IProps) => {
-  console.log(tags, "태그출력");
   return (
     <Container>
       <Tags>
-        {tags?.forEach((tag: any) => {
-          console.log(tag);
-          return <TagButton>{tag}</TagButton>;
-        })}
-        <TagButton>#가렌</TagButton>
-        <TagButton>#데마시아</TagButton>
-        <TagButton>#매드무비</TagButton>
+        {tags?.map((tag: any) => (
+          <TagButton key={0}>{`#${tag}`}</TagButton>
+        ))}
       </Tags>
 
       <Functions>

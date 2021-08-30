@@ -21,6 +21,10 @@ type IProps = {
 };
 
 const PlayList = ({ playInfo }: IProps) => {
+  const clickToPlay = () => {
+    window.open(playInfo?.external_url, "_blank");
+  };
+
   return (
     <Container>
       <PlayListInfo>
@@ -29,20 +33,28 @@ const PlayList = ({ playInfo }: IProps) => {
         <PlayListDescription>{playInfo?.description}</PlayListDescription>
       </PlayListInfo>
 
-      <PlayListThumbnail>
-        <img src={ThumbnailEdge} style={{ position: "absolute" }}></img>
+      <PlayListThumbnail onClick={clickToPlay}>
         <img
           src={playInfo?.image.url}
+          width="628px"
+          height="628px"
           style={{
             position: "absolute",
-            width: playInfo?.image.width,
-            height: playInfo?.image.height,
-            display: "none",
+            clipPath: "circle()",
+            margin: "15px",
+            // width: playInfo?.image.width,
+            // height: playInfo?.image.height,
           }}
-        ></img>
+        />
+        <img
+          src={ThumbnailEdge}
+          width="658px"
+          height="658px"
+          style={{ position: "absolute" }}
+        />
         <img
           src={PlayButton}
-          style={{ position: "absolute", top: "50%", left: "50%" }}
+          style={{ position: "absolute", top: "266px", left: "274px" }}
         ></img>
       </PlayListThumbnail>
 
