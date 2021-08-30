@@ -219,7 +219,6 @@ const LaunchpadWrapper = styled.div`
   overflow: auto;
   padding-top: 25px;
   padding-left: 25px;
-  /* margin-top: 25px; */
   ${ItemWrapper}:last-child {
     margin-bottom: 0;
   }

@@ -7,19 +7,24 @@ import Google from "assets/icon/i-google.svg";
 import { useCallback } from "react";
 import { useRecoilState } from "recoil";
 import { modalState } from "recoil/modal";
-import { auth, authType } from "recoil/auth";
+// import { auth, authType } from "recoil/auth";
+import axios from "axios";
 
 const LoginModal = () => {
   const [openModal, setOpenModal] = useRecoilState<boolean>(modalState);
-  const [, setLogin] = useRecoilState<authType>(auth);
+  // const [, setLogin] = useRecoilState<authType>(auth);
   const handleClose = useCallback(() => {
     setOpenModal(false);
   }, [setOpenModal]);
 
   // FIXME: 임시 로그인
-  const handleLogin = useCallback(() => {
-    setLogin({ token: "1111", id: "1111", name: "1111", email: "1111" });
-    handleClose();
+  const handleLogin = useCallback(async () => {
+    // setLogin({ token: "1111", id: "1111", name: "1111", email: "1111" });
+    const { data } = await axios({
+      url: "https://server.music-ward.com/users/auth/google",
+    });
+    console.log(data);
+    // handleClose();
   }, []);
 
   return (
