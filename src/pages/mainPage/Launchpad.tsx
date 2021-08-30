@@ -137,7 +137,7 @@ const LaunpadInner = styled.div`
   );
   margin: 0 auto;
   border-radius: 20px;
-  padding: 20px 35px 60px 50px;
+  padding: 20px 35px 60px 25px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -146,11 +146,12 @@ const LaunpadInner = styled.div`
 
 const LaunchpadFilter = styled.div`
   height: 60px;
-  width: calc(100% - 15px);
+  width: calc(100% - 52px);
   border-bottom: 1px solid #64583a;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-left: 25px;
 `;
 
 const LeftFilter = styled.div`
@@ -201,7 +202,7 @@ const LaunchpadItem = styled.div<{ url: string; selected: boolean }>`
   margin-bottom: 22px;
   opacity: ${({ selected }) => (selected ? "1" : "0.2")};
   filter: ${({ selected }) =>
-    selected ? "drop-shadow(0px 0px 22px #C89236)" : ""};
+    selected ? "drop-shadow(0px 0px 12px #C89236)" : ""};
 `;
 
 const ItemWrapper = styled.div`
@@ -216,7 +217,9 @@ const LaunchpadWrapper = styled.div`
   flex-wrap: wrap;
   height: 100%;
   overflow: auto;
-  margin-top: 25px;
+  padding-top: 25px;
+  padding-left: 25px;
+  /* margin-top: 25px; */
   ${ItemWrapper}:last-child {
     margin-bottom: 0;
   }
