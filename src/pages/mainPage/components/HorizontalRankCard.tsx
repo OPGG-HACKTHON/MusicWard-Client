@@ -4,7 +4,6 @@ import styled from "styled-components";
 import RandkingHorizontalCardBg from "assets/img/ranking-horizontal-card.svg";
 
 import RannkProfileBorder from "assets/img/rank-profile-border.svg";
-import RannkProfile from "assets/img/rank-profile.svg";
 import { RankCardProps } from "./VerticalRankCard";
 
 const HorizontalRankCard: FC<RankCardProps> = ({
@@ -14,14 +13,15 @@ const HorizontalRankCard: FC<RankCardProps> = ({
   reviewCount,
   title,
   subTitle,
+  img,
 }) => {
   return (
     <RankingCard>
       <Rank>{rank}</Rank>
       <ProfileWrapper />
-      <Profile />
-      <Title>{title}</Title>
-      <SubTitle>{subTitle}</SubTitle>
+      <Profile url={img} />
+      <Title full={!subTitle}>{title}</Title>
+      {subTitle && <SubTitle>{subTitle}</SubTitle>}
       <InfoBoxWrapper>
         <InfoBox>
           <div>조회수</div>
@@ -57,7 +57,7 @@ const Rank = styled.div`
   position: absolute;
   color: #c9ab6a;
   top: 34px;
-  left: 110px;
+  left: 95px;
   font-weight: bold;
   font-size: 28px;
   line-height: 41px;
@@ -75,28 +75,33 @@ const ProfileWrapper = styled.div`
   width: 65px;
   height: 64px;
   top: 25px;
-  left: 180px;
+  left: 150px;
 `;
 
-const Profile = styled.div`
+const Profile = styled.div<{ url?: string }>`
   position: absolute;
-  background-image: url(${RannkProfile});
+  background-image: url(${({ url }) => url});
   background-size: cover;
   background-repeat: no-repeat;
   width: 60px;
   height: 60px;
   top: 27px;
-  left: 183px;
+  left: 153px;
+  border-radius: 100px;
 `;
 
-const Title = styled.div`
+const Title = styled.div<{ full: boolean }>`
   position: absolute;
   top: 38px;
-  left: 280px;
+  left: 248px;
   font-weight: bold;
   font-size: 28px;
   line-height: 41px;
   letter-spacing: -0.01em;
+  width: ${({ full }) => (full ? "385px" : "120px")};
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 
 const SubTitle = styled.div`
@@ -107,6 +112,10 @@ const SubTitle = styled.div`
   font-weight: 500;
   font-size: 18px;
   line-height: 26px;
+  width: 245px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 
 const InfoBoxWrapper = styled.div`
@@ -116,6 +125,7 @@ const InfoBoxWrapper = styled.div`
   position: absolute;
   right: 0;
   top: 43px;
+  text-align: center;
 `;
 
 const InfoBox = styled.div`
