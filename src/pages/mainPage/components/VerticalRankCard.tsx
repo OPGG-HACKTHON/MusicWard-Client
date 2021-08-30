@@ -132,6 +132,7 @@ const Title = styled.div<{ isFirstPlace: boolean }>`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  cursor: pointer;
 `;
 
 const SubTitle = styled.div<{ isFirstPlace: boolean }>`

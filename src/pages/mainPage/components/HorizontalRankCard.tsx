@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useCallback } from "react";
 import styled from "styled-components";
 
 import RandkingHorizontalCardBg from "assets/img/ranking-horizontal-card.svg";
@@ -7,6 +7,7 @@ import RannkProfileBorder from "assets/img/rank-profile-border.svg";
 import { RankCardProps } from "./VerticalRankCard";
 
 const HorizontalRankCard: FC<RankCardProps> = ({
+  id,
   rank,
   hitCount,
   wardCount,
@@ -14,13 +15,19 @@ const HorizontalRankCard: FC<RankCardProps> = ({
   title,
   subTitle,
   img,
+  onClick,
 }) => {
+  const handleClick = useCallback(() => {
+    onClick(id);
+  }, [onClick, id]);
   return (
     <RankingCard>
       <Rank>{rank}</Rank>
       <ProfileWrapper />
       <Profile url={img} />
-      <Title full={!subTitle}>{title}</Title>
+      <Title full={!subTitle} onClick={handleClick}>
+        {title}
+      </Title>
       {subTitle && <SubTitle>{subTitle}</SubTitle>}
       <InfoBoxWrapper>
         <InfoBox>
@@ -102,6 +109,7 @@ const Title = styled.div<{ full: boolean }>`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  cursor: pointer;
 `;
 
 const SubTitle = styled.div`

@@ -45,10 +45,14 @@ const Ranking: FC<RankingProps> = ({ onChange }) => {
   }, [category]);
   const handleClick = useCallback(
     (id: number) => {
-      console.log(id);
-      if (category === "champion") {
+      const isChampionCategory = category === "champion";
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: isChampionCategory ? "smooth" : "auto",
+      });
+      if (isChampionCategory) {
         onChange(id);
-        window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
         return;
       }
       history.push({
