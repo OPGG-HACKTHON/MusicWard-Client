@@ -10,6 +10,9 @@ import { modalState } from "recoil/modal";
 // import { auth, authType } from "recoil/auth";
 import axios from "axios";
 
+import qs from "qs";
+import queryString from "query-string";
+
 const LoginModal = () => {
   const [openModal, setOpenModal] = useRecoilState<boolean>(modalState);
   // const [, setLogin] = useRecoilState<authType>(auth);
@@ -23,9 +26,18 @@ const LoginModal = () => {
     const { data } = await axios({
       url: "https://server.music-ward.com/users/auth/google",
     });
-    console.log(data);
-    // handleClose();
+
+    const { access_token } = qs.parse(window.location.hash.substr(1));
+
+    console.log(access_token);
+    if (!access_token) {
+      window.location.assign(data.data.link);
+      return null;
+    }
   }, []);
+
+  const parsed = queryString.parse(location.search);
+  console.log(parsed);
 
   return (
     <>
