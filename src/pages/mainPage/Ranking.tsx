@@ -1,13 +1,66 @@
-import React, { useState, useCallback } from "react";
+import React, { FC, useState, useCallback } from "react";
 import styled from "styled-components";
 import HorizontalRankCard from "./components/HorizontalRankCard";
 import VerticalRankCardProps from "./components/VerticalRankCard";
+import axios from "axios";
+import { useEffect } from "react";
+import { useHistory } from "react-router-dom";
 
-const Ranking = () => {
+interface RankType {
+  id: number;
+  title: string;
+  sub_title: string;
+  view: number;
+  wards_total: number;
+  comments_total: number;
+  image_url: string;
+}
+
+interface RankingProps {
+  onChange: (id: number) => void;
+}
+
+const Ranking: FC<RankingProps> = ({ onChange }) => {
+  const history = useHistory();
   const [category, setCategory] = useState("champion");
-  const handleChange = useCallback((e) => {
-    setCategory(e.target.id);
-  }, []);
+  const [rankList, setRankList] = useState<Array<RankType>>([]);
+  const getRanking = async () => {
+    const { data } = await axios({
+      url: "https://server.music-ward.com/ranking",
+      params: {
+        type: category,
+      },
+    });
+    console.log(data);
+    setRankList(data.data);
+  };
+  const handleChange = useCallback(
+    (e) => {
+      setCategory(e.target.id);
+    },
+    [setCategory]
+  );
+  useEffect(() => {
+    getRanking();
+  }, [category]);
+  const handleClick = useCallback(
+    (id: number) => {
+      const isChampionCategory = category === "champion";
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: isChampionCategory ? "smooth" : "auto",
+      });
+      if (isChampionCategory) {
+        onChange(id);
+        return;
+      }
+      history.push({
+        pathname: "/playlist",
+      });
+    },
+    [category, onChange]
+  );
   return (
     <RankingSection>
       <RankingCategory>
@@ -29,41 +82,34 @@ const Ranking = () => {
         <Category htmlFor="playlist">플레이리스트</Category>
       </RankingCategory>
       <TopRankingCardWrapper>
-        <VerticalRankCardProps
-          rank={2}
-          title="가렌"
-          subTitle="데마시아의 힘"
-          hitCount={100}
-          wardCount={100}
-          reviewCount={100}
-        />
-        <VerticalRankCardProps
-          rank={1}
-          title="가렌"
-          subTitle="데마시아의 힘"
-          hitCount={100}
-          wardCount={100}
-          reviewCount={100}
-        />
-        <VerticalRankCardProps
-          rank={3}
-          title="가렌"
-          subTitle="데마시아의 힘"
-          hitCount={100}
-          wardCount={100}
-          reviewCount={100}
-        />
+        {[1, 0, 2].map((i) => (
+          <VerticalRankCardProps
+            key={i}
+            rank={i + 1}
+            id={rankList[i]?.id}
+            title={rankList[i]?.title}
+            subTitle={rankList[i]?.sub_title}
+            hitCount={rankList[i]?.view}
+            wardCount={rankList[i]?.wards_total}
+            reviewCount={rankList[i]?.comments_total}
+            img={rankList[i]?.image_url}
+            onClick={handleClick}
+          />
+        ))}
       </TopRankingCardWrapper>
       <RankingCardWrapper>
-        {[...Array(7)].map((i, index) => (
+        {rankList.slice(3, rankList.length).map((i, index) => (
           <HorizontalRankCard
-            key={`rank-card-${index}`}
+            id={i.id}
+            key={`rank-card-${i.id}`}
             rank={4 + index}
-            title="가렌"
-            subTitle="데마시아의 힘"
-            hitCount={100}
-            wardCount={100}
-            reviewCount={100}
+            title={i.title}
+            subTitle={category === "champion" ? i.sub_title : undefined}
+            hitCount={i.view}
+            wardCount={i.wards_total}
+            reviewCount={i.comments_total}
+            img={i.image_url}
+            onClick={handleClick}
           />
         ))}
       </RankingCardWrapper>

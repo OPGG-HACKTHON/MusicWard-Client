@@ -1,33 +1,40 @@
-import React, { FC } from "react";
+import React, { FC, useCallback } from "react";
 import styled from "styled-components";
-
 import RandkingCardBg from "assets/img/ranking-card.svg";
 import Rank1 from "assets/img/rank1.svg";
 import Rank2 from "assets/img/rank2.svg";
 import Rank3 from "assets/img/rank3.svg";
 import RannkProfileBorder from "assets/img/rank-profile-border.svg";
-import RannkProfile from "assets/img/rank-profile.svg";
 
 export interface RankCardProps {
+  id: number;
   rank: number;
   hitCount: number;
   wardCount: number;
   reviewCount: number;
   title: string;
-  subTitle: string;
+  subTitle?: string;
+  img?: string;
+  onClick: (id: number) => void;
 }
 
 const rankIconArr = [Rank1, Rank2, Rank3];
 
 const VerticalRankCard: FC<RankCardProps> = ({
+  id,
   rank,
   hitCount,
   wardCount,
   reviewCount,
   title,
   subTitle,
+  img,
+  onClick,
 }) => {
   const isFirstPlace = rank === 1;
+  const handleClick = useCallback(() => {
+    onClick(id);
+  }, [onClick, id]);
   return (
     <RankingCard
       isFirstPlace={isFirstPlace}
@@ -35,8 +42,10 @@ const VerticalRankCard: FC<RankCardProps> = ({
     >
       <RankIcon rank={rank} />
       <ProfileWrapper isFirstPlace={isFirstPlace} />
-      <Profile isFirstPlace={isFirstPlace} />
-      <Title isFirstPlace={isFirstPlace}>{title}</Title>
+      <Profile isFirstPlace={isFirstPlace} url={img} />
+      <Title isFirstPlace={isFirstPlace} onClick={handleClick}>
+        {title}
+      </Title>
       <SubTitle isFirstPlace={isFirstPlace}>{subTitle}</SubTitle>
       <RankInfoWrapper isFirstPlace={isFirstPlace}>
         <InfoBoxWrapper isFirstPlace={isFirstPlace}>
@@ -63,6 +72,7 @@ export default VerticalRankCard;
 const RankingCard = styled.div<{
   isFirstPlace: boolean;
   margin: string;
+  url?: string;
 }>`
   background-image: url(${RandkingCardBg});
   height: ${({ isFirstPlace }) => (isFirstPlace ? "478px" : "387px")};
@@ -97,8 +107,8 @@ const ProfileWrapper = styled.div<{ isFirstPlace: boolean }>`
   left: ${({ isFirstPlace }) => `calc(50% - ${isFirstPlace ? 82 : 68}px)`};
   top: ${({ isFirstPlace }) => (isFirstPlace ? "74px" : "56px")};
 `;
-const Profile = styled.div<{ isFirstPlace: boolean }>`
-  background-image: url(${RannkProfile});
+const Profile = styled.div<{ isFirstPlace: boolean; url?: string }>`
+  background-image: url(${({ url }) => url});
   background-size: cover;
   background-repeat: no-repeat;
   position: absolute;
@@ -106,6 +116,7 @@ const Profile = styled.div<{ isFirstPlace: boolean }>`
   height: ${({ isFirstPlace }) => (isFirstPlace ? "156px" : "126px")};
   left: ${({ isFirstPlace }) => `calc(50% - ${isFirstPlace ? 77 : 62}px)`};
   top: ${({ isFirstPlace }) => (isFirstPlace ? "76px" : "59px")};
+  border-radius: 100px;
 `;
 
 const Title = styled.div<{ isFirstPlace: boolean }>`
@@ -118,6 +129,10 @@ const Title = styled.div<{ isFirstPlace: boolean }>`
   bottom: ${({ isFirstPlace }) => (isFirstPlace ? "182px" : "142px")};
   left: ${({ isFirstPlace }) => `calc(50% - ${isFirstPlace ? 175 : 140}px)`};
   width: ${({ isFirstPlace }) => (isFirstPlace ? "350px" : "280px")};
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
 `;
 
 const SubTitle = styled.div<{ isFirstPlace: boolean }>`
@@ -131,6 +146,9 @@ const SubTitle = styled.div<{ isFirstPlace: boolean }>`
   bottom: ${({ isFirstPlace }) => (isFirstPlace ? "154px" : "116px")};
   left: ${({ isFirstPlace }) => `calc(50% - ${isFirstPlace ? 175 : 140}px)`};
   width: ${({ isFirstPlace }) => (isFirstPlace ? "350px" : "280px")};
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 
 const InfoBoxWrapper = styled.div<{ isFirstPlace: boolean }>`

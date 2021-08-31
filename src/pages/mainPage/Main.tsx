@@ -58,7 +58,7 @@ const Main = () => {
         list={championList}
         onChange={handleChangeChampion}
       />
-      <Ranking />
+      <Ranking onChange={handleChangeChampion} />
     </>
   );
 };
