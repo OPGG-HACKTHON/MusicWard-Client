@@ -37,7 +37,24 @@ const LoginModal = () => {
   }, []);
 
   const parsed = queryString.parse(location.search);
-  console.log(parsed);
+
+  const login = async () => {
+    alert(`api 호출 ${parsed.code}`);
+    if (parsed.code) {
+      const { data } = await axios({
+        url: "https://server.music-ward.com/users/auth/google",
+        method: "post",
+        params: {
+          code: parsed.code,
+        },
+      });
+      console.log("로그인", data);
+    }
+  };
+
+  if (parsed.code) {
+    login();
+  }
 
   return (
     <>
