@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import Launchpad from "./Launchpad";
 import PlayList from "./PlayList";
 import Ranking from "./Ranking";
-import axios from "axios";
+import axiosInstance from "utils/axiosConfig";
 
 export type Champion = {
   champion_id: number;
@@ -29,18 +29,12 @@ const Main = () => {
     title: "",
   });
   const getChampionList = async () => {
-    const { data } = await axios({
-      url: "https://server.music-ward.com/championlist",
-      method: "get",
-    });
-    setChampionList(data.data.champion_list);
+    const { data } = await axiosInstance.get("championlist");
+    setChampionList(data.champion_list);
   };
   const getChampion = async (id: number) => {
-    const { data } = await axios({
-      url: `https://server.music-ward.com/champion/${id}`,
-      method: "get",
-    });
-    setSelectedChampion(data.data);
+    const { data } = await axiosInstance.get(`champion/${id}`);
+    setSelectedChampion(data);
   };
   const handleChangeChampion = useCallback(async (id: number) => {
     getChampion(id);

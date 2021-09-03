@@ -7,7 +7,7 @@ import Google from "assets/icon/i-google.svg";
 import { useCallback } from "react";
 import { useRecoilState } from "recoil";
 import { modalState } from "recoil/modal";
-import axios from "axios";
+import axiosInstance from "utils/axiosConfig";
 
 const LoginModal = () => {
   const [openModal, setOpenModal] = useRecoilState<boolean>(modalState);
@@ -16,10 +16,9 @@ const LoginModal = () => {
   }, [setOpenModal]);
   const handleLogin = useCallback(
     (type: string) => async () => {
-      const {
-        data: { data },
-      } = await axios({
-        url: `https://server.music-ward.com/users/auth/${type}`,
+      const { data } = await axiosInstance({
+        url: `users/auth/${type}`,
+        method: "get",
       });
       window.location.assign(data.link);
     },

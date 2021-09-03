@@ -8,19 +8,17 @@ import PlayListPage from "pages/playListPage/PlayListPage";
 import { SearchCategory, SearchResultList } from "pages/searchPage";
 import { Redirect, Route, Switch } from "react-router-dom";
 import PrivateRoute from "router/PrivateRoute";
-import axios from "axios";
 import { useRecoilState } from "recoil";
 import { token, TokenType } from "recoil/auth";
 import queryString from "query-string";
+import axiosInstance from "utils/axiosConfig";
 
 const Routes = () => {
   const [, setToken] = useRecoilState<TokenType>(token);
   const parsed = queryString.parse(location.search);
   const getToken = async () => {
-    const {
-      data: { data },
-    } = await axios({
-      url: "https://server.music-ward.com/users/auth/google",
+    const { data } = await axiosInstance({
+      url: "users/auth/google",
       method: "post",
       params: {
         code: parsed.code,

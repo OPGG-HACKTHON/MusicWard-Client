@@ -42,3 +42,10 @@ export const isLogined = selector({
     return !!get(token).accessToken;
   },
 });
+
+export const accessToken = selector({
+  key: "accessToken",
+  get: ({ get }) => {
+    return get(token).accessToken;
+  },
+});

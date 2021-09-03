@@ -1,10 +1,9 @@
-import React, { FC, useState, useCallback } from "react";
+import React, { FC, useState, useCallback, useEffect } from "react";
 import styled from "styled-components";
 import HorizontalRankCard from "./components/HorizontalRankCard";
 import VerticalRankCardProps from "./components/VerticalRankCard";
-import axios from "axios";
-import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
+import axiosInstance from "utils/axiosConfig";
 
 interface RankType {
   id: number;
@@ -25,13 +24,14 @@ const Ranking: FC<RankingProps> = ({ onChange }) => {
   const [category, setCategory] = useState("champion");
   const [rankList, setRankList] = useState<Array<RankType>>([]);
   const getRanking = async () => {
-    const { data } = await axios({
-      url: "https://server.music-ward.com/ranking",
+    const { data } = await axiosInstance({
+      url: "ranking",
+      method: "get",
       params: {
         type: category,
       },
     });
-    setRankList(data.data);
+    setRankList(data);
   };
   const handleChange = useCallback(
     (e) => {
