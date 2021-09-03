@@ -31,7 +31,6 @@ const Ranking: FC<RankingProps> = ({ onChange }) => {
         type: category,
       },
     });
-    console.log(data);
     setRankList(data.data);
   };
   const handleChange = useCallback(
@@ -71,7 +70,7 @@ const Ranking: FC<RankingProps> = ({ onChange }) => {
           name="category"
           onChange={handleChange}
         />
-        <Category htmlFor="champion">챔피온</Category>
+        <Category htmlFor="champion">챔피언</Category>
         <CategoryInput
           checked={category === "playlist"}
           type="radio"

@@ -74,6 +74,7 @@ const PlayListSection = styled.section<{ url: string }>`
   background-size: cover;
   width: 100%;
   position: relative;
+  background-position: 77.1687% 20.5788%;
 `;
 
 const GradientSection = styled.div`

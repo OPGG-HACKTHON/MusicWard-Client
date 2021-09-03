@@ -54,7 +54,7 @@ const SliderWrapper = styled.div<{ position: string }>`
   width: 1220px;
   position: ${({ position }) => position};
   z-index: 12;
-  bottom: -81px;
+  bottom: -120px;
   left: calc(50% - 610px);
   .slick-dots.slick-thumb {
     display: flex !important;
@@ -62,7 +62,7 @@ const SliderWrapper = styled.div<{ position: string }>`
     justify-content: center;
     padding: 0 22px;
     box-sizing: border-box;
-    bottom: -65px;
+    bottom: -40px;
   }
   .slick-dots.slick-thumb li {
     flex: 1;

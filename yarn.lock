@@ -1970,6 +1970,13 @@
   resolved "https://registry.yarnpkg.com/@types/q/-/q-1.5.4.tgz"
   integrity sha512-1HcDas8SEj4z1Wc696tH56G8OlRaH/sqZOynNNB+HF0WOeXPaxTtbYzJY2oEfiUxjSKjhCKr+MvR7dCHcEelug==
 
+"@types/query-string@^6.3.0":
+  version "6.3.0"
+  resolved "https://registry.yarnpkg.com/@types/query-string/-/query-string-6.3.0.tgz#b6fa172a01405abcaedac681118e78429d62ea39"
+  integrity sha512-yuIv/WRffRzL7cBW+sla4HwBZrEXRNf1MKQ5SklPEadth+BKbDxiVG8A3iISN5B3yC4EeSCzMZP8llHTcUhOzQ==
+  dependencies:
+    query-string "*"
+
 "@types/react-dom@^17.0.0":
   version "17.0.9"
   resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-17.0.9.tgz"
@@ -2009,6 +2016,13 @@
     "@types/prop-types" "*"
     "@types/scheduler" "*"
     csstype "^3.0.2"
+
+"@types/recoil@^0.0.9":
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/@types/recoil/-/recoil-0.0.9.tgz#a5efceda791ee2720418e232445bb34f4f2e4be9"
+  integrity sha512-dXKcvdzQbkFCcULgxhtc/3shoCNqsspRUY1KwIUYcAzgS0qY7+IxlcjRjq+9PizFnzKrHESllkbezqCMstPmQA==
+  dependencies:
+    recoil "*"
 
 "@types/resolve@0.0.8":
   version "0.0.8"
@@ -9967,15 +9981,7 @@ qs@~6.5.2:
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.5.2.tgz"
   integrity sha512-N5ZAX4/LxJmF+7wN74pUD6qAh9/wnvdQcjq9TZjevvXzSUo7bfmw91saqMjzGS2xq91/odN2dW/WOl7qQHNDGA==
 
-query-string@^4.1.0:
-  version "4.3.4"
-  resolved "https://registry.yarnpkg.com/query-string/-/query-string-4.3.4.tgz"
-  integrity sha1-u7aTucqRXCMlFbIosaArYJBD2+s=
-  dependencies:
-    object-assign "^4.1.0"
-    strict-uri-encode "^1.0.0"
-
-query-string@^7.0.1:
+query-string@*, query-string@^7.0.1:
   version "7.0.1"
   resolved "https://registry.yarnpkg.com/query-string/-/query-string-7.0.1.tgz#45bd149cf586aaa582dffc7ec7a8ad97dd02f75d"
   integrity sha512-uIw3iRvHnk9to1blJCG3BTc+Ro56CBowJXKmNNAm3RulvPBzWLRqKSiiDk+IplJhsydwtuNMHi8UGQFcCLVfkA==
@@ -9984,6 +9990,14 @@ query-string@^7.0.1:
     filter-obj "^1.1.0"
     split-on-first "^1.0.0"
     strict-uri-encode "^2.0.0"
+
+query-string@^4.1.0:
+  version "4.3.4"
+  resolved "https://registry.yarnpkg.com/query-string/-/query-string-4.3.4.tgz"
+  integrity sha1-u7aTucqRXCMlFbIosaArYJBD2+s=
+  dependencies:
+    object-assign "^4.1.0"
+    strict-uri-encode "^1.0.0"
 
 querystring-es3@^0.2.0:
   version "0.2.1"
@@ -10316,7 +10330,7 @@ readdirp@~3.5.0:
   dependencies:
     picomatch "^2.2.1"
 
-recoil@^0.4.1:
+recoil@*, recoil@^0.4.1:
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/recoil/-/recoil-0.4.1.tgz#1cb2171bc98d41361507131a059d7c3525d8c4fe"
   integrity sha512-vp6KPwlHOjJ4bJofmdDchmgI9ilMTCoUisK8/WYLl8dThH7e7KmtZttiLgvDb2Em99dUfTEsk8vT8L1nUMgqXQ==
