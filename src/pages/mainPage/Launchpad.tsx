@@ -6,12 +6,12 @@ import Mages from "assets/icon/i-mages.png";
 import Marksmen from "assets/icon/i-marksmen.png";
 import Supports from "assets/icon/i-supports.png";
 import Tanks from "assets/icon/i-tanks.png";
-import LaunchpadBg from "assets/img/launchpad-bg.png";
-import SelectArrow from "assets/icon/i-select.svg";
+import LaunchpadBg from "assets/img/launchpad-bg.svg";
 import InputSearch from "assets/icon/i-search.svg";
 
 import { Icon } from "./PlayList";
 import { Champion } from "./Main";
+import { useState } from "react";
 
 type ChampionList = {
   champion_id: number;
@@ -33,11 +33,17 @@ const Launchpad: FC<LaunchpadProps> = ({
   onChange,
 }) => {
   const IconArr = [Tanks, Fighters, Assassins, Mages, Marksmen, Supports];
-  const handleClick = (id: number) => () => {
+  const [selectedIcon, setSelectedIcon] = useState<string>("");
+  const handleClickChampion = (id: number) => () => {
     onChange(id);
+  };
+  const handleClickCategory = (icon: string) => () => {
+    setSelectedIcon(icon);
+    // TODO: 해당 카테고리 api 호출
   };
   return (
     <LaunchpadSection>
+      <HorizontalLine />
       <LaunchPadBg>
         <Description>
           <div>런치패드로</div>
@@ -48,20 +54,18 @@ const Launchpad: FC<LaunchpadProps> = ({
             <LaunchpadFilter>
               <LeftFilter>
                 {IconArr.map((i) => (
-                  <Icon
+                  <FilterIcon
                     key={i}
                     src={i}
                     width={34}
                     height={34}
                     marginRight={10}
-                    opacity={0.4}
+                    opacity={i === selectedIcon ? 1 : 0.4}
+                    onClick={handleClickCategory(i)}
                   />
                 ))}
               </LeftFilter>
               <RightFilter>
-                <Select value="이름순 정렬">
-                  <option value="이름순 정렬">이름순 정렬</option>
-                </Select>
                 <Input type="text" placeholder="검색" />
               </RightFilter>
             </LaunchpadFilter>
@@ -71,7 +75,7 @@ const Launchpad: FC<LaunchpadProps> = ({
                   key={i.champion_id}
                   url={i.image_url}
                   selected={i.champion_id === selectedChampion.champion_id}
-                  onClick={handleClick(Number(i.champion_id))}
+                  onClick={handleClickChampion(Number(i.champion_id))}
                 />
               ))}
             </LaunchpadWrapper>
@@ -86,16 +90,28 @@ export default Launchpad;
 
 const LaunchpadSection = styled.section`
   margin-top: 280px;
+  position: relative;
+`;
+
+const HorizontalLine = styled.hr`
+  position: absolute;
+  width: 100%;
+  height: 25px;
+  top: 352px;
+  left: 0;
+  background-color: #285766;
+  filter: blur(25px);
 `;
 
 const LaunchPadBg = styled.div`
   background-image: url(${LaunchpadBg});
-  width: 1102px;
+  width: 1104px;
   height: 865px;
   background-repeat: no-repeat;
-  background-size: cover;
+  background-size: contain;
   margin: 0 auto;
   position: relative;
+  background-position-x: 13px;
 `;
 const Description = styled.div`
   position: absolute;
@@ -127,14 +143,18 @@ const LaunpadInner = styled.div`
   width: 882px;
   height: 742px;
   background: conic-gradient(
-    #0c1c2d,
-    #0d1f32,
-    #0e2235,
-    #000204,
-    #0e2235,
-    #0d1f32,
-    #0c1c2d
+    from 180deg at 50% 50%,
+    #000203 0deg,
+    #0e2135 51.73deg,
+    #0a1826 88.44deg,
+    #0e2135 135.74deg,
+    #0b1b2b 180.1deg,
+    #0e2135 225.74deg,
+    #060f17 268.79deg,
+    #0e2235 307.46deg,
+    #000203 360deg
   );
+  border-radius: 20px;
   margin: 0 auto;
   border-radius: 20px;
   padding: 20px 35px 60px 25px;
@@ -157,23 +177,15 @@ const LaunchpadFilter = styled.div`
 const LeftFilter = styled.div`
   display: flex;
 `;
+
+const FilterIcon = styled(Icon)`
+  cursor: pointer;
+`;
+
 const RightFilter = styled.div`
   input {
     margin-left: 10px;
   }
-`;
-
-const Select = styled.select`
-  width: 115px;
-  height: 30px;
-  border: 2px solid #9b8a61;
-  box-shadow: none;
-  border-radius: 4px;
-  color: #f4ecd987;
-  font-size: 14px;
-  padding-left: 10px;
-  appearance: none;
-  background: url(${SelectArrow}) no-repeat right 9px center #12191c;
 `;
 
 const Input = styled.input`
@@ -186,7 +198,7 @@ const Input = styled.input`
   font-size: 14px;
   padding-left: 25px;
   box-sizing: border-box;
-  background: url(${InputSearch}) no-repeat right 9px center #12191c;
+  background: url(${InputSearch}) no-repeat left 8px center #12191c;
 `;
 
 const LaunchpadItem = styled.div<{ url: string; selected: boolean }>`
