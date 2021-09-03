@@ -31,7 +31,6 @@ const Ranking: FC<RankingProps> = ({ onChange }) => {
         type: category,
       },
     });
-    console.log(data);
     setRankList(data.data);
   };
   const handleChange = useCallback(
