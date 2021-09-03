@@ -7,55 +7,24 @@ import Google from "assets/icon/i-google.svg";
 import { useCallback } from "react";
 import { useRecoilState } from "recoil";
 import { modalState } from "recoil/modal";
-// import { auth, authType } from "recoil/auth";
 import axios from "axios";
-
-import qs from "qs";
-import queryString from "query-string";
 
 const LoginModal = () => {
   const [openModal, setOpenModal] = useRecoilState<boolean>(modalState);
-  // const [, setLogin] = useRecoilState<authType>(auth);
   const handleClose = useCallback(() => {
     setOpenModal(false);
   }, [setOpenModal]);
-
-  // FIXME: 임시 로그인
-  const handleLogin = useCallback(async () => {
-    // setLogin({ token: "1111", id: "1111", name: "1111", email: "1111" });
-    const { data } = await axios({
-      url: "https://server.music-ward.com/users/auth/google",
-    });
-
-    const { access_token } = qs.parse(window.location.hash.substr(1));
-
-    console.log(access_token);
-    if (!access_token) {
-      window.location.assign(data.data.link);
-      return null;
-    }
-  }, []);
-
-  const parsed = queryString.parse(location.search);
-
-  const login = async () => {
-    alert(`api 호출 ${parsed.code}`);
-    if (parsed.code) {
-      const { data } = await axios({
-        url: "https://server.music-ward.com/users/auth/google",
-        method: "post",
-        params: {
-          code: parsed.code,
-        },
+  const handleLogin = useCallback(
+    (type: string) => async () => {
+      const {
+        data: { data },
+      } = await axios({
+        url: `https://server.music-ward.com/users/auth/${type}`,
       });
-      console.log("로그인", data);
-    }
-  };
-
-  if (parsed.code) {
-    login();
-  }
-
+      window.location.assign(data.link);
+    },
+    []
+  );
   return (
     <>
       {openModal && (
@@ -65,10 +34,16 @@ const LoginModal = () => {
             <ModalContent>
               <Logo />
               <Text>연동 서비스로 간편 로그인하세요.</Text>
-              <LoginButton isGoogle type="button" onClick={handleLogin}>
+              <LoginButton
+                isGoogle
+                type="button"
+                onClick={handleLogin("google")}
+              >
                 Google 연동하기
               </LoginButton>
-              <LoginButton type="button">spotify 연동하기</LoginButton>
+              <LoginButton type="button" onClick={handleLogin("spotify")}>
+                spotify 연동하기
+              </LoginButton>
             </ModalContent>
           </ModalWrapper>
         </Wrapper>
