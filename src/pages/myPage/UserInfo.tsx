@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import UserIcon from "components/user/UserIcon";
@@ -6,6 +6,8 @@ import UserIcon from "components/user/UserIcon";
 import PlayYoutube from "assets/img/mypage/play-youtube.png";
 import PlaySpotify from "assets/img/mypage/play-spotify.png";
 import GoogleAccount from "assets/img/mypage/google-account.png";
+import { useResetRecoilState } from "recoil";
+import { token } from "recoil/auth";
 
 const UserInfo = () => {
   const [userId] = useState("와드깔고승리하자");
@@ -17,6 +19,10 @@ const UserInfo = () => {
       pathname: "/editpage",
     });
   };
+  const logout = useResetRecoilState(token);
+  const handleLogout = useCallback(() => {
+    logout();
+  }, [history]);
 
   return (
     <Container>
@@ -42,7 +48,7 @@ const UserInfo = () => {
       </MyInfoBox>
       <Functions>
         <FunctionButton onClick={clickToEdit}>수정</FunctionButton>
-        <FunctionButton>로그아웃</FunctionButton>
+        <FunctionButton onClick={handleLogout}>로그아웃</FunctionButton>
       </Functions>
     </Container>
   );
@@ -114,7 +120,7 @@ const Functions = styled.section`
   margin-left: auto;
 `;
 
-const FunctionButton = styled.div`
+const FunctionButton = styled.button`
   display: inline-block;
   padding: 5px 15px;
   margin: 4px;
