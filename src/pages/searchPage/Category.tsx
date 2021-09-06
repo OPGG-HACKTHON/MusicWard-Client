@@ -4,7 +4,9 @@ import { useHistory } from "react-router-dom";
 
 import SelectArrow from "assets/icon/i-select.svg";
 import InputSearch from "assets/icon/i-search.svg";
-import PlayListItem from "components/PlayListItem";
+import PlayListItem, { PlayListItemProps } from "components/PlayListItem";
+import { useEffect } from "react";
+import axiosInstance from "utils/axiosConfig";
 
 export const options = [
   { value: "summoner", text: "소환사명" },
@@ -15,19 +17,7 @@ export const options = [
 
 const Category = () => {
   const history = useHistory();
-  const [PlayList] = useState(
-    [...Array(8)].map((i, index) => {
-      return {
-        title: `데마시아의 힘을 느껴보자${index}`,
-        listCount: index,
-        wardCount: index * 10,
-        imgUrl:
-          index % 2 === 0
-            ? "https://i.ytimg.com/vi/veRIGU--tec/maxresdefault.jpg"
-            : "https://i.scdn.co/image/ab67616d0000b2736fa6b0d2a6f7e50c4b45939f",
-      };
-    })
-  );
+  const [PlayList, setPlayList] = useState<Array<PlayListItemProps>>([]);
   const [searchType, setSearchType] = useState(options[0].value);
   const [searchText, setSearchText] = useState("");
   const handleChangeSelect = useCallback(
@@ -48,7 +38,7 @@ const Category = () => {
       search: `type=${searchType}&text=${searchText}`,
     });
   }, [searchType, searchText]);
-  const onCheckEnter = useCallback(
+  const handleCheckEnter = useCallback(
     (e) => {
       if (e.key === "Enter") {
         search();
@@ -56,6 +46,29 @@ const Category = () => {
     },
     [search]
   );
+  const getRanking = async () => {
+    const { data } = await axiosInstance({
+      url: "ranking",
+      params: {
+        type: "playlist",
+      },
+    });
+    setPlayList(
+      data
+        .splice(0, 8)
+        .map(
+          (i: { title: string; wards_total: string; image_url?: string }) => ({
+            title: i.title,
+            listCount: 10, // FIXME: api에 플레이리스트 곡수 포함시켜달라고 해야함
+            wardCount: i.wards_total,
+            imgUrl: i.image_url,
+          })
+        )
+    );
+  };
+  useEffect(() => {
+    getRanking();
+  }, []);
   return (
     <>
       <SearchBar>
@@ -69,7 +82,7 @@ const Category = () => {
         <Input
           value={searchText}
           onChange={handleChangeInput}
-          onKeyPress={onCheckEnter}
+          onKeyPress={handleCheckEnter}
         />
       </SearchBar>
       <PlayListCategory>
