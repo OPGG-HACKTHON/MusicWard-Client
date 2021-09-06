@@ -26,7 +26,6 @@ const Ranking: FC<RankingProps> = ({ onChange }) => {
   const getRanking = async () => {
     const { data } = await axiosInstance({
       url: "ranking",
-      method: "get",
       params: {
         type: category,
       },
