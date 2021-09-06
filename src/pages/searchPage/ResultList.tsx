@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import queryString from "query-string";
@@ -6,26 +6,17 @@ import SelectArrow from "assets/icon/i-select.svg";
 import InputSearch from "assets/icon/i-search.svg";
 import SearchResultList from "./components/SearchResultList";
 import { options } from "./Category";
+import axiosInstance from "utils/axiosConfig";
+import { PlayListItemProps } from "components/PlayListItem";
 
 const ResultList = () => {
   const history = useHistory();
   const { type, text } = queryString.parse(useLocation().search);
-  const [list] = useState(
-    [...Array(8)].map((i, index) => {
-      return {
-        title: `데마시아의 힘을 느껴보자${index}`,
-        listCount: index,
-        wardCount: index * 10,
-        imgUrl:
-          index % 2 === 0
-            ? "https://i.ytimg.com/vi/veRIGU--tec/maxresdefault.jpg"
-            : "https://i.scdn.co/image/ab67616d0000b2736fa6b0d2a6f7e50c4b45939f",
-      };
-    })
-  );
-
-  const [searchType, setSearchType] = useState(options[0].value);
-  const [searchText, setSearchText] = useState("");
+  const [listByRank, setListByRank] = useState([]);
+  const [listByCreatedDate, setListByCreatedDate] = useState([]);
+  const [rankList, setRankList] = useState<Array<PlayListItemProps>>([]);
+  const [searchType, setSearchType] = useState(type || "summors");
+  const [searchText, setSearchText] = useState(text || "");
   const handleChangeSelect = useCallback(
     (e) => {
       setSearchType(e.target.value);
@@ -43,6 +34,8 @@ const ResultList = () => {
       pathname: "/search/list",
       search: `type=${searchType}&text=${searchText}`,
     });
+    getPlayListByRank();
+    getPlayListByCreatedDate();
   }, [searchType, searchText]);
   const onCheckEnter = useCallback(
     (e) => {
@@ -52,7 +45,83 @@ const ResultList = () => {
     },
     [search]
   );
-
+  const getPlayListByRank = async () => {
+    const { data } = await axiosInstance({
+      url: `search/${searchType}`,
+      params: {
+        query: searchText,
+        sort: "view",
+        page: 1,
+        size: 50,
+        provider: "SPOTIFY", // TODO: 이 구분값을 무슨 기준으로 넘겨줘야하는거지?
+      },
+    });
+    setListByRank(
+      data.map(
+        (i: {
+          title: string;
+          tracks: { total: number };
+          wards: { total: number };
+          image?: { url?: string };
+        }) => ({
+          title: i.title,
+          listCount: i.tracks.total,
+          wardCount: i.wards.total,
+          imgUrl: i.image?.url,
+        })
+      )
+    );
+  };
+  const getPlayListByCreatedDate = async () => {
+    const { data } = await axiosInstance({
+      url: `search/${searchType}`,
+      params: {
+        query: searchText,
+        sort: "created_date",
+        page: 1,
+        size: 50,
+        provider: "SPOTIFY",
+      },
+    });
+    setListByCreatedDate(
+      data.map(
+        (i: {
+          title: string;
+          tracks: { total: number };
+          wards: { total: number };
+          image?: { url?: string };
+        }) => ({
+          title: i.title,
+          listCount: i.tracks.total,
+          wardCount: i.wards.total,
+          imgUrl: i.image?.url,
+        })
+      )
+    );
+  };
+  const getRanking = async () => {
+    const { data } = await axiosInstance({
+      url: "ranking",
+      params: {
+        type: "playlist",
+      },
+    });
+    setRankList(
+      data.map(
+        (i: { title: string; wards_total: string; image_url?: string }) => ({
+          title: i.title,
+          listCount: 10, // FIXME: api에 플레이리스트 곡수 포함시켜달라고 해야함
+          wardCount: i.wards_total,
+          imgUrl: i.image_url,
+        })
+      )
+    );
+  };
+  useEffect(() => {
+    getPlayListByRank();
+    getPlayListByCreatedDate();
+    getRanking();
+  }, []);
   return (
     <Wrapper>
       <SearchWrapper>
@@ -78,20 +147,28 @@ const ResultList = () => {
       <SearchResultList
         title={
           <>
-            <SearchText>{text}</SearchText> 검색하신 결과입니다!
+            <SearchText>{text}</SearchText> (으)로 검색하신 검색결과입니다.
           </>
         }
-        subTitle={`${text} 검색하신 분들이 즐겨 듣는 플레이리스트에요!`}
-        items={list}
+        subTitle={
+          listByRank.length === 0
+            ? "검색하신 결과가 없습니다."
+            : `${text} (으)로 검색하신 분들이 즐겨 듣는 플레이리스트에요!`
+        }
+        items={listByRank}
       />
       <SearchResultList
         title={
-          <>
-            <SearchText>{text}</SearchText> 검색하신 결과입니다!
-          </>
+          listByRank.length === 0
+            ? "인기 플레이리스트 검색결과입니다."
+            : "플레이리스트 검색결과입니다."
         }
-        subTitle="인기 플레이리스트에요!"
-        items={list}
+        subTitle={
+          listByRank.length === 0
+            ? "감상을 추천드려요!"
+            : "최근 추가된 플레이리스트를 감상해보세요!"
+        }
+        items={listByRank.length === 0 ? rankList : listByCreatedDate}
       />
     </Wrapper>
   );

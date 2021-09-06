@@ -20,7 +20,11 @@ const SearchResultList: FC<SearchResultListProps> = ({
         <Title>{title}</Title>
         <SubTitle>{subTitle}</SubTitle>
       </TitleWrapper>
-      <Carousel items={items} position="block" />
+      {items.length === 0 ? (
+        <EmptyImg />
+      ) : (
+        <Carousel items={items} position="block" />
+      )}
     </ResultWrapper>
   );
 };
@@ -50,4 +54,11 @@ const SubTitle = styled.div`
   line-height: 24px;
   margin-top: 13px;
   margin-bottom: 40px;
+`;
+
+const EmptyImg = styled.div`
+  width: 200px;
+  height: 200px;
+  /* FIXME: empty image 추가 */
+  background-color: white;
 `;
