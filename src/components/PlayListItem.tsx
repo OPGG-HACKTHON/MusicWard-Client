@@ -84,14 +84,7 @@ const SliderItemGradient = styled.div`
   width: 100%;
   bottom: 0;
   left: 0;
-  background: linear-gradient(
-    to bottom,
-    rgba(20, 20, 20, 0) 5%,
-    rgba(20, 20, 20, 0.25) 35%,
-    rgba(20, 20, 20, 0.5) 55%,
-    rgba(20, 20, 20, 0.75) 75%,
-    rgba(20, 20, 20, 1) 100%
-  );
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 69.05%);
 `;
 const ItemWrappder = styled.div`
   position: absolute;

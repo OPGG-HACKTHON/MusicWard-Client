@@ -2,6 +2,7 @@ import Carousel from "components/Carousel";
 import { PlayListItemProps } from "components/PlayListItem";
 import React, { FC } from "react";
 import styled from "styled-components";
+import EmptyImg from "assets/img/empty-img.svg";
 
 interface SearchResultListProps {
   title: React.ReactNode;
@@ -20,7 +21,11 @@ const SearchResultList: FC<SearchResultListProps> = ({
         <Title>{title}</Title>
         <SubTitle>{subTitle}</SubTitle>
       </TitleWrapper>
-      <Carousel items={items} position="block" />
+      {items.length === 0 ? (
+        <EmptyBox />
+      ) : (
+        <Carousel items={items} position="block" />
+      )}
     </ResultWrapper>
   );
 };
@@ -50,4 +55,14 @@ const SubTitle = styled.div`
   line-height: 24px;
   margin-top: 13px;
   margin-bottom: 40px;
+`;
+
+const EmptyBox = styled.div`
+  width: 200px;
+  height: 200px;
+  margin: 0 22px;
+  background: url(${EmptyImg});
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center; ;;;;;;;;;;;;
 `;

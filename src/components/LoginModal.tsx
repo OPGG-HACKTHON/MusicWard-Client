@@ -18,7 +18,6 @@ const LoginModal = () => {
     (type: string) => async () => {
       const { data } = await axiosInstance({
         url: `users/auth/${type}`,
-        method: "get",
       });
       window.location.assign(data.link);
     },

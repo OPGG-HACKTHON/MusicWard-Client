@@ -27,7 +27,7 @@ const Carousel: FC<SliderProps> = ({
         dotsClass="slick-dots slick-thumb"
         infinite
         speed={500}
-        slidesToShow={5}
+        slidesToShow={items.length < 5 ? items.length : 5}
         slidesToScroll={5}
         variableWidth
         customPaging={() => <div className="slick-dots" />}
