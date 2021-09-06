@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useEffect, useCallback } from "react";
 import styled from "styled-components";
 import Fighters from "assets/icon/i-fighters.png";
 import Assassins from "assets/icon/i-assassins.png";
@@ -12,6 +12,7 @@ import InputSearch from "assets/icon/i-search.svg";
 import { Icon } from "./PlayList";
 import { Champion } from "./Main";
 import { useState } from "react";
+import axiosInstance from "utils/axiosConfig";
 
 type ChampionList = {
   champion_id: number;
@@ -21,26 +22,67 @@ type ChampionList = {
   image_url: string;
 };
 
+type IconType = {
+  position?: string;
+  img?: string;
+};
+
 interface LaunchpadProps {
-  list: Array<ChampionList>;
   selectedChampion: Champion;
   onChange: (id: number) => void;
 }
 
-const Launchpad: FC<LaunchpadProps> = ({
-  list,
-  selectedChampion,
-  onChange,
-}) => {
-  const IconArr = [Tanks, Fighters, Assassins, Mages, Marksmen, Supports];
-  const [selectedIcon, setSelectedIcon] = useState<string>("");
+const Launchpad: FC<LaunchpadProps> = ({ selectedChampion, onChange }) => {
+  const IconArr: Array<IconType> = [
+    { position: "Tank", img: Tanks },
+    {
+      position: "Fighter",
+      img: Fighters,
+    },
+    { position: "Assassin", img: Assassins },
+    { position: "Mage", img: Mages },
+    { position: "Marksman", img: Marksmen },
+    { position: "Support", img: Supports },
+  ];
+  const [championList, setChampionList] = useState<Array<ChampionList>>([]);
+  const [selectedIcon, setSelectedIcon] = useState<IconType>();
+  const [searchText, setSearchText] = useState<string>();
   const handleClickChampion = (id: number) => () => {
     onChange(id);
   };
-  const handleClickCategory = (icon: string) => () => {
-    setSelectedIcon(icon);
-    // TODO: 해당 카테고리 api 호출
+  const getChampionList = async () => {
+    const { data } = await axiosInstance({
+      url: "championlist",
+      params: {
+        positions: selectedIcon?.position,
+        champion_name: searchText,
+      },
+    });
+    setChampionList(data.champion_list);
   };
+  const handleClickCategory = useCallback(
+    (icon: IconType) => async () => {
+      setSelectedIcon(icon);
+    },
+    [setSelectedIcon]
+  );
+  const handlePressSearch = useCallback(
+    (e) => {
+      if (e.key === "Enter") {
+        getChampionList();
+      }
+    },
+    [getChampionList]
+  );
+  const handleChangeSearch = useCallback(
+    (e) => {
+      setSearchText(e.target.value);
+    },
+    [setSearchText]
+  );
+  useEffect(() => {
+    getChampionList();
+  }, [selectedIcon]);
   return (
     <LaunchpadSection>
       <HorizontalLine />
@@ -55,22 +97,28 @@ const Launchpad: FC<LaunchpadProps> = ({
               <LeftFilter>
                 {IconArr.map((i) => (
                   <FilterIcon
-                    key={i}
-                    src={i}
+                    key={i.position}
+                    src={i.img}
                     width={34}
                     height={34}
                     marginRight={10}
-                    opacity={i === selectedIcon ? 1 : 0.4}
+                    opacity={i.img === selectedIcon?.img ? 1 : 0.4}
                     onClick={handleClickCategory(i)}
                   />
                 ))}
               </LeftFilter>
               <RightFilter>
-                <Input type="text" placeholder="검색" />
+                <Input
+                  type="text"
+                  placeholder="검색"
+                  value={searchText}
+                  onChange={handleChangeSearch}
+                  onKeyPress={handlePressSearch}
+                />
               </RightFilter>
             </LaunchpadFilter>
             <LaunchpadWrapper>
-              {list.map((i) => (
+              {championList.map((i) => (
                 <LaunchpadItem
                   key={i.champion_id}
                   url={i.image_url}
