@@ -33,7 +33,7 @@ const PlayList: FC<PlayListProps> = ({ champion }) => {
         query: champion.name,
         size: 20,
         page: 1,
-        provider: "YOUTUBE",
+        provider: "SPOTIFY",
         sort: "view",
       },
     });
