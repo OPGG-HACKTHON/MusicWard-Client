@@ -2,6 +2,7 @@ import React, { FC, useCallback } from "react";
 import styled from "styled-components";
 
 import Ward from "assets/icon/i-ward.png";
+import EmptyImg from "assets/img/empty-img.svg";
 import { Icon } from "pages/mainPage/PlayList";
 
 import { useHistory } from "react-router-dom";
@@ -10,7 +11,7 @@ export interface PlayListItemProps {
   title: string;
   listCount: number;
   wardCount: number;
-  imgUrl: string;
+  imgUrl?: string;
 }
 
 const PlayListItem: FC<PlayListItemProps> = ({
@@ -65,13 +66,13 @@ const SliderItem = styled.div`
   margin: 0 22px;
 `;
 
-const SliderItemBox = styled.div<{ imgUrl: string }>`
+const SliderItemBox = styled.div<{ imgUrl?: string }>`
   position: absolute;
   top: 5px;
   left: 5px;
   width: 190px;
   height: 190px;
-  background-image: url(${({ imgUrl }) => imgUrl});
+  background: url(${({ imgUrl }) => imgUrl || EmptyImg}), #010407;
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;

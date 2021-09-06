@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useState, useEffect } from "react";
 import styled from "styled-components";
 import Fighter from "assets/icon/i-fighters.png";
 import Assassin from "assets/icon/i-assassins.png";
@@ -8,6 +8,8 @@ import Support from "assets/icon/i-supports.png";
 import Tank from "assets/icon/i-tanks.png";
 import Carousel from "components/Carousel";
 import { Champion } from "./Main";
+import axiosInstance from "utils/axiosConfig";
+import { PlayListItemProps } from "components/PlayListItem";
 
 const MaxString = 300;
 const IconObj: Record<string, string> = {
@@ -23,19 +25,41 @@ interface PlayListProps {
 }
 
 const PlayList: FC<PlayListProps> = ({ champion }) => {
-  const [playList] = useState(
-    [...Array(15)].map((i, index) => {
-      return {
-        title: `데마시아의 힘을 느껴보자${index}`,
-        listCount: index,
-        wardCount: index * 10,
-        imgUrl:
-          index % 2 === 0
-            ? "https://i.ytimg.com/vi/veRIGU--tec/maxresdefault.jpg"
-            : "https://i.scdn.co/image/ab67616d0000b2736fa6b0d2a6f7e50c4b45939f",
-      };
-    })
-  );
+  const [playList, setPlayList] = useState<Array<PlayListItemProps>>([]);
+  const getPlayList = async () => {
+    const { data } = await axiosInstance({
+      url: "search/champion",
+      params: {
+        query: champion.name,
+        size: 20,
+        page: 1,
+        provider: "SPOTIFY",
+        sort: "view",
+      },
+    });
+    setPlayList(
+      data.map(
+        (i: {
+          title: string;
+          track: { total: number };
+          wards: { total: number };
+          image: { url: string };
+        }) => {
+          return {
+            title: i.title,
+            listCount: i.track?.total,
+            wardCount: i.wards?.total,
+            imgUrl: i.image?.url,
+          };
+        }
+      )
+    );
+  };
+  useEffect(() => {
+    if (champion.name) {
+      getPlayList();
+    }
+  }, [champion]);
   return (
     <PlayListSection url={champion.profile_image_url}>
       <GradientSection />
@@ -85,14 +109,7 @@ const GradientSection = styled.div`
   left: 0;
   top: 0;
   z-index: 10;
-  background: linear-gradient(
-    to left,
-    rgba(20, 20, 20, 0) 10%,
-    rgba(20, 20, 20, 0.25) 20%,
-    rgba(20, 20, 20, 0.5) 40%,
-    rgba(20, 20, 20, 0.75) 65%,
-    rgba(20, 20, 20, 1) 100%
-  );
+  background: linear-gradient(90.41deg, #010407 0.34%, rgba(1, 4, 7, 0) 99.63%);
   backdrop-filter: blur(2px);
 `;
 const TextWrapper = styled.div`
