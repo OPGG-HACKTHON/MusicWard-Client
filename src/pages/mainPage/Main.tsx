@@ -17,7 +17,6 @@ export type Champion = {
 };
 
 const Main = () => {
-  const [championList, setChampionList] = useState([]);
   const [selectedChampion, setSelectedChampion] = useState<Champion>({
     champion_id: 0,
     english_name: "",
@@ -28,10 +27,6 @@ const Main = () => {
     story: "",
     title: "",
   });
-  const getChampionList = async () => {
-    const { data } = await axiosInstance.get("championlist");
-    setChampionList(data.champion_list);
-  };
   const getChampion = async (id: number) => {
     const { data } = await axiosInstance.get(`champion/${id}`);
     setSelectedChampion(data);
@@ -40,7 +35,6 @@ const Main = () => {
     getChampion(id);
   }, []);
   useEffect(() => {
-    getChampionList();
     getChampion(Math.floor(Math.random() * 48));
   }, []);
   return (
@@ -48,7 +42,6 @@ const Main = () => {
       <PlayList champion={selectedChampion} />
       <Launchpad
         selectedChampion={selectedChampion}
-        list={championList}
         onChange={handleChangeChampion}
       />
       <Ranking onChange={handleChangeChampion} />
