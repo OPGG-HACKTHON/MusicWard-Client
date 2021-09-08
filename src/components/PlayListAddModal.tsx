@@ -25,7 +25,7 @@ const PlayListAddModal: FC<PlayListAddModalProps> = ({ onClose, id, link }) => {
     description: "",
     champion: "",
   });
-  const [tagList, setTagList] = useState([]);
+  // const [tagList, setTagList] = useState([]);
   const handleCreate = useCallback(async () => {
     console.log(info);
     const { data } = await axiosInstance({
@@ -47,10 +47,10 @@ const PlayListAddModal: FC<PlayListAddModalProps> = ({ onClose, id, link }) => {
     onClose?.();
   }, [onClose, info]);
   const handleChange = useCallback(
-    (key) => (e: any) => {
+    (key) => () => {
       setInfo({
         ...info,
-        [key]: e.target.value,
+        [key]: "", //e.target.value,
       });
     },
     [info, setInfo]

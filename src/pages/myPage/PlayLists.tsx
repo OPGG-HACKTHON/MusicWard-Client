@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from "react";
 import styled from "styled-components";
-import PlayListSample from "assets/img/mypage/play-list-sample.png";
+// import PlayListSample from "assets/img/mypage/play-list-sample.png";
 import DeleteButton from "assets/img/mypage/delete-button.png";
 import Ward from "assets/img/mypage/ward.png";
 import PlayYoutube from "assets/img/mypage/play-youtube.png";
@@ -76,56 +76,68 @@ const PlayLists = () => {
         <MainText>업로드한 플레이리스트</MainText>
         <Lists>
           <Rows>
-            {uploadPlayList.map((i: any) => (
-              <Item
-                key={i.original_id}
-                url={i.image.url}
-                onClick={handleAddPlayList(i)}
-              >
-                <Delete src={DeleteButton} />
-                <Info>
-                  <img
-                    src={PlayYoutube}
-                    style={{
-                      width: "20px",
-                      position: "absolute",
-                      left: "15px",
-                      top: "40px",
-                    }}
-                  />
-                  <Title>{i.original_title}</Title>
-                  <Tags>#가렌 #데마시아 #매드무비</Tags>
-                  <Popu>
-                    <span>23곡</span>
-                    <VHr />
-                    <img src={Ward} />
-                    <span>133</span>
-                  </Popu>
-                  <Date>2021.07.21</Date>
-                </Info>
-              </Item>
-            ))}
-            {playList.map((i: any) => (
-              <Item
-                key={i.original_id}
-                url={i.image.url}
-                onClick={handleAddPlayList(i)}
-              >
-                <Delete src={DeleteButton} />
-                <Info>
-                  <img
-                    src={PlayYoutube}
-                    style={{
-                      width: "20px",
-                      position: "absolute",
-                      left: "15px",
-                      top: "40px",
-                    }}
-                  />
-                  <Title>{i.original_title}</Title>
-                </Info>
-              </Item>
-            ))}
+            {uploadPlayList.map(
+              (i: {
+                original_id: string;
+                image: { url: string };
+                original_title: string;
+              }) => (
+                <Item
+                  key={i.original_id}
+                  url={i.image.url}
+                  onClick={handleAddPlayList(i)}
+                >
+                  <Delete src={DeleteButton} />
+                  <Info>
+                    <img
+                      src={PlayYoutube}
+                      style={{
+                        width: "20px",
+                        position: "absolute",
+                        left: "15px",
+                        top: "40px",
+                      }}
+                    />
+                    <Title>{i.original_title}</Title>
+                    <Tags>#가렌 #데마시아 #매드무비</Tags>
+                    <Popu>
+                      <span>23곡</span>
+                      <VHr />
+                      <img src={Ward} />
+                      <span>133</span>
+                    </Popu>
+                    <Date>2021.07.21</Date>
+                  </Info>
+                </Item>
+              )
+            )}
+            {playList.map(
+              (i: {
+                original_id: string;
+                image: { url: string };
+                original_title: string;
+              }) => (
+                <Item
+                  key={i.original_id}
+                  url={i.image.url}
+                  onClick={handleAddPlayList(i)}
+                >
+                  <Delete src={DeleteButton} />
+                  <Info>
+                    <img
+                      src={PlayYoutube}
+                      style={{
+                        width: "20px",
+                        position: "absolute",
+                        left: "15px",
+                        top: "40px",
+                      }}
+                    />
+                    <Title>{i.original_title}</Title>
+                  </Info>
+                </Item>
+              )
+            )}
           </Rows>
         </Lists>
       </Wrapper>

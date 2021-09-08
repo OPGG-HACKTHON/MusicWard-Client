@@ -15,7 +15,7 @@ const UserInfo = () => {
   const [nickName, setNickName] = useState("");
   const [googleEmail, setGoogleEmail] = useState("");
   const [spotifyEmail, setSpotifyEmail] = useState("");
-  const [userProfile, setUserProfile] = useState("");
+  const [userProfile] = useState("");
   const jwtToken = useRecoilValue(accessToken);
 
   const history = useHistory();

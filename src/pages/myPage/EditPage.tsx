@@ -17,7 +17,7 @@ const EditPage = () => {
   const [nickName, setNickName] = useState("");
   const [googleEmail, setGoogleEmail] = useState("");
   const [spotifyEmail, setSpotifyEmail] = useState("");
-  const [userProfile, setUserProfile] = useState("");
+  // const [userProfile, setUserProfile] = useState("");
   const history = useHistory();
   const handleSubmitClick = async () => {
     await axiosInstance({
