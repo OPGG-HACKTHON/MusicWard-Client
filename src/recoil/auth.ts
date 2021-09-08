@@ -9,10 +9,10 @@ export type TokenType = {
 };
 
 export type AuthType = {
-  id?: string;
-  token?: string;
   name?: string;
-  email?: string;
+  nickname?: string;
+  googleEmail?: string;
+  spotifyEmail?: string;
 };
 
 export const token = atom<TokenType>({
@@ -29,10 +29,10 @@ export const token = atom<TokenType>({
 export const auth = atom<AuthType>({
   key: "auth",
   default: {
-    id: undefined,
-    token: undefined,
     name: undefined,
-    email: undefined,
+    nickname: undefined,
+    googleEmail: undefined,
+    spotifyEmail: undefined,
   },
 });
 
@@ -47,5 +47,12 @@ export const accessToken = selector({
   key: "accessToken",
   get: ({ get }) => {
     return get(token).accessToken;
+  },
+});
+
+export const isSpotify = selector({
+  key: "isSpotify",
+  get: ({ get }) => {
+    return !!get(auth).spotifyEmail;
   },
 });

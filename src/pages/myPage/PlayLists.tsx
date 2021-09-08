@@ -1,19 +1,33 @@
 import React, { useState, useCallback } from "react";
 import styled from "styled-components";
-// import PlayListSample from "assets/img/mypage/play-list-sample.png";
 import DeleteButton from "assets/img/mypage/delete-button.png";
 import Ward from "assets/img/mypage/ward.png";
 import PlayYoutube from "assets/img/mypage/play-youtube.png";
-// import PlaySpotify from "assets/img/mypage/play-spotify.png";
+import EmptyImg from "assets/img/empty-img.svg";
 import PlayListAddModal from "components/PlayListAddModal";
 import { useEffect } from "react";
 import { useRecoilValue } from "recoil";
-import { accessToken } from "recoil/auth";
+import { accessToken, isSpotify } from "recoil/auth";
 import axiosInstance from "utils/axiosConfig";
 
+type PlayListType = {
+  original_id: string;
+  image: { url: string };
+  original_title: string;
+};
+
+interface UploadPlayListType extends PlayListType {
+  playlist_id: number;
+  title: string;
+  tags: Array<string>;
+  created_date: string;
+  tracks: { total: string };
+  wards: { total: string };
+}
+
 const PlayLists = () => {
-  // FIXME: 임시로 플레이리스트 생성 모달 표출
   const jwtToken = useRecoilValue(accessToken);
+  const useSpotify = useRecoilValue(isSpotify);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [uploadPlayList, setUploadPlayList] = useState([]);
   const [playList, setPlayList] = useState([]);
@@ -42,25 +56,40 @@ const PlayLists = () => {
         Authorization: `Bearer ${jwtToken}`,
       },
     });
-    console.log(data);
     setUploadPlayList(data);
   };
-  const getPlayList = async () => {
+  const getPlayList = async (provider = "YOUTUBE") => {
     const { data } = await axiosInstance({
       url: "non-playlists",
       headers: {
         Authorization: `Bearer ${jwtToken}`,
       },
       params: {
-        provider: "SPOTIFY", // FIXME
+        provider,
       },
     });
-    console.log(data.items);
     setPlayList(data.items);
   };
+  // TODO: 플레리스트 삭제 알럿이 우선 떠야한다.
+  const handleDelete = useCallback(
+    (id) => async () => {
+      const { data } = await axiosInstance({
+        url: `playlists/${id}`,
+        method: "delete",
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      });
+      console.log(data);
+    },
+    []
+  );
   useEffect(() => {
     getUploadPlayList();
     getPlayList();
+    if (useSpotify) {
+      getPlayList("SPOTIFY");
+    }
   }, []);
 
   return (
@@ -76,18 +105,13 @@ const PlayLists = () => {
         <MainText>업로드한 플레이리스트</MainText>
         <Lists>
           <Rows>
-            {uploadPlayList.map(
-              (i: {
-                original_id: string;
-                image: { url: string };
-                original_title: string;
-              }) => (
-                <Item
-                  key={i.original_id}
-                  url={i.image.url}
-                  onClick={handleAddPlayList(i)}
-                >
-                  <Delete src={DeleteButton} />
+            {uploadPlayList.map((i: UploadPlayListType) => (
+              <PlayListWrapper key={`upload-play-list-${i.playlist_id}`}>
+                <PlayListBox imgUrl={i.image.url}>
+                  <Delete
+                    src={DeleteButton}
+                    onClick={handleDelete(i.playlist_id)}
+                  />
                   <Info>
                     <img
                       src={PlayYoutube}
@@ -98,46 +122,47 @@ const PlayLists = () => {
                         top: "40px",
                       }}
                     />
-                    <Title>{i.original_title}</Title>
-                    <Tags>#가렌 #데마시아 #매드무비</Tags>
+                    <Title>{i.title}</Title>
+                    <TagsWrapper>
+                      {i.tags.map((t) => (
+                        <Tags key={t}>#{t} </Tags>
+                      ))}
+                    </TagsWrapper>
                     <Popu>
-                      <span>23곡</span>
+                      <span>{i.tracks.total}곡</span>
                       <VHr />
                       <img src={Ward} />
-                      <span>133</span>
+                      <span>{i.wards.total}</span>
                     </Popu>
-                    <Date>2021.07.21</Date>
+                    <Date>{i.created_date.split(" ")[0]}</Date>
                   </Info>
-                </Item>
-              )
-            )}
-            {playList.map(
-              (i: {
-                original_id: string;
-                image: { url: string };
-                original_title: string;
-              }) => (
-                <Item
-                  key={i.original_id}
-                  url={i.image.url}
-                  onClick={handleAddPlayList(i)}
-                >
-                  <Delete src={DeleteButton} />
-                  <Info>
-                    <img
-                      src={PlayYoutube}
-                      style={{
-                        width: "20px",
-                        position: "absolute",
-                        left: "15px",
-                        top: "40px",
-                      }}
-                    />
-                    <Title>{i.original_title}</Title>
-                  </Info>
-                </Item>
-              )
-            )}
+                </PlayListBox>
+              </PlayListWrapper>
+            ))}
+            {playList.map((i: PlayListType) => (
+              <PlayListWrapper
+                key={`play-list-${i.original_id}`}
+                onClick={handleAddPlayList(i)}
+              >
+                <PlayListWrapperFilter />
+                <PlusIcon />
+                <PlayListBox imgUrl={i.image.url}>
+                  <PlayListGradient>
+                    <PlayListTitle>
+                      <div>
+                        <img
+                          src={PlayYoutube}
+                          style={{
+                            width: "20px",
+                          }}
+                        />
+                      </div>
+                      <div>{i.original_title}</div>
+                    </PlayListTitle>
+                  </PlayListGradient>
+                </PlayListBox>
+              </PlayListWrapper>
+            ))}
           </Rows>
         </Lists>
       </Wrapper>
@@ -145,9 +170,94 @@ const PlayLists = () => {
   );
 };
 
+const PlayListWrapperFilter = styled.div`
+  position: absolute;
+  width: 246px !important;
+  height: 246px;
+  top: 0;
+  left: 0;
+  background: rgb(42 77 109 / 50%);
+  z-index: 100;
+`;
+
+const PlusIcon = styled.div`
+  &::after,
+  &::before {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 6px;
+    height: 56px;
+    background-color: #f0f0f0;
+    transform-origin: top left;
+    content: "";
+    z-index: 999;
+  }
+  &::before {
+    transform: rotate(0deg) translate(-50%, -50%);
+  }
+  &::after {
+    transform: rotate(90deg) translate(-50%, -50%);
+  }
+`;
+
+const PlayListWrapper = styled.div`
+  position: relative;
+  width: 246px !important;
+  height: 246px;
+  background: conic-gradient(
+    #755c28,
+    #d3bf89,
+    #817347,
+    #433915,
+    #817347,
+    #d3bf89,
+    #755c28
+  );
+  padding: 12px;
+  box-sizing: border-box;
+  margin: 30px;
+  cursor: pointer;
+`;
+
+const PlayListBox = styled.div<{ imgUrl?: string }>`
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  width: 236px;
+  height: 236px;
+  background: url(${({ imgUrl }) => imgUrl || EmptyImg}), #010407;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+`;
+
+const PlayListGradient = styled.div`
+  position: absolute;
+  height: 150px;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 69.05%);
+`;
+
+const PlayListTitle = styled.div`
+  width: 100%;
+  padding: 15px;
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 26px;
+  color: #ffffff;
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+`;
+
 const Container = styled.section`
   background: #141a21;
-  height: calc(100vh - 380px);
+  height: 100vh;
   border-top: 1px solid #bb8c3c;
   display: flex;
   justify-content: center;
@@ -158,51 +268,32 @@ const Wrapper = styled.div`
 `;
 
 const MainText = styled.div`
-  font-family: Noto Sans KR;
   font-style: normal;
   font-weight: 500;
   font-size: 18px;
   line-height: 26px;
   color: #ffffff;
-  margin: 2vw 0;
+  margin: 35px 0;
 `;
 
 const Lists = styled.div`
   display: flex;
   flex-direction: column;
+  margin: -30px;
 `;
 
 const Rows = styled.div`
   width: 100%;
   margin-bottom: 60px;
   display: flex;
-`;
-
-const Item = styled.div<{ url?: string }>`
-  position: relative;
-  width: 246px;
-  height: 247px;
-  background-image: url(${({ url }) => url || ""});
-  border: 5px solid;
-  border-image-source: linear-gradient(
-    from 180deg at 50% 50%,
-    #443916 -0.23deg,
-    #d4c18b 112.53deg,
-    #765c29 144.84deg,
-    #765c29 214.97deg,
-    #d4c18b 248.9deg,
-    #443916 359.77deg,
-    #d4c18b 472.53deg
-  );
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
+  flex-wrap: wrap;
 `;
 
 const Delete = styled.img`
   position: absolute;
   right: 1vw;
   top: 1vw;
+  cursor: pointer;
 `;
 
 const Info = styled.div`
@@ -217,7 +308,6 @@ const Title = styled.div`
   position: absolute;
   left: 15px;
   top: 67px;
-  font-family: Noto Sans KR;
   font-style: normal;
   font-weight: bold;
   font-size: 18px;
@@ -225,25 +315,27 @@ const Title = styled.div`
   color: #ffffff;
 `;
 
-const Tags = styled.div`
+const TagsWrapper = styled.div`
   position: absolute;
+  display: flex;
   left: 15px;
   bottom: 45px;
-  font-family: Noto Sans KR;
+`;
+
+const Tags = styled.div`
   font-style: normal;
   font-weight: normal;
   font-size: 12px;
   line-height: 17px;
   color: #ffffff;
   opacity: 0.7;
+  margin-right: 10px;
 `;
 
 const Popu = styled.div`
   position: absolute;
   left: 15px;
   bottom: 15px;
-
-  font-family: Noto Sans KR;
   font-style: normal;
   font-weight: 500;
   font-size: 12px;
@@ -264,8 +356,6 @@ const Date = styled.div`
   position: absolute;
   right: 15px;
   bottom: 15px;
-
-  font-family: Noto Sans KR;
   font-style: normal;
   font-weight: 500;
   font-size: 12px;
