@@ -37,7 +37,7 @@ const PlayLists = () => {
   );
   const getUploadPlayList = async () => {
     const { data } = await axiosInstance({
-      url: "playlist/me",
+      url: "playlists/me",
       headers: {
         Authorization: `Bearer ${jwtToken}`,
       },

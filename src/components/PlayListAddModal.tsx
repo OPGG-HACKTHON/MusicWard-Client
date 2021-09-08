@@ -27,7 +27,7 @@ const PlayListAddModal: FC<PlayListAddModalProps> = ({ onClose, id, link }) => {
   });
   // const [tagList, setTagList] = useState([]);
   const handleCreate = useCallback(async () => {
-    console.log(info);
+    // console.log(info);
     const { data } = await axiosInstance({
       url: "playlists",
       method: "post",
@@ -47,10 +47,10 @@ const PlayListAddModal: FC<PlayListAddModalProps> = ({ onClose, id, link }) => {
     onClose?.();
   }, [onClose, info]);
   const handleChange = useCallback(
-    (key) => () => {
+    (key) => (e: { target: { value: string } }) => {
       setInfo({
         ...info,
-        [key]: "", //e.target.value,
+        [key]: e.target.value,
       });
     },
     [info, setInfo]
