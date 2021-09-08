@@ -1,37 +1,93 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import UserIcon from "components/user/UserIcon";
 
 import EditYoutube from "assets/img/mypage/edit-youtube.png";
 import EditSpotify from "assets/img/mypage/edit-spotify.png";
 import GoogleAccount from "assets/img/mypage/google-account.png";
+import PlaySpotify from "assets/img/mypage/play-spotify.png";
+import axiosInstance from "utils/axiosConfig";
+import { useRecoilValue } from "recoil";
+import { accessToken } from "recoil/auth";
+import { useHistory } from "react-router-dom";
 
 const EditPage = () => {
-  const [userId] = useState("와드깔고승리하자");
-  const [userEmail] = useState("rPwjd@lol.lol");
-
-  const clickToEdit = () => {
-    console.log("수정완료클릭");
+  const jwtToken = useRecoilValue(accessToken);
+  const [name, setName] = useState("");
+  const [nickName, setNickName] = useState("");
+  const [googleEmail, setGoogleEmail] = useState("");
+  const [spotifyEmail, setSpotifyEmail] = useState("");
+  const [userProfile, setUserProfile] = useState("");
+  const history = useHistory();
+  const handleSubmitClick = async () => {
+    await axiosInstance({
+      url: "users/nickname",
+      headers: {
+        Authorization: `Bearer ${jwtToken}`,
+      },
+      method: "patch",
+      data: {
+        nickname: nickName,
+      },
+    });
+    history.push({
+      pathname: "/mypage",
+    });
   };
+  const getMyPageInfo = useCallback(async () => {
+    const { data } = await axiosInstance({
+      url: "users/me",
+      headers: {
+        Authorization: `Bearer ${jwtToken}`,
+      },
+    });
+    setGoogleEmail(data.google_email);
+    setSpotifyEmail(data.spotify_email);
+    setNickName(data.nickname);
+    setName(data.name);
+  }, []);
+  const handleChange = useCallback(
+    (e) => {
+      setNickName(e.target.value);
+    },
+    [setNickName]
+  );
+  useEffect(() => {
+    getMyPageInfo();
+  }, []);
 
   return (
     <Container>
-      <UserIcon />
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <UserIcon />
+      </div>
       <MyInfoBox>
-        <MyId>{userId}</MyId>
+        <MyId>{name}</MyId>
         <MyInfoLine />
         <MyInfoAccount>
-          <img
-            style={{ width: "23px", marginRight: "15px" }}
-            src={GoogleAccount}
-            alt="account icon"
-          />
-          <UserEmail>{userEmail}</UserEmail>
+          <div>
+            <img
+              style={{ width: "23px", marginRight: "15px" }}
+              src={GoogleAccount}
+              alt="account icon"
+            />
+            <UserEmail>{googleEmail}</UserEmail>
+          </div>
+          {spotifyEmail && (
+            <div>
+              <img
+                style={{ width: "23px", marginRight: "15px" }}
+                src={PlaySpotify}
+                alt="account icon"
+              />
+              <UserEmail>{googleEmail}</UserEmail>
+            </div>
+          )}
         </MyInfoAccount>
       </MyInfoBox>
       <EditBox>
         <EditTitle>닉네임</EditTitle>
-        <Nickname />
+        <Nickname value={nickName} onChange={handleChange} />
       </EditBox>
       <EditBox>
         <EditTitle>연동플랫폼</EditTitle>
@@ -44,7 +100,7 @@ const EditPage = () => {
       </EditBox>
       <BottomLine />
       <Functions>
-        <FunctionButton onClick={clickToEdit}>수정완료</FunctionButton>
+        <FunctionButton onClick={handleSubmitClick}>수정완료</FunctionButton>
         <FunctionButton>회원탈퇴</FunctionButton>
       </Functions>
     </Container>

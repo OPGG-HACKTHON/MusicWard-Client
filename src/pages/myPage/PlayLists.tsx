@@ -6,10 +6,19 @@ import Ward from "assets/img/mypage/ward.png";
 import PlayYoutube from "assets/img/mypage/play-youtube.png";
 // import PlaySpotify from "assets/img/mypage/play-spotify.png";
 import PlayListAddModal from "components/PlayListAddModal";
+import { useEffect } from "react";
+import { useRecoilValue } from "recoil";
+import { accessToken } from "recoil/auth";
+import axiosInstance from "utils/axiosConfig";
 
 const PlayLists = () => {
   // FIXME: 임시로 플레이리스트 생성 모달 표출
+  const jwtToken = useRecoilValue(accessToken);
   const [openModal, setOpenModal] = useState<boolean>(false);
+  const [uploadPlayList, setUploadPlayList] = useState([]);
+  const [playList, setPlayList] = useState([]);
+  const [playListId, setPlayListId] = useState("");
+  const [playListUrl, setPlayListUrl] = useState("");
 
   const handleOpenModal = useCallback(
     (state: boolean) => () => {
@@ -17,141 +26,123 @@ const PlayLists = () => {
     },
     [setOpenModal]
   );
+  const handleAddPlayList = useCallback(
+    ({ original_id: id, external_url: url }) =>
+      () => {
+        setOpenModal(true);
+        setPlayListId(id);
+        setPlayListUrl(url);
+      },
+    [setOpenModal, setPlayListUrl]
+  );
+  const getUploadPlayList = async () => {
+    const { data } = await axiosInstance({
+      url: "playlist/me",
+      headers: {
+        Authorization: `Bearer ${jwtToken}`,
+      },
+    });
+    console.log(data);
+    setUploadPlayList(data);
+  };
+  const getPlayList = async () => {
+    const { data } = await axiosInstance({
+      url: "non-playlists",
+      headers: {
+        Authorization: `Bearer ${jwtToken}`,
+      },
+      params: {
+        provider: "SPOTIFY", // FIXME
+      },
+    });
+    console.log(data.items);
+    setPlayList(data.items);
+  };
+  useEffect(() => {
+    getUploadPlayList();
+    getPlayList();
+  }, []);
 
   return (
     <Container>
-      {openModal && <PlayListAddModal onClose={handleOpenModal(false)} />}
-      <Line />
-      <MainText>업로드한 플레이리스트</MainText>
-      <Lists>
-        <Rows>
-          <Item onClick={handleOpenModal(true)}>
-            <Delete src={DeleteButton} />
-            <Info>
-              <img
-                src={PlayYoutube}
-                style={{
-                  width: "20px",
-                  position: "absolute",
-                  left: "15px",
-                  top: "40px",
-                }}
-              />
-              <Title>데마시아의 힘을 느껴보자</Title>
-              <Tags>#가렌 #데마시아 #매드무비</Tags>
-              <Popu>
-                <span>23곡</span>
-                <VHr />
-                <img src={Ward} />
-                <span>133</span>
-              </Popu>
-              <Date>2021.07.21</Date>
-            </Info>
-          </Item>
-          <Item>
-            <Delete src={DeleteButton} />
-            <Info>
-              <img
-                src={PlayYoutube}
-                style={{
-                  width: "20px",
-                  position: "absolute",
-                  left: "15px",
-                  top: "40px",
-                }}
-              />
-              <Title>데마시아의 힘을 느껴보자</Title>
-              <Tags>#가렌 #데마시아 #매드무비</Tags>
-              <Popu>
-                <span>23곡</span>
-                <VHr />
-                <img src={Ward} />
-                <span>133</span>
-              </Popu>
-              <Date>2021.07.21</Date>
-            </Info>
-          </Item>
-          <Item>
-            <Delete src={DeleteButton} />
-            <Info>
-              <img
-                src={PlayYoutube}
-                style={{
-                  width: "20px",
-                  position: "absolute",
-                  left: "15px",
-                  top: "40px",
-                }}
-              />
-              <Title>데마시아의 힘을 느껴보자</Title>
-              <Tags>#가렌 #데마시아 #매드무비</Tags>
-              <Popu>
-                <span>23곡</span>
-                <VHr />
-                <img src={Ward} />
-                <span>133</span>
-              </Popu>
-              <Date>2021.07.21</Date>
-            </Info>
-          </Item>
-          <Item>
-            <Delete src={DeleteButton} />
-            <Info>
-              <img
-                src={PlayYoutube}
-                style={{
-                  width: "20px",
-                  position: "absolute",
-                  left: "15px",
-                  top: "40px",
-                }}
-              />
-              <Title>데마시아의 힘을 느껴보자</Title>
-              <Tags>#가렌 #데마시아 #매드무비</Tags>
-              <Popu>
-                <span>23곡</span>
-                <VHr />
-                <img src={Ward} />
-                <span>133</span>
-              </Popu>
-              <Date>2021.07.21</Date>
-            </Info>
-          </Item>
-        </Rows>
-        <Rows>
-          <Item>
-            <OverR></OverR>
-          </Item>
-          <img src={PlayListSample} />
-          <img src={PlayListSample} />
-          <img src={PlayListSample} />
-          <img src={PlayListSample} />
-        </Rows>
-        <Rows>
-          <img src={PlayListSample} />
-          <img src={PlayListSample} />
-          <img src={PlayListSample} />
-          <img src={PlayListSample} />
-        </Rows>
-      </Lists>
+      {openModal && (
+        <PlayListAddModal
+          id={playListId}
+          link={playListUrl}
+          onClose={handleOpenModal(false)}
+        />
+      )}
+      <Wrapper>
+        <MainText>업로드한 플레이리스트</MainText>
+        <Lists>
+          <Rows>
+            {uploadPlayList.map((i: any) => (
+              <Item
+                key={i.original_id}
+                url={i.image.url}
+                onClick={handleAddPlayList(i)}
+              >
+                <Delete src={DeleteButton} />
+                <Info>
+                  <img
+                    src={PlayYoutube}
+                    style={{
+                      width: "20px",
+                      position: "absolute",
+                      left: "15px",
+                      top: "40px",
+                    }}
+                  />
+                  <Title>{i.original_title}</Title>
+                  <Tags>#가렌 #데마시아 #매드무비</Tags>
+                  <Popu>
+                    <span>23곡</span>
+                    <VHr />
+                    <img src={Ward} />
+                    <span>133</span>
+                  </Popu>
+                  <Date>2021.07.21</Date>
+                </Info>
+              </Item>
+            ))}
+            {playList.map((i: any) => (
+              <Item
+                key={i.original_id}
+                url={i.image.url}
+                onClick={handleAddPlayList(i)}
+              >
+                <Delete src={DeleteButton} />
+                <Info>
+                  <img
+                    src={PlayYoutube}
+                    style={{
+                      width: "20px",
+                      position: "absolute",
+                      left: "15px",
+                      top: "40px",
+                    }}
+                  />
+                  <Title>{i.original_title}</Title>
+                </Info>
+              </Item>
+            ))}
+          </Rows>
+        </Lists>
+      </Wrapper>
     </Container>
   );
 };
 
 const Container = styled.section`
-  position: relative;
-  padding: 2vw 10%;
   background: #141a21;
+  height: calc(100vh - 380px);
+  border-top: 1px solid #bb8c3c;
+  display: flex;
+  justify-content: center;
 `;
 
-const Line = styled.hr`
-  position: absolute;
-  width: 100%;
-  top: 0;
-  margin: 0 0 0 -10%;
-  opacity: 0.5;
-  /* gold/primary */
-  border: 1px solid #bb8c3c;
+const Wrapper = styled.div`
+  width: 1166px;
 `;
 
 const MainText = styled.div`
@@ -173,14 +164,13 @@ const Rows = styled.div`
   width: 100%;
   margin-bottom: 60px;
   display: flex;
-  justify-content: space-between;
 `;
 
-const Item = styled.div`
+const Item = styled.div<{ url?: string }>`
   position: relative;
   width: 246px;
   height: 247px;
-  background-image: url(${PlayListSample});
+  background-image: url(${({ url }) => url || ""});
   border: 5px solid;
   border-image-source: linear-gradient(
     from 180deg at 50% 50%,
@@ -192,6 +182,9 @@ const Item = styled.div`
     #443916 359.77deg,
     #d4c18b 472.53deg
   );
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
 `;
 
 const Delete = styled.img`
@@ -268,11 +261,6 @@ const Date = styled.div`
   text-align: right;
   color: #ffffff;
   opacity: 0.6;
-`;
-
-const OverR = styled.div`
-  background: #2a4d6d;
-  opacity: 0.5;
 `;
 
 export default PlayLists;

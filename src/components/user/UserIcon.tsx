@@ -1,16 +1,16 @@
 import React from "react";
 import styled from "styled-components";
 import MyImgEdge from "assets/img/mypage/my-img-edge.png";
-import MyImgSample from "assets/img/mypage/my-img-sample.png";
+import EmptyImg from "assets/img/empty-img.svg";
 
-const UserIcon = () => {
+interface UserIconProps {
+  imgUrl?: string;
+}
+
+const UserIcon = ({ imgUrl }: UserIconProps) => {
   return (
     <MyImgBox>
-      <img
-        style={{ width: "92%", height: "92%", margin: "4% 4%" }}
-        src={MyImgSample}
-        alt="user image"
-      />
+      <img src={imgUrl || EmptyImg} alt="user image" />
     </MyImgBox>
   );
 };
@@ -20,8 +20,18 @@ const MyImgBox = styled.section`
   height: 200px;
   background-image: url(${MyImgEdge});
   background-repeat: no-repeat;
-  margin: 2vw 3vw 2vw 0;
   flex: none;
+  position: relative;
+  > img {
+    border: 1px solid black;
+    border: 5px solid gold;
+    border-radius: 100px;
+    width: 174px;
+    height: 174px;
+    position: absolute;
+    top: 5px;
+    left: 8px;
+  }
 `;
 
 export default UserIcon;

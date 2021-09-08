@@ -33,7 +33,7 @@ const PlayList: FC<PlayListProps> = ({ champion }) => {
         query: champion.name,
         size: 20,
         page: 1,
-        provider: "SPOTIFY",
+        provider: "SPTOFY",
         sort: "view",
       },
     });
@@ -41,13 +41,13 @@ const PlayList: FC<PlayListProps> = ({ champion }) => {
       data.map(
         (i: {
           title: string;
-          track: { total: number };
+          tracks: { total: number };
           wards: { total: number };
           image: { url: string };
         }) => {
           return {
             title: i.title,
-            listCount: i.track?.total,
+            listCount: i.tracks?.total,
             wardCount: i.wards?.total,
             imgUrl: i.image?.url,
           };

@@ -1,18 +1,60 @@
-import React, { FC, useCallback } from "react";
+import React, { FC, useCallback, useState } from "react";
 import PlayListModalBg from "assets/img/playlist-modal.svg";
 import styled from "styled-components";
 import { CloseBtn, Wrapper } from "./LoginModal";
+import axiosInstance from "utils/axiosConfig";
+import { useRecoilValue } from "recoil";
+import { accessToken } from "recoil/auth";
+
+type InfoType = {
+  title: string;
+  description: string;
+  champion: string;
+};
 
 interface PlayListAddModalProps {
-  Link?: string;
+  id: string;
+  link: string;
   onClose: () => void;
 }
 
-const PlayListAddModal: FC<PlayListAddModalProps> = ({ onClose, Link }) => {
-  const handleCreate = useCallback(() => {
+const PlayListAddModal: FC<PlayListAddModalProps> = ({ onClose, id, link }) => {
+  const jwtToken = useRecoilValue(accessToken);
+  const [info, setInfo] = useState<InfoType>({
+    title: "",
+    description: "",
+    champion: "",
+  });
+  const [tagList, setTagList] = useState([]);
+  const handleCreate = useCallback(async () => {
+    console.log(info);
+    const { data } = await axiosInstance({
+      url: "playlists",
+      method: "post",
+      headers: {
+        Authorization: `Bearer ${jwtToken}`,
+      },
+      data: {
+        original_id: id,
+        provider: "YOUTUBE",
+        title: info.title,
+        description: info.description,
+        champion_name: info.champion,
+        tags: ["신남", "행복"], //tagList
+      },
+    });
+    console.log(data);
     onClose?.();
-  }, [onClose]);
-
+  }, [onClose, info]);
+  const handleChange = useCallback(
+    (key) => (e: any) => {
+      setInfo({
+        ...info,
+        [key]: e.target.value,
+      });
+    },
+    [info, setInfo]
+  );
   return (
     <Wrapper>
       <ModalWrapper>
@@ -21,19 +63,19 @@ const PlayListAddModal: FC<PlayListAddModalProps> = ({ onClose, Link }) => {
           <Title>플레이리스트 생성</Title>
           <InputWrapper>
             <Label>링크</Label>
-            <Input type="text" value={Link} />
+            <Input type="text" value={link} disabled />
           </InputWrapper>
           <InputWrapper>
             <Label>제목</Label>
-            <Input type="text" />
+            <Input type="text" onChange={handleChange("title")} />
           </InputWrapper>
           <InputWrapper>
             <Label>설명</Label>
-            <Input type="text" />
+            <Input type="text" onChange={handleChange("description")} />
           </InputWrapper>
           <InputWrapper>
             <Label>챔피언</Label>
-            <Input type="text" />
+            <Input type="text" onChange={handleChange("champion")} />
           </InputWrapper>
           <InputWrapper>
             <Label>태그</Label>

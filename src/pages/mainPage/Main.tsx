@@ -30,12 +30,16 @@ const Main = () => {
   const getChampion = async (id: number) => {
     const { data } = await axiosInstance.get(`champion/${id}`);
     setSelectedChampion(data);
+    setTimeout(() => {
+      const audio = new Audio(data.voice_url);
+      audio.play();
+    }, 100);
   };
   const handleChangeChampion = useCallback(async (id: number) => {
     getChampion(id);
   }, []);
   useEffect(() => {
-    getChampion(Math.floor(Math.random() * 48));
+    getChampion(Math.floor(Math.random() * 48) + 1);
   }, []);
   return (
     <>

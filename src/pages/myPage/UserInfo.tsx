@@ -6,12 +6,17 @@ import UserIcon from "components/user/UserIcon";
 import PlayYoutube from "assets/img/mypage/play-youtube.png";
 import PlaySpotify from "assets/img/mypage/play-spotify.png";
 import GoogleAccount from "assets/img/mypage/google-account.png";
-import { useResetRecoilState } from "recoil";
-import { token } from "recoil/auth";
+import { useRecoilValue, useResetRecoilState } from "recoil";
+import { accessToken, token } from "recoil/auth";
+import { useEffect } from "react";
+import axiosInstance from "utils/axiosConfig";
 
 const UserInfo = () => {
-  const [userId] = useState("와드깔고승리하자");
-  const [userEmail] = useState("rPwjd@lol.lol");
+  const [nickName, setNickName] = useState("");
+  const [googleEmail, setGoogleEmail] = useState("");
+  const [spotifyEmail, setSpotifyEmail] = useState("");
+  const [userProfile, setUserProfile] = useState("");
+  const jwtToken = useRecoilValue(accessToken);
 
   const history = useHistory();
   const clickToEdit = () => {
@@ -23,51 +28,103 @@ const UserInfo = () => {
   const handleLogout = useCallback(() => {
     logout();
   }, [history]);
+  const getMyPageInfo = useCallback(async () => {
+    const { data } = await axiosInstance({
+      url: "users/me",
+      headers: {
+        Authorization: `Bearer ${jwtToken}`,
+      },
+    });
+    console.log(data);
+    setGoogleEmail(data.google_email);
+    setSpotifyEmail(data.spotify_email);
+    setNickName(data.nickname);
+  }, []);
+  const getMyPlayList = useCallback(async () => {
+    const { data } = await axiosInstance({
+      url: "non-playlists",
+      headers: {
+        Authorization: `Bearer ${jwtToken}`,
+      },
+      params: {
+        provider: "YOUTUBE",
+      },
+    });
+    console.log(data);
+  }, []);
+  useEffect(() => {
+    getMyPageInfo();
+    getMyPlayList();
+  }, []);
 
   return (
     <Container>
-      <UserIcon />
-      <MyInfoBox>
-        <div>
-          <img
-            style={{ width: "40px", marginRight: "1vw" }}
-            src={PlayYoutube}
-          />
-          <img style={{ width: "40px" }} src={PlaySpotify} />
-        </div>
-        <MyId>{userId}</MyId>
-        <MyInfoLine />
-        <MyInfoAccount>
-          <img
-            style={{ width: "23px", marginRight: "15px" }}
-            src={GoogleAccount}
-            alt="account icon"
-          />
-          <UserEmail>{userEmail}</UserEmail>
-        </MyInfoAccount>
-      </MyInfoBox>
-      <Functions>
-        <FunctionButton onClick={clickToEdit}>수정</FunctionButton>
-        <FunctionButton onClick={handleLogout}>로그아웃</FunctionButton>
-      </Functions>
+      <Wrapper>
+        <UserIcon imgUrl={userProfile} />
+        <MyInfoBox>
+          <div>
+            {googleEmail && (
+              <img
+                style={{ width: "40px", marginRight: "1vw" }}
+                src={PlayYoutube}
+              />
+            )}
+            {spotifyEmail && (
+              <img style={{ width: "40px" }} src={PlaySpotify} />
+            )}
+          </div>
+          <MyId>{nickName}</MyId>
+          <MyInfoLine />
+          <MyInfoAccount>
+            <div>
+              <img
+                style={{ width: "23px", marginRight: "15px" }}
+                src={GoogleAccount}
+                alt="account icon"
+              />
+              <UserEmail>{googleEmail}</UserEmail>
+            </div>
+            {spotifyEmail && (
+              <div>
+                <img
+                  style={{ width: "23px", marginRight: "15px" }}
+                  src={PlaySpotify}
+                  alt="account icon"
+                />
+                <UserEmail>{spotifyEmail}</UserEmail>
+              </div>
+            )}
+          </MyInfoAccount>
+        </MyInfoBox>
+        <Functions>
+          <FunctionButton onClick={clickToEdit}>수정</FunctionButton>
+          <FunctionButton onClick={handleLogout}>로그아웃</FunctionButton>
+        </Functions>
+      </Wrapper>
     </Container>
   );
 };
 
 const Container = styled.section`
-  height: 20vw;
+  height: 300px;
   position: relative;
   display: flex;
-  margin: 5vw 10% 0;
   background: #010407;
+  justify-content: center;
+  align-items: center;
+`;
+
+const Wrapper = styled.div`
+  display: flex;
+  width: 1166px;
 `;
 
 const MyInfoBox = styled.section`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  margin: 3vw 0;
   flex: none;
+  margin-left: 40px;
 `;
 
 const MyId = styled.span`
@@ -94,6 +151,7 @@ const MyInfoLine = styled.hr`
 const MyInfoAccount = styled.div`
   display: flex;
   justify-content: left;
+  flex-direction: column;
 
   font-family: Noto Sans KR;
   font-style: normal;
@@ -115,8 +173,6 @@ const UserEmail = styled.div`
 `;
 
 const Functions = styled.section`
-  position: relative;
-  margin: 2vw 0;
   margin-left: auto;
 `;
 
