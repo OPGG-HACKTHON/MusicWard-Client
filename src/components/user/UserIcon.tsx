@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import MyImgEdge from "assets/img/mypage/my-img-edge.png";
+import Profile from "assets/img/profile.png";
 import EmptyImg from "assets/img/empty-img.svg";
 
 interface UserIconProps {
@@ -16,21 +16,21 @@ const UserIcon = ({ imgUrl }: UserIconProps) => {
 };
 
 const MyImgBox = styled.section`
+  position: relative;
+  flex: none;
   width: 200px;
   height: 200px;
-  background-image: url(${MyImgEdge});
+  background-image: url(${Profile});
   background-repeat: no-repeat;
-  flex: none;
-  position: relative;
+  background-size: contain;
+  background-position: center;
   > img {
-    border: 1px solid black;
-    border: 5px solid gold;
     border-radius: 100px;
-    width: 174px;
-    height: 174px;
+    width: 164px;
+    height: 164px;
     position: absolute;
-    top: 5px;
-    left: 8px;
+    top: 17px;
+    left: 18px;
   }
 `;
 

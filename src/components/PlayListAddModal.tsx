@@ -25,9 +25,9 @@ const PlayListAddModal: FC<PlayListAddModalProps> = ({ onClose, id, link }) => {
     description: "",
     champion: "",
   });
+  // TODO: 태그 기능
   // const [tagList, setTagList] = useState([]);
   const handleCreate = useCallback(async () => {
-    // console.log(info);
     const { data } = await axiosInstance({
       url: "playlists",
       method: "post",
@@ -43,6 +43,7 @@ const PlayListAddModal: FC<PlayListAddModalProps> = ({ onClose, id, link }) => {
         tags: ["신남", "행복"], //tagList
       },
     });
+    // TODO: 챔피언 이름 체크 결과 알럿 또는 힌트텍스트 필요
     console.log(data);
     onClose?.();
   }, [onClose, info]);

@@ -6,17 +6,19 @@ import UserIcon from "components/user/UserIcon";
 import PlayYoutube from "assets/img/mypage/play-youtube.png";
 import PlaySpotify from "assets/img/mypage/play-spotify.png";
 import GoogleAccount from "assets/img/mypage/google-account.png";
-import { useRecoilValue, useResetRecoilState } from "recoil";
-import { accessToken, token } from "recoil/auth";
+import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
+import { accessToken, AuthType, auth, token } from "recoil/auth";
 import { useEffect } from "react";
 import axiosInstance from "utils/axiosConfig";
 
 const UserInfo = () => {
+  // TODO: atom 사용해도 좋을듯?
   const [nickName, setNickName] = useState("");
   const [googleEmail, setGoogleEmail] = useState("");
   const [spotifyEmail, setSpotifyEmail] = useState("");
-  const [userProfile] = useState("");
+  const [userProfile] = useState(""); // TODO: 구글 프로필 추가
   const jwtToken = useRecoilValue(accessToken);
+  const [, setAuth] = useRecoilState<AuthType>(auth);
 
   const history = useHistory();
   const clickToEdit = () => {
@@ -35,26 +37,19 @@ const UserInfo = () => {
         Authorization: `Bearer ${jwtToken}`,
       },
     });
-    console.log(data);
-    setGoogleEmail(data.google_email);
-    setSpotifyEmail(data.spotify_email);
-    setNickName(data.nickname);
-  }, []);
-  const getMyPlayList = useCallback(async () => {
-    const { data } = await axiosInstance({
-      url: "non-playlists",
-      headers: {
-        Authorization: `Bearer ${jwtToken}`,
-      },
-      params: {
-        provider: "YOUTUBE",
-      },
+    const { google_email, spotify_email, nickname, name } = data;
+    setGoogleEmail(google_email);
+    setSpotifyEmail(spotify_email);
+    setNickName(nickname);
+    setAuth({
+      name,
+      nickname: nickname,
+      googleEmail: google_email,
+      spotifyEmail: spotify_email,
     });
-    console.log(data);
   }, []);
   useEffect(() => {
     getMyPageInfo();
-    getMyPlayList();
   }, []);
 
   return (
@@ -65,25 +60,25 @@ const UserInfo = () => {
           <div>
             {googleEmail && (
               <img
-                style={{ width: "40px", marginRight: "1vw" }}
+                style={{ width: "24px", marginRight: "10px" }}
                 src={PlayYoutube}
               />
             )}
             {spotifyEmail && (
-              <img style={{ width: "40px" }} src={PlaySpotify} />
+              <img style={{ width: "24px" }} src={PlaySpotify} />
             )}
           </div>
           <MyId>{nickName}</MyId>
           <MyInfoLine />
           <MyInfoAccount>
-            <div>
+            <EmailWrapper>
               <img
-                style={{ width: "23px", marginRight: "15px" }}
+                style={{ width: "24px", marginRight: "15px" }}
                 src={GoogleAccount}
                 alt="account icon"
               />
               <UserEmail>{googleEmail}</UserEmail>
-            </div>
+            </EmailWrapper>
             {spotifyEmail && (
               <div>
                 <img
@@ -128,7 +123,6 @@ const MyInfoBox = styled.section`
 `;
 
 const MyId = styled.span`
-  font-family: Noto Sans KR;
   font-style: normal;
   font-weight: bold;
   font-size: 28px;
@@ -141,19 +135,16 @@ const MyInfoLine = styled.hr`
   width: 240px;
   height: 0px;
   margin-left: 0;
-
   opacity: 0.8;
-  /* gold/primary */
   border: 1px solid #bb8c3c;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  margin: 16px 0;
 `;
 
 const MyInfoAccount = styled.div`
   display: flex;
   justify-content: left;
   flex-direction: column;
-
-  font-family: Noto Sans KR;
   font-style: normal;
   font-weight: 300;
   font-size: 16px;
@@ -161,10 +152,13 @@ const MyInfoAccount = styled.div`
   color: #ffffff;
 `;
 
+const EmailWrapper = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
 const UserEmail = styled.div`
   display: inline-block;
-
-  font-family: Noto Sans KR;
   font-style: normal;
   font-weight: 300;
   font-size: 16px;
@@ -184,7 +178,6 @@ const FunctionButton = styled.button`
     linear-gradient(180deg, #c9ac6a 0%, #72572a 100%);
   border: 1px solid transparent;
   border-radius: 8px;
-  font-family: Noto Sans KR;
   font-style: normal;
   font-weight: 300;
   font-size: 16px;

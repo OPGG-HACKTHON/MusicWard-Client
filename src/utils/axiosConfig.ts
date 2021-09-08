@@ -8,7 +8,6 @@ const axiosInstance = Axios.create({
 });
 axiosInstance.interceptors.request.use(
   (config) => {
-    console.log(config);
     return config;
   },
   (err) => {
