@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useCallback } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import Fighters from "assets/icon/i-fighters.png";
 import Assassins from "assets/icon/i-assassins.png";
 import Mages from "assets/icon/i-mages.png";
@@ -20,6 +20,7 @@ type ChampionList = {
   name: string;
   position: Array<string>;
   image_url: string;
+  matrix: Array<number>;
 };
 
 type IconType = {
@@ -47,9 +48,13 @@ const Launchpad: FC<LaunchpadProps> = ({ selectedChampion, onChange }) => {
   const [championList, setChampionList] = useState<Array<ChampionList>>([]);
   const [selectedIcon, setSelectedIcon] = useState<IconType>();
   const [searchText, setSearchText] = useState<string>();
-  const handleClickChampion = (id: number) => () => {
-    onChange(id);
-  };
+  const [position, setPosition] = useState<Array<number>>([0, 0]);
+  const handleClickChampion =
+    ({ champion_id, matrix }: ChampionList) =>
+    () => {
+      setPosition(matrix);
+      onChange(Number(champion_id));
+    };
   const getChampionList = async () => {
     const { data } = await axiosInstance({
       url: "championlist",
@@ -58,13 +63,31 @@ const Launchpad: FC<LaunchpadProps> = ({ selectedChampion, onChange }) => {
         champion_name: searchText,
       },
     });
-    setChampionList(data.champion_list);
+    setPosition([]);
+    let row = 1;
+    const temp = data.champion_list.map((i: ChampionList, index: number) => {
+      if (index === row * 8) {
+        row += 1;
+      }
+      if (i.champion_id === selectedChampion.champion_id) {
+        setPosition([row - 1, (index % 8) + 1]);
+      }
+      return {
+        ...i,
+        matrix: [row - 1, (index % 8) + 1],
+      };
+    });
+    setChampionList(temp);
   };
   const handleClickCategory = useCallback(
     (icon: IconType) => async () => {
+      if (icon.position === selectedIcon?.position) {
+        setSelectedIcon(undefined);
+        return;
+      }
       setSelectedIcon(icon);
     },
-    [setSelectedIcon]
+    [selectedIcon, setSelectedIcon]
   );
   const handlePressSearch = useCallback(
     (e) => {
@@ -82,7 +105,8 @@ const Launchpad: FC<LaunchpadProps> = ({ selectedChampion, onChange }) => {
   );
   useEffect(() => {
     getChampionList();
-  }, [selectedIcon]);
+  }, [selectedChampion, selectedIcon]);
+
   return (
     <LaunchpadSection>
       <HorizontalLine />
@@ -121,9 +145,12 @@ const Launchpad: FC<LaunchpadProps> = ({ selectedChampion, onChange }) => {
               {championList.map((i) => (
                 <LaunchpadItem
                   key={i.champion_id}
+                  position={
+                    position[0] === i.matrix[0] || position[1] === i.matrix[1]
+                  }
                   url={i.image_url}
                   selected={i.champion_id === selectedChampion.champion_id}
-                  onClick={handleClickChampion(Number(i.champion_id))}
+                  onClick={handleClickChampion(i)}
                 />
               ))}
             </LaunchpadWrapper>
@@ -209,11 +236,11 @@ const LaunpadInner = styled.div`
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  /* justify-content: space-between; */
 `;
 
 const LaunchpadFilter = styled.div`
-  height: 60px;
+  min-height: 60px;
   width: calc(100% - 52px);
   border-bottom: 1px solid #64583a;
   display: flex;
@@ -249,20 +276,51 @@ const Input = styled.input`
   background: url(${InputSearch}) no-repeat left 8px center #12191c;
 `;
 
-const LaunchpadItem = styled.div<{ url: string; selected: boolean }>`
+const LaunchpadItem = styled.div<{
+  url: string;
+  selected: boolean;
+  position?: boolean;
+}>`
   width: 75px;
   height: 75px;
+  cursor: pointer;
   background: radial-gradient(50% 50% at 50% 50%, #8488a0 0%, #40414f 100%);
   border-radius: 5px;
   border: 1px solid #73592c;
   background-image: url(${({ url }) => url});
   background-size: cover;
   background-repeat: no-repeat;
-  margin-right: 22px;
-  margin-bottom: 22px;
+  background-size: 107%;
+  background-position: center;
+  margin: 11px;
   opacity: ${({ selected }) => (selected ? "1" : "0.2")};
+  ${({ position, selected, url }) =>
+    position &&
+    !selected &&
+    css`
+      background-image: radial-gradient(
+          50% 50% at 50% 50%,
+          #ebf3ff80 0%,
+          #444ea980 100%
+        ),
+        url(${url});
+      border-radius: 6px;
+      opacity: 0.5;
+      border: 1px solid #0c1e2f;
+    `}
   filter: ${({ selected }) =>
     selected ? "drop-shadow(0px 0px 12px #C89236)" : ""};
+
+  &::after {
+    width: 100px;
+    height: 100px;
+    background-color: white;
+  }
+  &::before {
+    width: 100px;
+    height: 100px;
+    background-color: white;
+  }
 `;
 
 const ItemWrapper = styled.div`
@@ -275,10 +333,10 @@ const ItemWrapper = styled.div`
 const LaunchpadWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
-  height: 100%;
+  /* height: 100%; */
   overflow: auto;
-  padding-top: 25px;
-  padding-left: 25px;
+  margin-left: -11px;
+  padding: 0 0 0 25px;
   ${ItemWrapper}:last-child {
     margin-bottom: 0;
   }
