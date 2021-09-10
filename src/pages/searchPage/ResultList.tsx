@@ -5,6 +5,7 @@ import queryString from "query-string";
 import SelectArrow from "assets/icon/i-select.svg";
 import InputSearch from "assets/icon/i-search.svg";
 import SearchResultList from "./components/SearchResultList";
+import Dropdown, { Option } from "components/Dropdown";
 import { options } from "./Category";
 import axiosInstance from "utils/axiosConfig";
 import { PlayListItemProps } from "components/PlayListItem";
@@ -15,11 +16,15 @@ const ResultList = () => {
   const [listByRank, setListByRank] = useState([]);
   const [listByCreatedDate, setListByCreatedDate] = useState([]);
   const [rankList, setRankList] = useState<Array<PlayListItemProps>>([]);
-  const [searchType, setSearchType] = useState(type || "summors");
+  const [searchType, setSearchType] = useState<Option>(
+    options.filter((i) => i.value === type)[0] || options[0]
+  );
   const [searchText, setSearchText] = useState(text || "");
+  console.log(type, text);
   const handleChangeSelect = useCallback(
-    (e) => {
-      setSearchType(e.target.value);
+    (value) => {
+      const [selected] = options.filter((i) => i.value === value);
+      setSearchType(selected);
     },
     [setSearchType]
   );
@@ -32,7 +37,7 @@ const ResultList = () => {
   const search = useCallback(() => {
     history.replace({
       pathname: "/search/list",
-      search: `type=${searchType}&text=${searchText}`,
+      search: `type=${searchType.value}&text=${searchText}`,
     });
     getPlayListByRank();
     getPlayListByCreatedDate();
@@ -47,13 +52,12 @@ const ResultList = () => {
   );
   const getPlayListByRank = async () => {
     const { data } = await axiosInstance({
-      url: `search/${searchType}`,
+      url: `search/${searchType.value}`,
       params: {
         query: searchText,
         sort: "view",
         page: 1,
         size: 50,
-        provider: "SPOTIFY", // TODO: 이 구분값을 무슨 기준으로 넘겨줘야하는거지?
       },
     });
     setListByRank(
@@ -74,13 +78,12 @@ const ResultList = () => {
   };
   const getPlayListByCreatedDate = async () => {
     const { data } = await axiosInstance({
-      url: `search/${searchType}`,
+      url: `search/${searchType.value}`,
       params: {
         query: searchText,
         sort: "created_date",
         page: 1,
         size: 50,
-        provider: "SPOTIFY",
       },
     });
     setListByCreatedDate(
@@ -126,17 +129,16 @@ const ResultList = () => {
     <Wrapper>
       <SearchWrapper>
         <SearchDescription>
-          {options.filter((i) => i.value === type)[0].text}
+          {options.filter((i) => i.value === type)[0]?.label}
           {type === "tag" ? "를" : "을"} 검색한 결과입니다.
         </SearchDescription>
         <SearchBar>
-          <Select value={searchType} onChange={handleChangeSelect}>
-            {options.map((i) => (
-              <option key={i.value} value={i.value}>
-                {i.text}
-              </option>
-            ))}
-          </Select>
+          <Dropdown
+            value={searchType.label}
+            options={options}
+            onChange={handleChangeSelect}
+            isSmall
+          />
           <Input
             value={searchText}
             onChange={handleChangeInput}

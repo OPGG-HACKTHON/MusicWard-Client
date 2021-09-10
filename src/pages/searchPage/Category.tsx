@@ -1,28 +1,29 @@
 import React, { useState, useCallback } from "react";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
-
-import SelectArrow from "assets/icon/i-select.svg";
 import InputSearch from "assets/icon/i-search.svg";
 import PlayListItem, { PlayListItemProps } from "components/PlayListItem";
 import { useEffect } from "react";
 import axiosInstance from "utils/axiosConfig";
+import Dropdown from "components/Dropdown";
+import { Option } from "components/Dropdown";
 
-export const options = [
-  { value: "summoner", text: "소환사명" },
-  { value: "tag", text: "태그" },
-  { value: "champion", text: "챔피언명" },
-  { value: "playlist", text: "플레이리스트명" },
+export const options: Array<Option> = [
+  { key: "summoner", value: "summoner", label: "소환사명" },
+  { key: "tag", value: "tag", label: "태그" },
+  { key: "champion", value: "champion", label: "챔피언명" },
+  { key: "playlist", value: "playlist", label: "플레이리스트명" },
 ];
 
 const Category = () => {
   const history = useHistory();
   const [PlayList, setPlayList] = useState<Array<PlayListItemProps>>([]);
-  const [searchType, setSearchType] = useState(options[0].value);
+  const [searchType, setSearchType] = useState<Option>(options[0]);
   const [searchText, setSearchText] = useState("");
   const handleChangeSelect = useCallback(
-    (e) => {
-      setSearchType(e.target.value);
+    (value) => {
+      const [selected] = options.filter((i) => i.value === value);
+      setSearchType(selected);
     },
     [setSearchType]
   );
@@ -35,7 +36,7 @@ const Category = () => {
   const search = useCallback(() => {
     history.push({
       pathname: "/search/list",
-      search: `type=${searchType}&text=${searchText}`,
+      search: `type=${searchType.value}&text=${searchText}`,
     });
   }, [searchType, searchText]);
   const handleCheckEnter = useCallback(
@@ -72,13 +73,11 @@ const Category = () => {
   return (
     <>
       <SearchBar>
-        <Select value={searchType} onChange={handleChangeSelect}>
-          {options.map((i) => (
-            <option key={i.value} value={i.value}>
-              {i.text}
-            </option>
-          ))}
-        </Select>
+        <Dropdown
+          value={searchType.label}
+          options={options}
+          onChange={handleChangeSelect}
+        />
         <Input
           value={searchText}
           onChange={handleChangeInput}
@@ -106,25 +105,6 @@ const SearchBar = styled.div`
   display: flex;
   justify-content: center;
   margin: 100px 0;
-`;
-
-const Select = styled.select`
-  width: 200px;
-  height: 51px;
-  border: 2px solid #9b8a61;
-  border-right: none;
-  box-shadow: none;
-  border-top-left-radius: 3px;
-  border-bottom-left-radius: 3px;
-  appearance: none;
-  background: url(${SelectArrow}) no-repeat right 21px center #2c2c2c;
-  background-size: 9px;
-  padding-left: 30px;
-  color: #f4ecd987;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 16px;
-  line-height: 23px;
 `;
 
 const Input = styled.input`
