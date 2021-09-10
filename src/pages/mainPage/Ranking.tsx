@@ -131,7 +131,7 @@ const Category = styled.label`
   cursor: pointer;
   font-size: 28px;
   font-weight: normal;
-  padding: 0 35px;
+  padding: 0 35px 6px;
   border-image: linear-gradient(to right, #bb8c3c 0%, #73592c 100%);
   border-image-width: 0 0 0 0;
   border-style: solid;
@@ -147,7 +147,7 @@ const Category = styled.label`
 `;
 
 const RankingCategory = styled.div`
-  height: 47px;
+  height: 55px;
   border-bottom: 1px solid #73592c;
   display: flex;
   justify-content: center;

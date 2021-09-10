@@ -3,8 +3,10 @@ import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import UserIcon from "components/user/UserIcon";
 
-import PlayYoutube from "assets/img/mypage/play-youtube.png";
-import PlaySpotify from "assets/img/mypage/play-spotify.png";
+// import PlayYoutube from "assets/img/mypage/play-youtube.png";
+// import PlaySpotify from "assets/img/mypage/play-spotify.png";
+import YoutubeMusicIcon from "assets/icon/i-youtube-music.svg";
+import SpotifyMusicIcon from "assets/icon/i-spotify-music.svg";
 import GoogleAccount from "assets/img/mypage/google-account.png";
 import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
 import { accessToken, AuthType, auth, token } from "recoil/auth";
@@ -61,11 +63,11 @@ const UserInfo = () => {
             {googleEmail && (
               <img
                 style={{ width: "24px", marginRight: "10px" }}
-                src={PlayYoutube}
+                src={YoutubeMusicIcon}
               />
             )}
             {spotifyEmail && (
-              <img style={{ width: "24px" }} src={PlaySpotify} />
+              <img style={{ width: "24px" }} src={SpotifyMusicIcon} />
             )}
           </div>
           <MyId>{nickName}</MyId>
@@ -83,7 +85,7 @@ const UserInfo = () => {
               <div>
                 <img
                   style={{ width: "23px", marginRight: "15px" }}
-                  src={PlaySpotify}
+                  src={SpotifyMusicIcon}
                   alt="account icon"
                 />
                 <UserEmail>{spotifyEmail}</UserEmail>

@@ -2,7 +2,7 @@ import React, { useState, useCallback } from "react";
 import styled from "styled-components";
 import DeleteButton from "assets/img/mypage/delete-button.png";
 import Ward from "assets/img/mypage/ward.png";
-import PlayYoutube from "assets/img/mypage/play-youtube.png";
+import YoutubeMusicIcon from "assets/icon/i-youtube-music.svg";
 import EmptyImg from "assets/img/empty-img.svg";
 import PlayListAddModal from "components/PlayListAddModal";
 import { useEffect } from "react";
@@ -114,7 +114,7 @@ const PlayLists = () => {
                   />
                   <Info>
                     <img
-                      src={PlayYoutube}
+                      src={YoutubeMusicIcon}
                       style={{
                         width: "20px",
                         position: "absolute",
@@ -151,7 +151,7 @@ const PlayLists = () => {
                     <PlayListTitle>
                       <div>
                         <img
-                          src={PlayYoutube}
+                          src={YoutubeMusicIcon}
                           style={{
                             width: "20px",
                           }}
@@ -177,7 +177,7 @@ const PlayListWrapperFilter = styled.div`
   top: 0;
   left: 0;
   background: rgb(42 77 109 / 50%);
-  z-index: 100;
+  z-index: 10;
 `;
 
 const PlusIcon = styled.div`
@@ -191,7 +191,7 @@ const PlusIcon = styled.div`
     background-color: #f0f0f0;
     transform-origin: top left;
     content: "";
-    z-index: 999;
+    z-index: 20;
   }
   &::before {
     transform: rotate(0deg) translate(-50%, -50%);
