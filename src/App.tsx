@@ -5,6 +5,8 @@ import { Route, BrowserRouter } from "react-router-dom";
 import Routes from "routes";
 import GlobalNavBar from "components/GlobalNavBar";
 import LoginModal from "components/LoginModal";
+import PerfectScrollbar from "react-perfect-scrollbar";
+import "react-perfect-scrollbar/dist/css/styles.css";
 
 const App = () => {
   return (
@@ -13,9 +15,11 @@ const App = () => {
         <Suspense fallback={<div>Loading...</div>}>
           <BrowserRouter>
             <GlobalStyle />
-            <GlobalNavBar />
-            <LoginModal />
-            <Route component={Routes} />
+            <PerfectScrollbar>
+              <GlobalNavBar />
+              <LoginModal />
+              <Route component={Routes} />
+            </PerfectScrollbar>
           </BrowserRouter>
         </Suspense>
       </RecoilRoot>
