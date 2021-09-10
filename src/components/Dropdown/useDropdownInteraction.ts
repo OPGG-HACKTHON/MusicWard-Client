@@ -6,7 +6,7 @@ interface DropdownInteractionProps {
   options: Option[];
   node: MutableRefObject<HTMLDivElement | null>;
   disabled?: boolean;
-  onChange: (v: any) => void;
+  onChange: (v: string) => void;
 }
 
 const useDropdownInteraction = ({
@@ -23,7 +23,7 @@ const useDropdownInteraction = ({
   }, [disabled, isOpened, setIsOpened]);
 
   const handleClickOutsideDropdown = useCallback(
-    (e: any) => {
+    (e) => {
       if (node.current && node.current.contains(e.target)) {
         return;
       }

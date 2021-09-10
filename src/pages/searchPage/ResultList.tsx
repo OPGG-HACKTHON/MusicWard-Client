@@ -2,7 +2,6 @@ import React, { useState, useCallback, useEffect } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import queryString from "query-string";
-import SelectArrow from "assets/icon/i-select.svg";
 import InputSearch from "assets/icon/i-search.svg";
 import SearchResultList from "./components/SearchResultList";
 import Dropdown, { Option } from "components/Dropdown";
@@ -206,25 +205,6 @@ const SearchDescription = styled.div`
 const SearchBar = styled.div`
   display: flex;
   justify-content: center;
-`;
-
-const Select = styled.select`
-  width: 159px;
-  height: 45px;
-  border: 2px solid #9b8a61;
-  border-right: none;
-  box-shadow: none;
-  border-top-left-radius: 3px;
-  border-bottom-left-radius: 3px;
-  appearance: none;
-  background: url(${SelectArrow}) no-repeat right 21px center #2c2c2c;
-  background-size: 8px;
-  padding-left: 21px;
-  color: #f4ecd987;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 16px;
-  line-height: 23px;
 `;
 
 const Input = styled.input`
