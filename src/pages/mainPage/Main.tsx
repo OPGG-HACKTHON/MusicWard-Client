@@ -31,8 +31,8 @@ const Main = () => {
     const { data } = await axiosInstance.get(`champion/${id}`);
     setSelectedChampion(data);
     setTimeout(() => {
-      const audio = new Audio(data.voice_url);
-      audio.play();
+      // const audio = new Audio(data.voice_url);
+      // audio.play();
     }, 100);
   };
   const handleChangeChampion = useCallback(async (id: number) => {
