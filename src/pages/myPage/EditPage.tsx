@@ -2,9 +2,9 @@ import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import UserIcon from "components/user/UserIcon";
 
-import EditYoutube from "assets/img/mypage/edit-youtube.png";
-import EditSpotify from "assets/img/mypage/edit-spotify.png";
-import GoogleAccount from "assets/img/mypage/google-account.png";
+import GoogleIcon from "assets/icon/i-google.svg";
+import SpotifyFull from "assets/img/spotify-full.svg";
+import YoutubeFull from "assets/img/youtube-full.svg";
 import PlaySpotify from "assets/img/mypage/play-spotify.png";
 import axiosInstance from "utils/axiosConfig";
 import { useRecoilValue } from "recoil";
@@ -65,23 +65,15 @@ const EditPage = () => {
         <MyId>{name}</MyId>
         <MyInfoLine />
         <MyInfoAccount>
-          <div>
-            <img
-              style={{ width: "23px", marginRight: "15px" }}
-              src={GoogleAccount}
-              alt="account icon"
-            />
+          <AccountWrapper>
+            <AccountIcon src={GoogleIcon} alt="account icon" />
             <UserEmail>{googleEmail}</UserEmail>
-          </div>
+          </AccountWrapper>
           {spotifyEmail && (
-            <div>
-              <img
-                style={{ width: "23px", marginRight: "15px" }}
-                src={PlaySpotify}
-                alt="account icon"
-              />
+            <AccountWrapper>
+              <AccountIcon src={PlaySpotify} alt="account icon" />
               <UserEmail>{googleEmail}</UserEmail>
-            </div>
+            </AccountWrapper>
           )}
         </MyInfoAccount>
       </MyInfoBox>
@@ -92,10 +84,10 @@ const EditPage = () => {
       <EditBox>
         <EditTitle>연동플랫폼</EditTitle>
         <SpotifyButton>
-          <img src={EditSpotify} />
+          <img src={SpotifyFull} />
         </SpotifyButton>
         <YoutubeButton>
-          <img src={EditYoutube} />
+          <img src={YoutubeFull} />
         </YoutubeButton>
       </EditBox>
       <BottomLine />
@@ -134,9 +126,9 @@ const MyInfoLine = styled.hr`
   display: inline-block;
   width: 240px;
   height: 0px;
-
+  margin: 13px 0;
+  align-self: center;
   opacity: 0.8;
-  /* gold/primary */
   border: 1px solid #bb8c3c;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 `;
@@ -153,6 +145,16 @@ const MyInfoAccount = styled.div`
   color: #ffffff;
 `;
 
+const AccountWrapper = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const AccountIcon = styled.img`
+  width: 23px;
+  margin-right: 15px;
+`;
+
 const UserEmail = styled.div`
   display: inline-block;
 
@@ -166,6 +168,8 @@ const UserEmail = styled.div`
 
 const EditBox = styled.div`
   display: flex;
+  align-items: center;
+  margin-bottom: 23px;
 `;
 
 const EditTitle = styled.div`
@@ -183,12 +187,11 @@ const EditTitle = styled.div`
 const Nickname = styled.input`
   width: 375px;
   height: 45px;
-  margin-bottom: 23px;
   background: #12191c;
-  /* gold/deepdark */
   border: 2px solid #64583a;
   box-sizing: border-box;
   border-radius: 3px;
+  padding: 0 15px;
 `;
 
 const SpotifyButton = styled.div`
@@ -233,14 +236,14 @@ const BottomLine = styled.hr`
 
 const Functions = styled.section`
   position: relative;
-  margin: 2vw 0;
+  margin: 40px 0;
   margin-left: auto;
 `;
 
 const FunctionButton = styled.div`
   display: inline-block;
   padding: 5px 15px;
-  margin: 4px;
+  margin: 0 4px;
   background: linear-gradient(#010407, #010407) padding-box,
     linear-gradient(180deg, #c9ac6a 0%, #72572a 100%);
   border: 1px solid transparent;

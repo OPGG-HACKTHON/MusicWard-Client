@@ -65,7 +65,7 @@ const Rank = styled.div`
   color: #c9ab6a;
   top: 34px;
   left: 95px;
-  font-weight: bold;
+  font-weight: normal;
   font-size: 28px;
   line-height: 41px;
   letter-spacing: -0.01em;
@@ -101,7 +101,7 @@ const Title = styled.div<{ full: boolean }>`
   position: absolute;
   top: 38px;
   left: 248px;
-  font-weight: bold;
+  font-weight: normal;
   font-size: 28px;
   line-height: 41px;
   letter-spacing: -0.01em;
@@ -145,7 +145,7 @@ const InfoBox = styled.div`
     letter-spacing: -0.01em;
   }
   div:last-child {
-    font-weight: bold;
+    font-weight: normal;
     font-size: 22px;
     line-height: 32px;
   }

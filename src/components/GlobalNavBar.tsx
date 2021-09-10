@@ -64,10 +64,12 @@ const Menu = styled(Link)`
 
 const Logo = styled.div`
   background-image: url(${LogoImg});
-  width: 147px;
-  height: 24px;
+  width: 260px;
+  height: 30px;
   background-repeat: no-repeat;
-  background-size: contain;
+  background-position: center;
+  background-size: 140px;
+  background-position-y: 1px;
 `;
 
 export default GlobalNavBar;

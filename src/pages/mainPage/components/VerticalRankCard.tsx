@@ -75,7 +75,7 @@ const RankingCard = styled.div<{
   url?: string;
 }>`
   background-image: url(${RandkingCardBg});
-  height: ${({ isFirstPlace }) => (isFirstPlace ? "478px" : "387px")};
+  height: ${({ isFirstPlace }) => (isFirstPlace ? "493px" : "400px")};
   width: ${({ isFirstPlace }) => (isFirstPlace ? "478px" : "387px")};
   background-size: cover;
   background-repeat: no-repeat;
@@ -92,7 +92,7 @@ const RankIcon = styled.div<{
   height: ${({ rank }) => (rank === 1 ? "100px" : "84px")};
   width: ${({ rank }) => (rank === 1 ? "100px" : "84px")};
   position: absolute;
-  top: -28px;
+  top: ${({ rank }) => (rank === 1 ? "-44px" : "-28px")};
   left: ${({ rank }) => `calc(50% - ${rank === 1 ? 50 : 42}px)`};
 `;
 
@@ -121,7 +121,7 @@ const Profile = styled.div<{ isFirstPlace: boolean; url?: string }>`
 
 const Title = styled.div<{ isFirstPlace: boolean }>`
   position: absolute;
-  font-weight: bold;
+  font-weight: normal;
   text-align: center;
   font-size: 28px;
   line-height: 41px;
@@ -155,12 +155,12 @@ const InfoBoxWrapper = styled.div<{ isFirstPlace: boolean }>`
   display: flex;
   justify-content: space-around;
   text-align: center;
-  padding: 0 ${({ isFirstPlace }) => (isFirstPlace ? "22px" : "18px")};
+  padding: 0 ${({ isFirstPlace }) => (isFirstPlace ? "13px" : "11px")};
 `;
 
 const RankInfoWrapper = styled.div<{ isFirstPlace: boolean }>`
   position: absolute;
-  bottom: ${({ isFirstPlace }) => (isFirstPlace ? "20px" : "10px")};
+  bottom: ${({ isFirstPlace }) => (isFirstPlace ? "30px" : "17px")};
   width: 100%;
 `;
 
@@ -174,7 +174,7 @@ const InfoBox = styled.div`
   }
   div:last-child {
     font-size: 22px;
-    font-weight: bold;
+    font-weight: normal;
     line-height: 32px;
   }
 `;

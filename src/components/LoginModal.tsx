@@ -39,9 +39,6 @@ const LoginModal = () => {
               >
                 Google 연동하기
               </LoginButton>
-              <LoginButton type="button" onClick={handleLogin("spotify")}>
-                spotify 연동하기
-              </LoginButton>
             </ModalContent>
           </ModalWrapper>
         </Wrapper>
@@ -67,7 +64,7 @@ export const CloseBtn = styled.div`
   position: absolute;
   width: 40px;
   height: 40px;
-  left: calc(50% - 10px);
+  left: calc(50% - 20px);
   top: -57px;
   background: #101010;
   border: 1px solid #9c9c9c;
@@ -95,12 +92,12 @@ export const CloseBtn = styled.div`
 
 const ModalWrapper = styled.div`
   position: absolute;
-  left: calc(50% - 227px);
-  top: calc(50% - 300px);
+  left: calc(50% - 201px);
+  top: calc(50% - 261px);
   background-image: url(${LoginModalBg});
   background-repeat: no-repeat;
-  width: 454px;
-  height: 600px;
+  width: 402px;
+  height: 522px;
 `;
 
 const ModalContent = styled.div`
@@ -108,7 +105,7 @@ const ModalContent = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 520px;
+  height: 462px;
 `;
 
 const Logo = styled.div`
