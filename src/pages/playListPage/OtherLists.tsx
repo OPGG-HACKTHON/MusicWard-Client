@@ -45,7 +45,6 @@ const OtherLists = ({ others }: IProps) => {
         prevArrow={<LeftButtonImg src={LeftButton} />}
         nextArrow={<RightButtonImg src={RightButton} />}
       >
-        {/* <OtherPlayLists> */}
         {others?.tracks.items.map((item) => (
           <OtherPlayList key={item.id}>
             <img
@@ -57,7 +56,6 @@ const OtherLists = ({ others }: IProps) => {
             <OtherSinger>{item.artists}</OtherSinger>
           </OtherPlayList>
         ))}
-        {/* </OtherPlayLists> */}
       </Slider>
     </Container>
   );
@@ -65,26 +63,20 @@ const OtherLists = ({ others }: IProps) => {
 
 const Container = styled.section`
   position: relative;
-  margin: 5% auto;
+  margin: 0 auto;
   width: 1060px;
 `;
 
 const LeftButtonImg = styled.img`
   position: absolute;
-  top: 6vw;
+  top: 111px;
   left: -52px;
 `;
 
 const RightButtonImg = styled.img`
   position: absolute;
-  top: 6vw;
+  top: 111px;
   right: -52px;
-`;
-
-const OtherPlayLists = styled.div`
-  display: flex;
-  justify-content: space-between;
-  overflow: hidden;
 `;
 
 const OtherPlayListHr = styled.div`
@@ -100,7 +92,7 @@ const OtherPlayList = styled.div`
   flex-direction: column;
   text-align: center;
   margin-right: 62px;
-  padding-left: 24px;
+  padding-left: 20px;
 `;
 
 const OtherTitle = styled.div`

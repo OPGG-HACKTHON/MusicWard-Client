@@ -90,14 +90,16 @@ const PlayList = ({ playInfo }: IProps) => {
 const Container = styled.section`
   display: flex;
   justify-content: space-between;
-  margin: -4% 5% 2%;
-  height: 40vw;
+  margin: 0 auto;
+  width: 1160px;
+  height: 569px;
+  position: relative;
 `;
 
 const PlayListInfo = styled.section`
   position: absolute;
-  top: 337.5px;
-  left: 140px;
+  top: 183.5px;
+  left: 0px;
 `;
 
 const PlayListTitle = styled.div`
@@ -130,24 +132,23 @@ const PlayListDescription = styled.div`
 
 const PlayListThumbnail = styled.section`
   position: absolute;
-  top: 147.5px;
-  left: 391px;
+  left: 251px;
 `;
 
 const PlayListThumbnailShadow = styled.div`
   position: absolute;
   width: 629px;
   height: 216px;
-  left: 411px;
-  top: 618.5px;
+  left: 271px;
+  top: 518.5px;
 
   background: linear-gradient(0deg, #010407 28.25%, rgba(1, 4, 7, 0) 91.32%);
 `;
 
 const PlayListComments = styled.section`
   position: absolute;
-  top: 228.5px;
-  right: 132px;
+  top: 74.5px;
+  right: 0;
   width: 274px;
   height: 488px;
   text-align: right;

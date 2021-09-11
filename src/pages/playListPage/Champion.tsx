@@ -1,11 +1,19 @@
-import React from "react";
+import React, { useCallback } from "react";
 import styled from "styled-components";
+import { useRecoilState } from "recoil";
+import { reportModalState } from "recoil/modal";
 
 type IProps = {
   tags?: [];
 };
 
 const Champion = ({ tags }: IProps) => {
+  const [, setOpenReportModal] = useRecoilState<boolean>(reportModalState);
+
+  const handleOpenReportModal = useCallback(() => {
+    setOpenReportModal(true);
+  }, [setOpenReportModal]);
+
   return (
     <Container>
       <Tags>
@@ -15,7 +23,7 @@ const Champion = ({ tags }: IProps) => {
       </Tags>
 
       <Functions>
-        <FunctionButton>신고</FunctionButton>
+        <FunctionButton onClick={handleOpenReportModal}>신고</FunctionButton>
         <FunctionButton>수정</FunctionButton>
       </Functions>
     </Container>
@@ -25,13 +33,14 @@ const Champion = ({ tags }: IProps) => {
 const Container = styled.section`
   display: flex;
   justify-content: space-between;
-  margin: 35px 140px 0;
+  margin: 35px auto 0;
+  width: 1160px;
+  height: 50px;
+  overflow: visible;
 `;
 
 const Tags = styled.section`
-  position: absolute;
-  top: 115px;
-  left: 140px;
+  position: relative;
 `;
 
 const TagButton = styled.div`
@@ -53,9 +62,8 @@ const TagButton = styled.div`
 `;
 
 const Functions = styled.section`
-  position: absolute;
-  top: 115px;
-  right: 140px;
+  position: relative;
+  top: 10px;
 `;
 
 const FunctionButton = styled.div`
