@@ -236,7 +236,6 @@ const LaunpadInner = styled.div`
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  /* justify-content: space-between; */
 `;
 
 const LaunchpadFilter = styled.div`
@@ -333,7 +332,6 @@ const ItemWrapper = styled.div`
 const LaunchpadWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
-  /* height: 100%; */
   overflow: auto;
   margin-left: -11px;
   padding: 0 0 0 25px;

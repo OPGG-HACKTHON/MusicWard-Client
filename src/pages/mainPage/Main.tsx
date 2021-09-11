@@ -31,6 +31,7 @@ const Main = () => {
     const { data } = await axiosInstance.get(`champion/${id}`);
     setSelectedChampion(data);
     setTimeout(() => {
+      // FIXME: 최종배포 때 풀어주세용!
       // const audio = new Audio(data.voice_url);
       // audio.play();
     }, 100);
