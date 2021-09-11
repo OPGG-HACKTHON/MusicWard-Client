@@ -43,7 +43,7 @@ const Routes = () => {
       <Switch>
         <Route path="/search/list" component={SearchResultList} />
         <Route path="/search" component={SearchCategory} />
-        <Route path="/playlist" exact component={PlayListPage} />
+        <Route path="/playlist/:id" exact component={PlayListPage} />
         <PrivateRoute path="/mypage" exact component={MyPage} />
         <PrivateRoute path="/editpage" exact component={EditPage} />
         <PrivateRoute path="/archive" exact component={ArchivePage} />

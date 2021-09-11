@@ -8,6 +8,15 @@ import Dropdown, { Option } from "components/Dropdown";
 import { options } from "./Category";
 import axiosInstance from "utils/axiosConfig";
 import { PlayListItemProps } from "components/PlayListItem";
+import { RankType } from "pages/mainPage/Ranking";
+
+type SearchPlayListType = {
+  playlist_id: number;
+  title: string;
+  tracks: { total: number };
+  wards: { total: number };
+  image?: { url?: string };
+};
 
 const ResultList = () => {
   const history = useHistory();
@@ -60,19 +69,13 @@ const ResultList = () => {
       },
     });
     setListByRank(
-      data.map(
-        (i: {
-          title: string;
-          tracks: { total: number };
-          wards: { total: number };
-          image?: { url?: string };
-        }) => ({
-          title: i.title,
-          listCount: i.tracks.total,
-          wardCount: i.wards.total,
-          imgUrl: i.image?.url,
-        })
-      )
+      data.map((i: SearchPlayListType) => ({
+        id: i.playlist_id,
+        title: i.title,
+        listCount: i.tracks.total,
+        wardCount: i.wards.total,
+        imgUrl: i.image?.url,
+      }))
     );
   };
   const getPlayListByCreatedDate = async () => {
@@ -86,19 +89,13 @@ const ResultList = () => {
       },
     });
     setListByCreatedDate(
-      data.map(
-        (i: {
-          title: string;
-          tracks: { total: number };
-          wards: { total: number };
-          image?: { url?: string };
-        }) => ({
-          title: i.title,
-          listCount: i.tracks.total,
-          wardCount: i.wards.total,
-          imgUrl: i.image?.url,
-        })
-      )
+      data.map((i: SearchPlayListType) => ({
+        id: i.playlist_id,
+        title: i.title,
+        listCount: i.tracks.total,
+        wardCount: i.wards.total,
+        imgUrl: i.image?.url,
+      }))
     );
   };
   const getRanking = async () => {
@@ -109,14 +106,13 @@ const ResultList = () => {
       },
     });
     setRankList(
-      data.map(
-        (i: { title: string; wards_total: string; image_url?: string }) => ({
-          title: i.title,
-          listCount: 10, // FIXME: api에 플레이리스트 곡수 포함시켜달라고 해야함
-          wardCount: i.wards_total,
-          imgUrl: i.image_url,
-        })
-      )
+      data.map((i: RankType) => ({
+        id: i.id,
+        title: i.title,
+        listCount: i.tracks_total,
+        wardCount: i.wards_total,
+        imgUrl: i.image_url,
+      }))
     );
   };
   useEffect(() => {
@@ -169,6 +165,7 @@ const ResultList = () => {
             ? "감상을 추천드려요!"
             : "최근 추가된 플레이리스트를 감상해보세요!"
         }
+        // FIXME: 결과가 있는 경우 확인 필요
         items={listByRank.length === 0 ? rankList : listByCreatedDate}
       />
     </Wrapper>

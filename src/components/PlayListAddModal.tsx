@@ -1,5 +1,6 @@
 import React, { FC, useCallback, useState } from "react";
 import PlayListModalBg from "assets/img/playlist-modal.svg";
+import PlayListModalLongBg from "assets/img/playlist-modal-long.svg";
 import styled from "styled-components";
 import { CloseBtn, Wrapper } from "./LoginModal";
 import axiosInstance from "utils/axiosConfig";
@@ -25,10 +26,10 @@ const PlayListAddModal: FC<PlayListAddModalProps> = ({ onClose, id, link }) => {
     description: "",
     champion: "",
   });
-  // TODO: 태그 기능
-  // const [tagList, setTagList] = useState([]);
+  const [tagList, setTagList] = useState<Array<string>>([]);
+  const [tag, setTag] = useState<string>("");
   const handleCreate = useCallback(async () => {
-    const { data } = await axiosInstance({
+    await axiosInstance({
       url: "playlists",
       method: "post",
       headers: {
@@ -40,13 +41,19 @@ const PlayListAddModal: FC<PlayListAddModalProps> = ({ onClose, id, link }) => {
         title: info.title,
         description: info.description,
         champion_name: info.champion,
-        tags: ["신남", "행복"], //tagList
+        tags: tagList,
       },
+    }).catch((err) => {
+      // FIXME: 예쁜 알럿으로 바꿔주세요~
+      if (err.response.status === 400) {
+        alert("제목, 챔피언은 필수 입력입니다.");
+      }
+      if (err.response.status === 404) {
+        alert("옳바른 챔피언명을 입력해주세요");
+      }
     });
-    // TODO: 챔피언 이름 체크 결과 알럿 또는 힌트텍스트 필요
-    console.log(data);
     onClose?.();
-  }, [onClose, info]);
+  }, [onClose, info, tagList]);
   const handleChange = useCallback(
     (key) => (e: { target: { value: string } }) => {
       setInfo({
@@ -56,9 +63,24 @@ const PlayListAddModal: FC<PlayListAddModalProps> = ({ onClose, id, link }) => {
     },
     [info, setInfo]
   );
+  const handleChangeTag = useCallback((e) => {
+    setTag(e.target.value);
+  }, []);
+  const handleAddTag = useCallback(
+    (e) => {
+      if (e.key === "Enter") {
+        if (tagList.length > 4) {
+          return;
+        }
+        setTagList([...tagList, tag]);
+        setTag("");
+      }
+    },
+    [tag, setTagList, setTag]
+  );
   return (
     <Wrapper>
-      <ModalWrapper>
+      <ModalWrapper long={tagList.length > 0}>
         <CloseBtn onClick={onClose} />
         <ModalContent>
           <Title>플레이리스트 생성</Title>
@@ -80,11 +102,21 @@ const PlayListAddModal: FC<PlayListAddModalProps> = ({ onClose, id, link }) => {
           </InputWrapper>
           <InputWrapper>
             <Label>태그</Label>
-            <Input type="text" />
+            <Input
+              type="text"
+              value={tag}
+              onChange={handleChangeTag}
+              onKeyPress={handleAddTag}
+            />
           </InputWrapper>
-          <TagWrapper>
-            <HintText>최대 5개 까지 가능합니다.</HintText>
-          </TagWrapper>
+          <HintText>최대 5개 까지 가능합니다.</HintText>
+          {tagList.length > 0 && (
+            <TagWrapper>
+              {tagList.map((i, index) => (
+                <TagCloud key={index}>#{i}</TagCloud>
+              ))}
+            </TagWrapper>
+          )}
           <Button type="button" onClick={handleCreate}>
             생성하기
           </Button>
@@ -96,14 +128,15 @@ const PlayListAddModal: FC<PlayListAddModalProps> = ({ onClose, id, link }) => {
 
 export default PlayListAddModal;
 
-const ModalWrapper = styled.div`
+const ModalWrapper = styled.div<{ long: boolean }>`
   position: absolute;
   left: calc(50% - 276px);
   top: calc(50% - 288px);
-  background-image: url(${PlayListModalBg});
+  background-image: ${({ long }) =>
+    long ? `url(${PlayListModalLongBg})` : `url(${PlayListModalBg})`};
   background-repeat: no-repeat;
   width: 558px;
-  height: 577px;
+  height: ${({ long }) => (long ? "663px" : "577px")};
   background-position: center;
   background-size: contain;
 `;
@@ -151,12 +184,9 @@ const Input = styled.input`
   border-radius: 3px;
 `;
 
-const TagWrapper = styled.div`
+const HintText = styled.div`
   margin-left: 82px;
   margin-top: 9px;
-`;
-
-const HintText = styled.div`
   font-weight: 300;
   font-size: 16px;
   line-height: 24px;
@@ -178,4 +208,23 @@ const Button = styled.button`
   border: none;
   margin: 0 auto;
   margin-top: 34px;
+`;
+
+const TagWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 16px;
+`;
+
+const TagCloud = styled.div`
+  border-radius: 19.5px;
+  padding: 7px 15px;
+  background: linear-gradient(#2c2c2c, #2c2c3c) padding-box,
+    linear-gradient(
+      to top,
+      rgba(201, 172, 106, 1) 0%,
+      rgba(114, 87, 42, 1) 103%
+    );
+  border: 1px solid transparent;
+  margin: 0 10px 10px 0;
 `;

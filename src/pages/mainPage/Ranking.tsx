@@ -5,7 +5,7 @@ import VerticalRankCardProps from "./components/VerticalRankCard";
 import { useHistory } from "react-router-dom";
 import axiosInstance from "utils/axiosConfig";
 
-interface RankType {
+export type RankType = {
   id: number;
   title: string;
   sub_title: string;
@@ -13,7 +13,8 @@ interface RankType {
   wards_total: number;
   comments_total: number;
   image_url: string;
-}
+  tracks_total: number;
+};
 
 interface RankingProps {
   onChange: (id: number) => void;
@@ -54,7 +55,7 @@ const Ranking: FC<RankingProps> = ({ onChange }) => {
         return;
       }
       history.push({
-        pathname: "/playlist",
+        pathname: `/playlist/${id}`,
       });
     },
     [category, onChange]
