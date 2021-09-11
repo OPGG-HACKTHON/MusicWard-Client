@@ -6,10 +6,12 @@ import Mage from "assets/icon/i-mages.png";
 import Marksman from "assets/icon/i-marksmen.png";
 import Support from "assets/icon/i-supports.png";
 import Tank from "assets/icon/i-tanks.png";
+import EmptyImg from "assets/img/empty-img.svg";
 import Carousel from "components/Carousel";
 import { Champion } from "./Main";
 import axiosInstance from "utils/axiosConfig";
 import { PlayListItemProps } from "components/PlayListItem";
+import { Link } from "react-router-dom";
 
 const MaxString = 300;
 const IconObj: Record<string, string> = {
@@ -86,7 +88,22 @@ const PlayList: FC<PlayListProps> = ({ champion }) => {
           {champion.story.length > MaxString ? "..." : ""}
         </Description>
       </TextWrapper>
-      <Carousel items={playList} showPaging />
+      {playList.length === 0 ? (
+        <EmptyPlayList>
+          <EmptyImage src={EmptyImg} />
+          <EmptyText>
+            소환사가 포로에게 먹이를 주듯,
+            <br />
+            여러분이 직접 챔피언에게 플레이리스트를 주세요 :)
+          </EmptyText>
+          <HorizontalLine />
+          <AddButton type="button" to="/mypage">
+            플레이리스트 등록하기
+          </AddButton>
+        </EmptyPlayList>
+      ) : (
+        <Carousel items={playList} showPaging />
+      )}
     </PlayListSection>
   );
 };
@@ -162,4 +179,48 @@ const Description = styled.div`
   font-size: 16px;
   font-weight: lighter;
   margin-top: 30px;
+`;
+
+const EmptyPlayList = styled.div`
+  width: 1220px;
+  position: absolute;
+  z-index: 12;
+  bottom: -168px;
+  left: calc(50% - 610px);
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const EmptyImage = styled.img`
+  width: 200px;
+`;
+
+const EmptyText = styled.div`
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: -0.01em;
+  opacity: 0.8;
+  text-align: center;
+`;
+
+const HorizontalLine = styled.hr`
+  position: absolute;
+  width: 550px;
+  height: 25px;
+  top: 204px;
+  background-color: #285766;
+  filter: blur(25px);
+`;
+
+const AddButton = styled(Link)`
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: -0.01em;
+  opacity: 0.9;
+  margin-top: 40px;
+  cursor: pointer;
+  color: #ffffff;
 `;
