@@ -1,15 +1,17 @@
 import React from "react";
 import styled from "styled-components";
 
-const Champion = () => {
+type IProps = {
+  tags?: [];
+};
+
+const Champion = ({ tags }: IProps) => {
   return (
     <Container>
       <Tags>
-        <TagButton>#가렌</TagButton>
-        <TagButton>#데마시아</TagButton>
-        <TagButton>#매드무비</TagButton>
-        <TagButton>#전사</TagButton>
-        <TagButton>#가요</TagButton>
+        {tags?.map((tag: any) => (
+          <TagButton key={0}>{`#${tag}`}</TagButton>
+        ))}
       </Tags>
 
       <Functions>
@@ -23,12 +25,13 @@ const Champion = () => {
 const Container = styled.section`
   display: flex;
   justify-content: space-between;
-  margin: 5vw 5% 0 5%;
+  margin: 35px 140px 0;
 `;
 
 const Tags = styled.section`
-  position: relative;
-  width: 30%;
+  position: absolute;
+  top: 115px;
+  left: 140px;
 `;
 
 const TagButton = styled.div`
@@ -39,7 +42,6 @@ const TagButton = styled.div`
     linear-gradient(180deg, #c9ac6a 0%, #72572a 100%) border-box;
   border: 1px solid transparent;
   border-radius: 19.5px;
-
   font-family: Noto Sans KR;
   font-style: normal;
   font-weight: 500;
@@ -51,7 +53,9 @@ const TagButton = styled.div`
 `;
 
 const Functions = styled.section`
-  position: relative;
+  position: absolute;
+  top: 115px;
+  right: 140px;
 `;
 
 const FunctionButton = styled.div`
@@ -62,7 +66,6 @@ const FunctionButton = styled.div`
     linear-gradient(180deg, #c9ac6a 0%, #72572a 100%);
   border: 1px solid transparent;
   border-radius: 8px;
-
   font-family: Noto Sans KR;
   font-style: normal;
   font-weight: 300;

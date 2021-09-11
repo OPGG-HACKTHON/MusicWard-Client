@@ -1,48 +1,87 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import styled from "styled-components";
-import Thumbnail from "assets/img/playlistpage/thumbnail.png";
-import ThumbnailImageSample from "assets/img/playlistpage/thumbnail-image-sample.png";
+import ThumbnailEdge from "assets/img/playlistpage/thumbnail-edge.svg";
 import PlayButton from "assets/img/playlistpage/play-button.png";
 
-const PlayList = () => {
-  const [title] = useState("데마시아의 힘을 느껴보자");
-  const [description] = useState(`
-    가렌은 불굴의 선봉대를 이끄는 고결하고 자긍심 강한 전사다. 
-    선봉대 내에서 인망이 두터울 뿐 아니라 심지어 적에게도 존경을 받지만, 
-    그가 대대로 데마시아와 데마시아의 이상을
-    `);
+type IProps = {
+  playInfo?: {
+    title: string;
+    description: string;
+    external_url: string;
+    image: {
+      url: string;
+      width: number;
+      height: number;
+    };
+    comments: {
+      total: number;
+      items: [];
+    };
+  };
+};
+
+const PlayList = ({ playInfo }: IProps) => {
+  const clickToPlay = () => {
+    window.open(playInfo?.external_url, "_blank");
+  };
+
+  const [addComment, setAddComment] = useState("");
+  const handleChange = useCallback(
+    (e) => {
+      setAddComment(e.target.value);
+    },
+    [setAddComment]
+  );
 
   return (
     <Container>
       <PlayListInfo>
-        <PlayListTitle>{title}</PlayListTitle>
+        <PlayListTitle>{playInfo?.title}</PlayListTitle>
         <PlayListHr />
-        <PlayListDescription>{description}</PlayListDescription>
+        <PlayListDescription>{playInfo?.description}</PlayListDescription>
       </PlayListInfo>
 
-      <PlayListThumbnail>
-        <img src={Thumbnail} style={{ position: "absolute" }}></img>
-        <img src={ThumbnailImageSample} style={{ position: "absolute" }}></img>
+      <PlayListThumbnail onClick={clickToPlay}>
+        <img
+          src={playInfo?.image.url}
+          width="628px"
+          height="628px"
+          style={{
+            position: "absolute",
+            clipPath: "circle()",
+            margin: "15px",
+            // width: playInfo?.image.width,
+            // height: playInfo?.image.height,
+          }}
+        />
+        <img
+          src={ThumbnailEdge}
+          width="658px"
+          height="658px"
+          style={{ position: "absolute" }}
+        />
         <img
           src={PlayButton}
-          style={{ position: "absolute", top: "50%", left: "50%" }}
+          style={{ position: "absolute", top: "266px", left: "274px" }}
         ></img>
       </PlayListThumbnail>
+      <PlayListThumbnailShadow />
 
       <PlayListComments>
         <CommentTitle>
           <HideText>숨기기</HideText>
           <CommentText>댓글</CommentText>
         </CommentTitle>
-        <Comment>댓글이얌</Comment>
-        <Comment>댓글이얌댓글이얌댓글이얌댓글이얌댓글이얌</Comment>
-        <Comment>댓글이얌</Comment>
-        <Comment>댓글이얌</Comment>
-        <Comment>댓글이얌</Comment>
-        <Comment>댓글이얌</Comment>
-        <Comment>
-          댓글이얌댓글이얌댓글이얌댓글이얌댓글이얌댓글이얌댓글이얌댓글
-        </Comment>
+        {playInfo?.comments.items &&
+          playInfo?.comments.items.map((item: any) => {
+            console.log(playInfo?.comments);
+            <Comment key={item.comment_id}>{item.content}</Comment>;
+          })}
+        <CommentEdit
+          type="textarea"
+          onChange={handleChange}
+          value={addComment}
+        />
       </PlayListComments>
     </Container>
   );
@@ -56,9 +95,9 @@ const Container = styled.section`
 `;
 
 const PlayListInfo = styled.section`
-  position: relative;
-  top: 10vw;
-  width: 30%;
+  position: absolute;
+  top: 337.5px;
+  left: 140px;
 `;
 
 const PlayListTitle = styled.div`
@@ -90,21 +129,32 @@ const PlayListDescription = styled.div`
 `;
 
 const PlayListThumbnail = styled.section`
-  position: relative;
-  width: 659px;
+  position: absolute;
+  top: 147.5px;
+  left: 391px;
+`;
+
+const PlayListThumbnailShadow = styled.div`
+  position: absolute;
+  width: 629px;
+  height: 216px;
+  left: 411px;
+  top: 618.5px;
+
+  background: linear-gradient(0deg, #010407 28.25%, rgba(1, 4, 7, 0) 91.32%);
 `;
 
 const PlayListComments = styled.section`
-  position: relative;
-  display: grid;
-  justify-items: end;
-  height: fit-content;
-  width: 30%;
+  position: absolute;
+  top: 228.5px;
+  right: 132px;
+  width: 274px;
+  height: 488px;
+  text-align: right;
 `;
 
 const CommentTitle = styled.div`
   position: relative;
-  margin: 5vw 0 10px;
 `;
 
 const HideText = styled.span`
@@ -119,7 +169,6 @@ const HideText = styled.span`
 
 const CommentText = styled.span`
   margin-left: 10px;
-
   font-family: Noto Sans KR;
   font-style: normal;
   font-weight: 500;
@@ -138,7 +187,6 @@ const Comment = styled.span`
     linear-gradient(180deg, #c9ac6a 0%, #72572a 100%) border-box;
   border: 1px solid transparent;
   border-radius: 8px;
-
   font-family: Noto Sans KR;
   font-style: normal;
   font-weight: 300;
@@ -147,6 +195,17 @@ const Comment = styled.span`
   text-align: right;
   color: #ffffff;
   opacity: 0.8;
+`;
+
+const CommentEdit = styled.input`
+  width: 260px;
+  height: 69px;
+  margin-top: 12.5px;
+  background: #12191c;
+  /* gold/deepdark */
+  border: 2px solid #64583a;
+  box-sizing: border-box;
+  border-radius: 3px;
 `;
 
 export default PlayList;
