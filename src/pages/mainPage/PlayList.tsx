@@ -40,12 +40,14 @@ const PlayList: FC<PlayListProps> = ({ champion }) => {
     setPlayList(
       data.map(
         (i: {
+          playlist_id: number;
           title: string;
           tracks: { total: number };
           wards: { total: number };
           image: { url: string };
         }) => {
           return {
+            id: i.playlist_id,
             title: i.title,
             listCount: i.tracks?.total,
             wardCount: i.wards?.total,

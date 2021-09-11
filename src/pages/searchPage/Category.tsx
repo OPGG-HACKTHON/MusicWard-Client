@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import axiosInstance from "utils/axiosConfig";
 import Dropdown from "components/Dropdown";
 import { Option } from "components/Dropdown";
+import { RankType } from "pages/mainPage/Ranking";
 
 export const options: Array<Option> = [
   { key: "summoner", value: "summoner", label: "소환사명" },
@@ -55,16 +56,13 @@ const Category = () => {
       },
     });
     setPlayList(
-      data
-        .splice(0, 8)
-        .map(
-          (i: { title: string; wards_total: string; image_url?: string }) => ({
-            title: i.title,
-            listCount: 10, // FIXME: api에 플레이리스트 곡수 포함시켜달라고 해야함
-            wardCount: i.wards_total,
-            imgUrl: i.image_url,
-          })
-        )
+      data.splice(0, 8).map((i: RankType) => ({
+        id: i.id,
+        title: i.title,
+        listCount: i.tracks_total,
+        wardCount: i.wards_total,
+        imgUrl: i.image_url,
+      }))
     );
   };
   useEffect(() => {
@@ -88,6 +86,7 @@ const Category = () => {
         {PlayList.map((i, index) => (
           <PlayListItem
             key={`slider-item-${index}`}
+            id={i.id}
             title={i.title}
             listCount={i.listCount}
             wardCount={i.wardCount}

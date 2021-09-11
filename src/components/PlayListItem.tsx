@@ -8,6 +8,7 @@ import { Icon } from "pages/mainPage/PlayList";
 import { useHistory } from "react-router-dom";
 
 export interface PlayListItemProps {
+  id: number;
   title: string;
   listCount: number;
   wardCount: number;
@@ -15,6 +16,7 @@ export interface PlayListItemProps {
 }
 
 const PlayListItem: FC<PlayListItemProps> = ({
+  id,
   title,
   listCount,
   wardCount,
@@ -23,8 +25,9 @@ const PlayListItem: FC<PlayListItemProps> = ({
   const history = useHistory();
   // FIXME: 임시로 플레이리스트 페이지로 이동
   const goPlayList = useCallback(() => {
+    console.log(id);
     history.push({
-      pathname: "/playlist",
+      pathname: `/playlist/${id}`,
     });
   }, []);
   return (

@@ -37,6 +37,7 @@ const Carousel: FC<SliderProps> = ({
         {items.map((i, index) => (
           <PlayListItem
             key={`slider-item-${index}`}
+            id={i.id}
             title={i.title}
             listCount={i.listCount}
             wardCount={i.wardCount}

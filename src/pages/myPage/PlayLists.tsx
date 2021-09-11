@@ -9,6 +9,7 @@ import { useEffect } from "react";
 import { useRecoilValue } from "recoil";
 import { accessToken, isSpotify } from "recoil/auth";
 import axiosInstance from "utils/axiosConfig";
+import { useHistory } from "react-router";
 
 type PlayListType = {
   original_id: string;
@@ -26,6 +27,7 @@ interface UploadPlayListType extends PlayListType {
 }
 
 const PlayLists = () => {
+  const history = useHistory();
   const jwtToken = useRecoilValue(accessToken);
   const useSpotify = useRecoilValue(isSpotify);
   const [openModal, setOpenModal] = useState<boolean>(false);
@@ -36,6 +38,13 @@ const PlayLists = () => {
 
   const handleOpenModal = useCallback(
     (state: boolean) => () => {
+      if (!state) {
+        getUploadPlayList();
+        getPlayList();
+        if (useSpotify) {
+          getPlayList("SPOTIFY");
+        }
+      }
       setOpenModal(state);
     },
     [setOpenModal]
@@ -84,6 +93,14 @@ const PlayLists = () => {
     },
     []
   );
+  const handleGoPlayList = useCallback(
+    (id) => () => {
+      history.push({
+        pathname: `/playlist/${id}`,
+      });
+    },
+    []
+  );
   useEffect(() => {
     getUploadPlayList();
     getPlayList();
@@ -103,10 +120,13 @@ const PlayLists = () => {
       )}
       <Wrapper>
         <MainText>업로드한 플레이리스트</MainText>
-        <Lists>
-          <Rows>
+        <PlayListSection>
+          <PlayList>
             {uploadPlayList.map((i: UploadPlayListType) => (
-              <PlayListWrapper key={`upload-play-list-${i.playlist_id}`}>
+              <PlayListWrapper
+                key={`upload-play-list-${i.playlist_id}`}
+                onClick={handleGoPlayList(i.playlist_id)}
+              >
                 <PlayListBox imgUrl={i.image.url}>
                   <Delete
                     src={DeleteButton}
@@ -124,7 +144,7 @@ const PlayLists = () => {
                     />
                     <Title>{i.title}</Title>
                     <TagsWrapper>
-                      {i.tags.map((t) => (
+                      {i.tags?.map((t) => (
                         <Tags key={t}>#{t} </Tags>
                       ))}
                     </TagsWrapper>
@@ -163,8 +183,8 @@ const PlayLists = () => {
                 </PlayListBox>
               </PlayListWrapper>
             ))}
-          </Rows>
-        </Lists>
+          </PlayList>
+        </PlayListSection>
       </Wrapper>
     </Container>
   );
@@ -276,17 +296,16 @@ const MainText = styled.div`
   margin: 35px 0;
 `;
 
-const Lists = styled.div`
+const PlayListSection = styled.div`
   display: flex;
   flex-direction: column;
   margin: -30px;
 `;
 
-const Rows = styled.div`
-  width: 100%;
-  margin-bottom: 60px;
+const PlayList = styled.div`
   display: flex;
   flex-wrap: wrap;
+  width: 100%;
 `;
 
 const Delete = styled.img`
