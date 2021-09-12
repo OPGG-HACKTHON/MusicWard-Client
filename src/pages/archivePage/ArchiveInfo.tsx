@@ -3,6 +3,7 @@ import styled from "styled-components";
 import axiosInstance from "utils/axiosConfig";
 import { useRecoilValue } from "recoil";
 import { accessToken } from "recoil/auth";
+import { useHistory } from "react-router-dom";
 
 const ArchiveInfo = () => {
   const [title] = useState("데마시아의 힘을 느껴보자");
@@ -47,6 +48,13 @@ const ArchiveInfo = () => {
     }
   };
 
+  const history = useHistory();
+  const goToDetail = () => {
+    history.push({
+      pathname: `/playlist/${playlistId}`,
+    });
+  };
+
   return (
     <Container>
       <Tags>
@@ -71,7 +79,9 @@ const ArchiveInfo = () => {
           와드
         </FunctionButton>
         <FunctionButton colorProps={functionBasicColor}>공유</FunctionButton>
-        <FunctionButton colorProps={functionBasicColor}>상세</FunctionButton>
+        <FunctionButton colorProps={functionBasicColor} onClick={goToDetail}>
+          상세
+        </FunctionButton>
       </Functions>
     </Container>
   );
