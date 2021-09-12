@@ -58,13 +58,6 @@ const OtherLists = ({ others }: IProps) => {
         prevArrow={<LeftButtonImg src={LeftButton} className="slick-prev" />}
         nextArrow={<RightButtonImg src={RightButton} className="slick-next" />}
       >
-        {/* <button
-          type="button"
-          className="slick-prev"
-          style={{ display: "none" }}
-        >
-          Previous
-        </button> */}
         {others?.tracks.items.map((item) => (
           <OtherPlayList key={item.id}>
             <img
@@ -76,9 +69,6 @@ const OtherLists = ({ others }: IProps) => {
             <OtherSinger>{item.artists}</OtherSinger>
           </OtherPlayList>
         ))}
-        {/* <button type="button" className="slick-next">
-          Next
-        </button> */}
       </Slider>
     </Container>
   );
