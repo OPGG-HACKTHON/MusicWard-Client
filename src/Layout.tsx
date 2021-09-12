@@ -28,7 +28,7 @@ const Layout = (props: LayoutProps) => {
   return (
     <Switch>
       <Route
-        path={["/riot.txt", "/account/terms"]}
+        path={["/account/terms"]}
         render={() => <EmptyTemplate {...props} />}
       />
       <Route
