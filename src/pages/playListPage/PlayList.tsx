@@ -4,7 +4,7 @@ import ThumbnailEdge from "assets/img/playlistpage/thumbnail-edge.svg";
 import PlayButton from "assets/img/playlistpage/play-button.png";
 import { useRecoilValue } from "recoil";
 import { accessToken } from "recoil/auth";
-import Axios from "axios";
+// import Axios from "axios";
 import axiosInstance from "utils/axiosConfig";
 
 type IProps = {

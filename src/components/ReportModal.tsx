@@ -1,7 +1,6 @@
 import React from "react";
-import LoginModalBg from "assets/img/login-modal.svg";
+// import LoginModalBg from "assets/img/login-modal.svg";
 import styled from "styled-components";
-import LogoImg from "assets/img/logo.svg";
 import Spotify from "assets/icon/i-spotify.svg";
 import Google from "assets/icon/i-google.svg";
 import { useCallback } from "react";
@@ -105,7 +104,6 @@ const ModalContent = styled.div`
 `;
 
 const Logo = styled.div`
-  background-image: url(${LogoImg});
   width: 203px;
   height: 32px;
   background-repeat: no-repeat;
