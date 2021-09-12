@@ -4,8 +4,8 @@ import WardLists from "./WardLists";
 import PlayCircle from "./PlayCircle";
 import ArchiveInfo from "./ArchiveInfo";
 import Champion from "assets/img/archivepage/background-champion.png";
-import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
-import { accessToken, AuthType, auth, token } from "recoil/auth";
+import { useRecoilValue } from "recoil";
+import { accessToken } from "recoil/auth";
 import axiosInstance from "utils/axiosConfig";
 
 // type IProps = {
