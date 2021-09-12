@@ -1,5 +1,9 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import styled from "styled-components";
+import axiosInstance from "utils/axiosConfig";
+import { useRecoilValue } from "recoil";
+import { accessToken } from "recoil/auth";
+import { useHistory } from "react-router-dom";
 
 const ArchiveInfo = () => {
   const [title] = useState("데마시아의 힘을 느껴보자");
@@ -8,6 +12,48 @@ const ArchiveInfo = () => {
     선봉대 내에서 인망이 두터울 뿐 아니라 심지어 적에게도 존경을 받지만, 
     그가 대대로 데마시아와 데마시아의 이상을
     `);
+
+  const jwtToken = useRecoilValue(accessToken);
+
+  const functionBasicColor = "#010407";
+  const functionActiveColor = "#2a4d6d";
+
+  const [wardState, setWardState] = useState(true);
+  const playlistId = 2;
+
+  const handleWard = useCallback(
+    (id, method) => async () => {
+      const { data } = await axiosInstance({
+        url: "playlists/ward",
+        method: method,
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+        data: {
+          playlist_id: id,
+        },
+      });
+      console.log(data);
+    },
+    []
+  );
+
+  const handleWardState = () => {
+    if (wardState) {
+      setWardState(false);
+      handleWard(playlistId, "delete");
+    } else {
+      setWardState(true);
+      handleWard(playlistId, "post");
+    }
+  };
+
+  const history = useHistory();
+  const goToDetail = () => {
+    history.push({
+      pathname: `/playlist/${playlistId}`,
+    });
+  };
 
   return (
     <Container>
@@ -26,15 +72,24 @@ const ArchiveInfo = () => {
       </PlayListInfo>
 
       <Functions>
-        <FunctionButton>와드</FunctionButton>
-        <FunctionButton>공유</FunctionButton>
+        <FunctionButton
+          colorProps={wardState ? functionActiveColor : functionBasicColor}
+          onClick={handleWardState}
+        >
+          와드
+        </FunctionButton>
+        <FunctionButton colorProps={functionBasicColor}>공유</FunctionButton>
+        <FunctionButton colorProps={functionBasicColor} onClick={goToDetail}>
+          상세
+        </FunctionButton>
       </Functions>
     </Container>
   );
 };
 
 const Container = styled.section`
-  width: 25%;
+  width: 320px;
+  margin: 142px 0 0;
   text-align: right;
 `;
 
@@ -82,6 +137,7 @@ const PlayListHr = styled.hr`
   opacity: 0.5;
   border: 1px solid #bb8c3c;
   transform: rotate(180deg);
+  background-color: #bb8c3c;
 `;
 
 const PlayListDescription = styled.div`
@@ -98,11 +154,14 @@ const Functions = styled.section`
   position: relative;
 `;
 
-const FunctionButton = styled.div`
+const FunctionButton = styled.div<{ colorProps: string }>`
   display: inline-block;
   padding: 5px 15px;
   margin: 4px;
-  background: linear-gradient(#010407, #010407) padding-box,
+  background: linear-gradient(
+        ${(props) => props.colorProps + ", " + props.colorProps}
+      )
+      padding-box,
     linear-gradient(180deg, #c9ac6a 0%, #72572a 100%);
   border: 1px solid transparent;
   border-radius: 8px;

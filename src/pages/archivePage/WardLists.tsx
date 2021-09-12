@@ -1,72 +1,78 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 
-import Ward from "assets/img/archivepage/ward.png";
+import Ward from "assets/img/archivepage/ward.svg";
 import SmallWard from "assets/img/mypage/ward.png";
 import WardListSample from "assets/img/archivepage/ward-list-sample.png";
 
 const WardLists = () => {
+  const [positionTop, setPositionTop] = useState(272);
+  const getActiveItemAttr = (e: any) => {
+    setPositionTop(e.target.offsetTop);
+  };
+
   return (
     <Container>
       <img src={Ward} style={{ width: "40px" }} />
       <WardText>와드함</WardText>
       <WardHr />
 
+      <ActiveGradi positionTop={positionTop} />
       <Lists>
-        <Items>
+        <Items onClick={getActiveItemAttr}>
           <img src={WardListSample} style={{ marginRight: "28px" }} />
-          <span>
+          <ItemAlign>
             <Title>데마시아의 힘을 느껴보자</Title>
             <Popu>
               <span>23곡</span>
               <img src={SmallWard} />
               <span>133</span>
             </Popu>
-          </span>
+          </ItemAlign>
         </Items>
         <Items>
           <img src={WardListSample} style={{ marginRight: "28px" }} />
-          <span>
+          <ItemAlign>
             <Title>데마시아의 힘을 느껴보자</Title>
             <Popu>
               <span>23곡</span>
               <img src={SmallWard} />
               <span>133</span>
             </Popu>
-          </span>
+          </ItemAlign>
         </Items>
         <Items>
           <img src={WardListSample} style={{ marginRight: "28px" }} />
-          <span>
+          <ItemAlign>
             <Title>데마시아의 힘을 느껴보자</Title>
             <Popu>
               <span>23곡</span>
               <img src={SmallWard} />
               <span>133</span>
             </Popu>
-          </span>
+          </ItemAlign>
         </Items>
         <Items>
           <img src={WardListSample} style={{ marginRight: "28px" }} />
-          <span>
+          <ItemAlign>
             <Title>데마시아의 힘을 느껴보자</Title>
             <Popu>
               <span>23곡</span>
               <img src={SmallWard} />
               <span>133</span>
             </Popu>
-          </span>
+          </ItemAlign>
         </Items>
         <Items>
           <img src={WardListSample} style={{ marginRight: "28px" }} />
-          <span>
+          <ItemAlign>
             <Title>데마시아의 힘을 느껴보자</Title>
             <Popu>
               <span>23곡</span>
               <img src={SmallWard} />
               <span>133</span>
             </Popu>
-          </span>
+          </ItemAlign>
         </Items>
         <Items>
           <img src={WardListSample} style={{ marginRight: "28px" }} />
@@ -118,7 +124,27 @@ const WardLists = () => {
 };
 
 const Container = styled.section`
-  width: 25%;
+  width: 340px;
+`;
+
+const ActiveGradi = styled.div<{ positionTop: number }>`
+  position: absolute;
+  width: 460px;
+  height: 112px;
+  left: 0px;
+  top: ${(props) => props.positionTop};
+
+  background: radial-gradient(
+    100% 1686.86% at 0% 64.73%,
+    #2a4d6d 0%,
+    rgba(42, 77, 109, 0) 100%
+  );
+`;
+
+const ItemAlign = styled.span`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
 `;
 
 const WardText = styled.div`
@@ -138,6 +164,7 @@ const WardHr = styled.hr`
   /* gold/primary */
   border: 1px solid #bb8c3c;
   transform: rotate(180deg);
+  background-color: #bb8c3c;
 `;
 
 const Lists = styled.section`
@@ -157,6 +184,9 @@ const Lists = styled.section`
 
 const Items = styled.div`
   display: flex;
+  height: 112px;
+  padding: 10px 7px 10px 0;
+  box-sizing: border-box;
 `;
 
 const Title = styled.div`
