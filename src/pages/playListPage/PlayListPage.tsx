@@ -3,7 +3,6 @@ import Champion from "./Champion";
 import PlayList from "./PlayList";
 import OtherLists from "./OtherLists";
 import Axios from "axios";
-import { type } from "os";
 
 type IProps = {
   tags: [];
