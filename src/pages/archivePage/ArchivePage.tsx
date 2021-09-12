@@ -63,15 +63,18 @@ const ArchivePage = () => {
   const jwtToken = useRecoilValue(accessToken);
   console.log(jwtToken, "access_token");
 
-  const getMyArchive = useCallback((provider) => async () => {
-    const { data } = await axiosInstance({
-      url: `playlists/wards/me?page=1&size=5&sort=created_date&provider=${provider}`,
-      headers: {
-        Authorization: `Bearer ${jwtToken}`,
-      },
-    });
-    console.log(data);
-  }, []);
+  const getMyArchive = useCallback(
+    (provider) => async () => {
+      const { data } = await axiosInstance({
+        url: `playlists/wards/me?page=1&size=5&sort=created_date&provider=${provider}`,
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      });
+      console.log(data);
+    },
+    []
+  );
 
   useEffect(() => {
     getMyArchive("SPOTIFY");
