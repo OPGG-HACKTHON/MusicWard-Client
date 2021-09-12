@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import Slider from "react-slick";
 import RightButton from "assets/img/playlistpage/list-arrow-right.svg";
@@ -30,20 +30,33 @@ const OtherLists = ({ others }: IProps) => {
   const slideSettings = {
     className: "center",
     centerPadding: "60px",
-    dots: true,
+    dots: false,
     infinite: true,
-    slidesToShow: 7,
+    slidesToShow:
+      others?.tracks.total &&
+      (others?.tracks.total > 6 ? 7 : others?.tracks.total),
     slidesToScroll: 1,
     swipeToSlide: true,
   };
+
+  useEffect(() => {
+    const slideItems = document.querySelectorAll(".kepvkH");
+    slideItems.forEach((item) => {
+      item.setAttribute("style", "width: auto");
+      item.parentElement?.setAttribute(
+        "style",
+        "display: flex; justify-content: center"
+      );
+    });
+  });
 
   return (
     <Container>
       <OtherPlayListHr />
       <Slider
         {...slideSettings}
-        prevArrow={<LeftButtonImg src={LeftButton} />}
-        nextArrow={<RightButtonImg src={RightButton} />}
+        prevArrow={<LeftButtonImg src={LeftButton} className="slick-prev" />}
+        nextArrow={<RightButtonImg src={RightButton} className="slick-next" />}
       >
         {others?.tracks.items.map((item) => (
           <OtherPlayList key={item.id}>
@@ -88,11 +101,10 @@ const OtherPlayListHr = styled.div`
 `;
 
 const OtherPlayList = styled.div`
+  width: auto;
   display: flex;
   flex-direction: column;
   text-align: center;
-  margin-right: 62px;
-  padding-left: 20px;
 `;
 
 const OtherTitle = styled.div`

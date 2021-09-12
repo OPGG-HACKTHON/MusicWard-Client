@@ -2,12 +2,17 @@ import React, { useState, useCallback } from "react";
 import styled from "styled-components";
 import ThumbnailEdge from "assets/img/playlistpage/thumbnail-edge.svg";
 import PlayButton from "assets/img/playlistpage/play-button.png";
+import { useRecoilValue } from "recoil";
+import { accessToken } from "recoil/auth";
+import Axios from "axios";
+import axiosInstance from "utils/axiosConfig";
 
 type IProps = {
   playInfo?: {
     title: string;
     description: string;
     external_url: string;
+    playlist_id: number;
     image: {
       url: string;
       width: number;
@@ -15,7 +20,12 @@ type IProps = {
     };
     comments: {
       total: number;
-      items: [];
+      items: [
+        {
+          item_id: number;
+          content: string;
+        }
+      ];
     };
   };
 };
@@ -25,22 +35,44 @@ const PlayList = ({ playInfo }: IProps) => {
     window.open(playInfo?.external_url, "_blank");
   };
 
-  const [addComment, setAddComment] = useState("");
+  const [commentContent, setCommentContent] = useState("");
   const handleChange = useCallback(
     (e) => {
-      setAddComment(e.target.value);
+      setCommentContent(e.target.value);
     },
-    [setAddComment]
+    [setCommentContent]
+  );
+
+  const userToken = useRecoilValue(accessToken);
+
+  const handleEnterPress = (e: any) => {
+    if (e.key === "Enter") {
+      console.log(userToken);
+      uploadComment(playInfo?.playlist_id);
+    }
+  };
+
+  // TODO: 플레리스트 삭제 알럿이 우선 떠야한다.
+  const uploadComment = useCallback(
+    (id) => async () => {
+      const { data } = await axiosInstance({
+        url: "playlists/comment",
+        data: {
+          comment: commentContent,
+          playList_id: id,
+        },
+        method: "post",
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+      });
+      console.log(data);
+    },
+    []
   );
 
   return (
     <Container>
-      <PlayListInfo>
-        <PlayListTitle>{playInfo?.title}</PlayListTitle>
-        <PlayListHr />
-        <PlayListDescription>{playInfo?.description}</PlayListDescription>
-      </PlayListInfo>
-
       <PlayListThumbnail onClick={clickToPlay}>
         <img
           src={playInfo?.image.url}
@@ -67,20 +99,29 @@ const PlayList = ({ playInfo }: IProps) => {
       </PlayListThumbnail>
       <PlayListThumbnailShadow />
 
+      <PlayListInfo>
+        <PlayListTitle>{playInfo?.title}</PlayListTitle>
+        <PlayListHr />
+        <PlayListDescription>{playInfo?.description}</PlayListDescription>
+      </PlayListInfo>
+
       <PlayListComments>
         <CommentTitle>
           <HideText>숨기기</HideText>
           <CommentText>댓글</CommentText>
         </CommentTitle>
-        {playInfo?.comments.items &&
-          playInfo?.comments.items.map((item: any) => {
-            console.log(playInfo?.comments);
-            <Comment key={item.comment_id}>{item.content}</Comment>;
-          })}
+        <CommentBox>
+          {playInfo?.comments.items &&
+            playInfo?.comments.items.map((item: any) => {
+              console.log(playInfo?.comments, "댓글 나요냐~", item);
+              <Comment>{item.item}</Comment>;
+            })}
+        </CommentBox>
         <CommentEdit
           type="textarea"
           onChange={handleChange}
-          value={addComment}
+          onKeyPress={handleEnterPress}
+          value={commentContent}
         />
       </PlayListComments>
     </Container>
@@ -177,6 +218,11 @@ const CommentText = styled.span`
   line-height: 26px;
   color: #ffffff;
   opacity: 0.8;
+`;
+
+const CommentBox = styled.section`
+  height: 313px;
+  width: 261px;
 `;
 
 const Comment = styled.span`

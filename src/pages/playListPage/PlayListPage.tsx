@@ -3,6 +3,7 @@ import Champion from "./Champion";
 import PlayList from "./PlayList";
 import OtherLists from "./OtherLists";
 import Axios from "axios";
+import { type } from "os";
 
 type IProps = {
   tags: [];
@@ -11,6 +12,7 @@ type IProps = {
     title: string;
     description: string;
     external_url: string;
+    playlist_id: number;
     image: {
       url: string;
       width: number;
@@ -18,7 +20,12 @@ type IProps = {
     };
     comments: {
       total: number;
-      items: [];
+      items: [
+        {
+          item_id: number;
+          content: string;
+        }
+      ];
     };
   };
 
@@ -69,37 +76,43 @@ const PlayListPage = () => {
   const [others, setOthers] = useState<IProps["others"] | undefined>();
 
   useEffect(() => {
-    Axios.get("https://server.music-ward.com/playlists/5").then((res) => {
-      const resData = res.data.data;
-      console.log(resData);
+    const pathName: string = window.location.pathname;
+    const playListId = parseInt(pathName.substring(10));
 
-      const tags: IProps["tags"] = resData.tags;
-      setTags(tags);
+    Axios.get(`https://server.music-ward.com/playlists/${playListId}`).then(
+      (res) => {
+        const resData = res.data.data;
+        console.log(resData);
 
-      const playListData: IProps["playInfo"] = {
-        title: resData.title,
-        description: resData.description,
-        external_url: resData.external_url,
-        image: {
-          url: resData.image.url,
-          width: resData.image.width,
-          height: resData.image.height,
-        },
-        comments: {
-          total: resData.comments.total,
-          items: resData.comments.items,
-        },
-      };
-      setPlayListInfo(playListData);
+        const tags: IProps["tags"] = resData.tags;
+        setTags(tags);
 
-      const othersData: IProps["others"] = {
-        tracks: {
-          total: resData.tracks.total,
-          items: resData.tracks.items,
-        },
-      };
-      setOthers(othersData);
-    });
+        const playListData: IProps["playInfo"] = {
+          title: resData.title,
+          description: resData.description,
+          external_url: resData.external_url,
+          playlist_id: resData.playlist_id,
+          image: {
+            url: resData.image.url,
+            width: resData.image.width,
+            height: resData.image.height,
+          },
+          comments: {
+            total: resData.comments.total,
+            items: resData.comments.items,
+          },
+        };
+        setPlayListInfo(playListData);
+
+        const othersData: IProps["others"] = {
+          tracks: {
+            total: resData.tracks.total,
+            items: resData.tracks.items,
+          },
+        };
+        setOthers(othersData);
+      }
+    );
   }, []);
 
   return (
