@@ -3,6 +3,7 @@ import { Route, Switch } from "react-router-dom";
 import GlobalNavBar from "components/GlobalNavBar";
 import LoginModal from "components/LoginModal";
 import PerfectScrollbar from "react-perfect-scrollbar";
+import GlobalFooter from "components/GlobalFooter";
 
 interface LayoutProps {
   children?: ReactNode;
@@ -18,8 +19,7 @@ const DefaultTemplate = ({ children }: LayoutProps) => {
       <GlobalNavBar />
       <LoginModal />
       {children}
-      {/* TODO: 푸터 추가 */}
-      {/* <GlobalFooter/> */}
+      <GlobalFooter />
     </PerfectScrollbar>
   );
 };
