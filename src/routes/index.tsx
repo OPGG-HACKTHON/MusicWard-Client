@@ -12,6 +12,9 @@ import { useRecoilState } from "recoil";
 import { token, TokenType } from "recoil/auth";
 import queryString from "query-string";
 import axiosInstance from "utils/axiosConfig";
+import Layout from "Layout";
+import CertificationPage from "pages/etcPage/CertificationPage";
+import AccountTermPage from "pages/etcPage/AccountTermPage";
 
 const Routes = () => {
   const [, setToken] = useRecoilState<TokenType>(token);
@@ -39,7 +42,7 @@ const Routes = () => {
     }
   }, []);
   return (
-    <>
+    <Layout>
       <Switch>
         <Route path="/search/list" component={SearchResultList} />
         <Route path="/search" component={SearchCategory} />
@@ -47,10 +50,12 @@ const Routes = () => {
         <PrivateRoute path="/mypage" exact component={MyPage} />
         <PrivateRoute path="/editpage" exact component={EditPage} />
         <PrivateRoute path="/archive" exact component={ArchivePage} />
+        <Route path="/riot.txt" exact component={CertificationPage} />
+        <Route path="/account/terms" exact component={AccountTermPage} />
         <Route path="/" exact component={MainPage} />
         <Redirect path="*" to="/" />
       </Switch>
-    </>
+    </Layout>
   );
 };
 
