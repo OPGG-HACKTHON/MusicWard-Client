@@ -63,9 +63,9 @@ const ArchivePage = () => {
   const jwtToken = useRecoilValue(accessToken);
   console.log(jwtToken, "access_token");
 
-  const getMyArchive = useCallback(async () => {
+  const getMyArchive = useCallback((provider) => async () => {
     const { data } = await axiosInstance({
-      url: "playlists/wards/me?page=1&size=5&sort=created_date&provider=SPOTIFY",
+      url: `playlists/wards/me?page=1&size=5&sort=created_date&provider=${provider}`,
       headers: {
         Authorization: `Bearer ${jwtToken}`,
       },
@@ -74,12 +74,8 @@ const ArchivePage = () => {
   }, []);
 
   useEffect(() => {
-    getMyArchive();
-    // Axios.get(`https://server.music-ward.com/playlists/wrads/me`).then(
-    //   (res) => {
-    //     const resData = res.data.data;
-    //     console.log(resData);
-
+    getMyArchive("SPOTIFY");
+    getMyArchive("YOUTUBE");
     //     const tags: IProps["tags"] = resData.tags;
     //     setTags(tags);
 
