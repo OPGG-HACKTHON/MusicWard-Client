@@ -40,12 +40,15 @@ const OtherLists = ({ others }: IProps) => {
   };
 
   useEffect(() => {
-    const slideItems = document.querySelectorAll(".kepvkH");
+    const slideItems = document.querySelectorAll(".slick-slide.slick-active");
     slideItems.forEach((item) => {
-      item.setAttribute("style", "width: auto");
-      item.parentElement?.setAttribute(
+      item.firstElementChild?.firstElementChild?.setAttribute(
         "style",
-        "display: flex; justify-content: center"
+        "width: auto;"
+      );
+      item.firstElementChild?.setAttribute(
+        "style",
+        "display: flex; justify-content: center;"
       );
     });
   });
