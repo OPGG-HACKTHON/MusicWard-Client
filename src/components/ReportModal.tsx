@@ -15,15 +15,7 @@ const ReportModal = () => {
   const handleClose = useCallback(() => {
     setOpenReportModal(false);
   }, [setOpenReportModal]);
-  const handleLogin = useCallback(
-    (type: string) => async () => {
-      const { data } = await axiosInstance({
-        url: `users/auth/${type}`,
-      });
-      window.location.assign(data.link);
-    },
-    []
-  );
+
   return (
     <>
       {console.log(openReportModal, "모달 !!")}
@@ -37,7 +29,6 @@ const ReportModal = () => {
               <LoginButton
                 isGoogle
                 type="button"
-                onClick={handleLogin("google")}
               >
                 Google 연동하기
               </LoginButton>
