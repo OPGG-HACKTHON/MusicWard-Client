@@ -4,6 +4,7 @@ import GlobalNavBar from "components/GlobalNavBar";
 import LoginModal from "components/LoginModal";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import GlobalFooter from "components/GlobalFooter";
+import Alert from "components/Alert";
 
 interface LayoutProps {
   children?: ReactNode;
@@ -18,6 +19,7 @@ const DefaultTemplate = ({ children }: LayoutProps) => {
     <PerfectScrollbar>
       <GlobalNavBar />
       <LoginModal />
+      <Alert />
       {children}
       <GlobalFooter />
     </PerfectScrollbar>

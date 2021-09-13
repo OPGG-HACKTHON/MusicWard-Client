@@ -1,15 +1,17 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, MouseEvent } from "react";
 import styled from "styled-components";
-import DeleteButton from "assets/img/mypage/delete-button.png";
+import DeleteButton from "assets/img/delete-button.svg";
 import Ward from "assets/img/mypage/ward.png";
 import YoutubeMusicIcon from "assets/icon/i-youtube-music.svg";
+import SpotifyMusicIcon from "assets/icon/i-spotify-music.svg";
 import EmptyImg from "assets/img/empty-img.svg";
 import PlayListAddModal from "components/PlayListAddModal";
 import { useEffect } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { accessToken, isSpotify } from "recoil/auth";
 import axiosInstance from "utils/axiosConfig";
 import { useHistory } from "react-router";
+import { alertState, AlertType } from "recoil/alert";
 
 type PlayListType = {
   original_id: string;
@@ -32,9 +34,11 @@ const PlayLists = () => {
   const useSpotify = useRecoilValue(isSpotify);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [uploadPlayList, setUploadPlayList] = useState([]);
+  const [spotifyPlayList, setSpotifyPlayList] = useState([]);
   const [playList, setPlayList] = useState([]);
   const [playListId, setPlayListId] = useState("");
   const [playListUrl, setPlayListUrl] = useState("");
+  const [, setAlertState] = useRecoilState<AlertType>(alertState);
 
   const handleOpenModal = useCallback(
     (state: boolean) => () => {
@@ -77,22 +81,37 @@ const PlayLists = () => {
         provider,
       },
     });
-    setPlayList(data.items);
+    if (provider === "YOUTUBE") {
+      setPlayList(data.items);
+      return;
+    }
+    setSpotifyPlayList(data.items);
   };
-  // TODO: 플레리스트 삭제 알럿이 우선 떠야한다.
   const handleDelete = useCallback(
-    (id) => async () => {
-      const { data } = await axiosInstance({
-        url: `playlists/${id}`,
-        method: "delete",
-        headers: {
-          Authorization: `Bearer ${jwtToken}`,
-        },
+    (id) => (e: MouseEvent<HTMLElement>) => {
+      e.stopPropagation();
+      setAlertState({
+        show: true,
+        title: "플레이리스트 삭제",
+        confirmText: "삭제하기",
+        onConfirm: () => deletePlayList(id),
       });
-      console.log(data);
     },
-    []
+    [setAlertState]
   );
+  const deletePlayList = async (id: number) => {
+    await axiosInstance({
+      url: `playlists/${id}`,
+      method: "delete",
+      headers: {
+        Authorization: `Bearer ${jwtToken}`,
+      },
+    }).then(() => {
+      setAlertState({
+        show: false,
+      });
+    });
+  };
   const handleGoPlayList = useCallback(
     (id) => () => {
       history.push({
@@ -149,13 +168,37 @@ const PlayLists = () => {
                       ))}
                     </TagsWrapper>
                     <Popu>
-                      <span>{i.tracks.total}곡</span>
+                      <span>{i.tracks?.total}곡</span>
                       <VHr />
                       <img src={Ward} />
-                      <span>{i.wards.total}</span>
+                      <span>{i.wards?.total}</span>
                     </Popu>
                     <Date>{i.created_date.split(" ")[0]}</Date>
                   </Info>
+                </PlayListBox>
+              </PlayListWrapper>
+            ))}
+            {spotifyPlayList.map((i: UploadPlayListType) => (
+              <PlayListWrapper
+                key={`play-list-${i.original_id}`}
+                onClick={handleAddPlayList(i)}
+              >
+                <PlayListWrapperFilter />
+                <PlusIcon />
+                <PlayListBox imgUrl={i.image.url}>
+                  <PlayListGradient>
+                    <PlayListTitle>
+                      <div>
+                        <img
+                          src={SpotifyMusicIcon}
+                          style={{
+                            width: "20px",
+                          }}
+                        />
+                      </div>
+                      <div>{i.original_title}</div>
+                    </PlayListTitle>
+                  </PlayListGradient>
                 </PlayListBox>
               </PlayListWrapper>
             ))}
@@ -277,10 +320,11 @@ const PlayListTitle = styled.div`
 
 const Container = styled.section`
   background: #141a21;
-  height: 100vh;
+  min-height: 100vh;
   border-top: 1px solid #bb8c3c;
   display: flex;
   justify-content: center;
+  padding-bottom: 50px;
 `;
 
 const Wrapper = styled.div`
