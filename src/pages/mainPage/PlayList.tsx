@@ -80,7 +80,7 @@ const PlayList: FC<PlayListProps> = ({ champion }) => {
           ))}
         </IconWrapper>
         <Name>
-          {champion.name} {champion.english_name}
+          {champion.name} <span>{champion.english_name}</span>
         </Name>
         <ShortInfo>{champion.title}</ShortInfo>
         <Description>
@@ -166,6 +166,12 @@ const Name = styled.div`
   font-weight: 500;
   line-height: 74px;
   width: 1000px;
+  span {
+    font-weight: bold;
+    font-size: 30px;
+    line-height: 43px;
+    opacity: 0.8;
+  }
 `;
 
 const ShortInfo = styled.div`

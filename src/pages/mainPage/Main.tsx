@@ -36,7 +36,7 @@ const Main = () => {
       // audio.play();
     }, 100);
   };
-  const handleChangeChampion = useCallback(async (id: number) => {
+  const handleChangeChampion = useCallback((id: number) => {
     getChampion(id);
   }, []);
   useEffect(() => {

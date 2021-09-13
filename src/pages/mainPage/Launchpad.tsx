@@ -320,6 +320,10 @@ const LaunchpadItem = styled.div<{
     height: 100px;
     background-color: white;
   }
+  &:hover {
+    opacity: 1;
+    filter: drop-shadow(0px 0px 12px #c89236);
+  }
 `;
 
 const ItemWrapper = styled.div`
