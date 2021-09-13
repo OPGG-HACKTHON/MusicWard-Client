@@ -28,6 +28,8 @@ const PlayListAddModal: FC<PlayListAddModalProps> = ({ onClose, id, link }) => {
   });
   const [tagList, setTagList] = useState<Array<string>>([]);
   const [tag, setTag] = useState<string>("");
+  const [titleErrorMsg, setTitleErrorMsg] = useState("");
+  const [championErrorMsg, setChampionErrorMsg] = useState("");
   const handleCreate = useCallback(async () => {
     await axiosInstance({
       url: "playlists",
@@ -43,16 +45,23 @@ const PlayListAddModal: FC<PlayListAddModalProps> = ({ onClose, id, link }) => {
         champion_name: info.champion,
         tags: tagList,
       },
-    }).catch((err) => {
-      // FIXME: 예쁜 알럿으로 바꿔주세요~
-      if (err.response.status === 400) {
-        alert("제목, 챔피언은 필수 입력입니다.");
-      }
-      if (err.response.status === 404) {
-        alert("옳바른 챔피언명을 입력해주세요");
-      }
-    });
-    onClose?.();
+    })
+      .then(() => {
+        onClose?.();
+      })
+      .catch((err) => {
+        if (err.response.status === 400) {
+          if (info.title === "") {
+            setTitleErrorMsg("제목은 필수 입력값입니다.");
+          }
+          if (info.champion === "") {
+            setChampionErrorMsg("챔피언은 필수 입력값입니다.");
+          }
+        }
+        if (err.response.status === 404) {
+          setChampionErrorMsg("옳바른 챔피언명을 입력해주세요");
+        }
+      });
   }, [onClose, info, tagList]);
   const handleChange = useCallback(
     (key) => (e: { target: { value: string } }) => {
@@ -92,6 +101,7 @@ const PlayListAddModal: FC<PlayListAddModalProps> = ({ onClose, id, link }) => {
             <Label>제목</Label>
             <Input type="text" onChange={handleChange("title")} />
           </InputWrapper>
+          <ErrorMsg>{titleErrorMsg}</ErrorMsg>
           <InputWrapper>
             <Label>설명</Label>
             <Input type="text" onChange={handleChange("description")} />
@@ -100,6 +110,7 @@ const PlayListAddModal: FC<PlayListAddModalProps> = ({ onClose, id, link }) => {
             <Label>챔피언</Label>
             <Input type="text" onChange={handleChange("champion")} />
           </InputWrapper>
+          <ErrorMsg>{championErrorMsg}</ErrorMsg>
           <InputWrapper>
             <Label>태그</Label>
             <Input
@@ -227,4 +238,10 @@ const TagCloud = styled.div`
     );
   border: 1px solid transparent;
   margin: 0 10px 10px 0;
+`;
+
+const ErrorMsg = styled.p`
+  margin: 5px 0 0 82px;
+  font-size: 13px;
+  color: #b52d2d;
 `;
