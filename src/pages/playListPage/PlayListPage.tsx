@@ -3,6 +3,8 @@ import Champion from "./Champion";
 import PlayList from "./PlayList";
 import OtherLists from "./OtherLists";
 import Axios from "axios";
+import { useRecoilState } from "recoil";
+import { uploadCommentState } from "recoil/comments";
 
 type IProps = {
   tags: [];
@@ -49,30 +51,14 @@ type IProps = {
   };
 };
 
-`
-champion: {champion_id: 50, name: "징크스", title: "난폭한 말괄량이", english_name: "Jinx", story: "자운 출신의 충동적이고 격정적인 범죄자 징크스. 난장판을 벌이는 재미로 살며, 결과 따위는… 징크스는 지루함을 끔찍이 싫어하고 가는 곳 어디에나 특유의 대혼란을 화끈하게 일으킨다.", …}
-comments: {total: 2, items: Array(2)}
-created_date: "2021-08-22 23:41:50"
-description: "징크스를 좋아한다면 꼭 들어야 하는 플레이리스트"
-external_url: "https://music.youtube.com/playlist?list=PLKoYnF1HLQ5gW5DPfWI8erSG-MfjEJE2k"
-image: {url: "https://i.ytimg.com/vi/veRIGU--tec/maxresdefault.jpg", width: "1280", height: "720"}
-last_modified_date: "2021-08-23 16:15:23"
-original_id: "PLKoYnF1HLQ5gW5DPfWI8erSG-MfjEJE2k"
-playlist_id: 1
-provider: "YOUTUBE"
-tags: (3) ["징크스", "매드무비", "원딜"]
-title: "매드무비 즐길사람 여기모여라"
-tracks: {total: 50, items: Array(50)}
-view: 1
-wards: {total: 0}
-`;
-
 const PlayListPage = () => {
   const [tags, setTags] = useState<IProps["tags"] | undefined>();
   const [playListInfo, setPlayListInfo] = useState<
     IProps["playInfo"] | undefined
   >();
   const [others, setOthers] = useState<IProps["others"] | undefined>();
+  const [commentsState, setCommentsState] =
+    useRecoilState<boolean>(uploadCommentState);
 
   useEffect(() => {
     const pathName: string = window.location.pathname;
@@ -112,7 +98,8 @@ const PlayListPage = () => {
         setOthers(othersData);
       }
     );
-  }, []);
+    setCommentsState(false);
+  }, [commentsState]);
 
   return (
     <>

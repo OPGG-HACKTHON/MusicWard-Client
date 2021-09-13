@@ -57,7 +57,7 @@ const UserInfo = () => {
   return (
     <Container>
       <Wrapper>
-        <UserIcon imgUrl={userProfile} />
+        <UserIcon imgUrl={userProfile} width={200} height={200} />
         <MyInfoBox>
           <div>
             {googleEmail && (

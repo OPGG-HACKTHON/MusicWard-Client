@@ -59,7 +59,7 @@ const EditPage = () => {
   return (
     <Container>
       <div style={{ display: "flex", justifyContent: "center" }}>
-        <UserIcon />
+        <UserIcon width={200} height={200} />
       </div>
       <MyInfoBox>
         <MyId>{name}</MyId>
