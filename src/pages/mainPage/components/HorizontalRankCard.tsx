@@ -114,16 +114,17 @@ const Title = styled.div<{ full: boolean }>`
 
 const SubTitle = styled.div`
   position: absolute;
-  color: #c9ab6a;
+  color: #c9ac6a;
   top: 48px;
   left: 380px;
-  font-weight: 500;
+  font-weight: normal;
   font-size: 18px;
   line-height: 26px;
   width: 245px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  opacity: 0.6;
 `;
 
 const InfoBoxWrapper = styled.div`
