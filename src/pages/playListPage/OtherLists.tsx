@@ -107,7 +107,6 @@ const OtherPlayList = styled.div`
   width: auto;
   display: flex;
   flex-direction: column;
-  text-align: center;
 `;
 
 const OtherTitle = styled.div`
