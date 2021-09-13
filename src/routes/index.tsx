@@ -16,6 +16,7 @@ import Layout from "Layout";
 import AccountTermPage from "pages/etcPage/AccountTermPage";
 
 const Routes = () => {
+  window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   const jwtToken = useRecoilValue(accessToken);
   const [, setToken] = useRecoilState<TokenType>(token);
   const parsed = queryString.parse(location.search);

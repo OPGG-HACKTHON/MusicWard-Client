@@ -137,10 +137,10 @@ const Title = styled.div<{ isFirstPlace: boolean }>`
 
 const SubTitle = styled.div<{ isFirstPlace: boolean }>`
   position: absolute;
-  color: #c9ab6a;
+  color: #c9ac6a;
   opacity: 0.6;
   text-align: center;
-  font-weight: 500;
+  font-weight: normal;
   font-size: 18px;
   line-height: 26px;
   bottom: ${({ isFirstPlace }) => (isFirstPlace ? "154px" : "116px")};

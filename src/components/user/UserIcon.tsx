@@ -5,32 +5,34 @@ import EmptyImg from "assets/img/empty-img.svg";
 
 interface UserIconProps {
   imgUrl?: string;
+  width: number;
+  height: number;
 }
 
-const UserIcon = ({ imgUrl }: UserIconProps) => {
+const UserIcon = ({ imgUrl, width, height }: UserIconProps) => {
   return (
-    <MyImgBox>
+    <MyImgBox width={width} height={height}>
       <img src={imgUrl || EmptyImg} alt="user image" />
     </MyImgBox>
   );
 };
 
-const MyImgBox = styled.section`
+const MyImgBox = styled.section<{ width: number; height: number }>`
   position: relative;
   flex: none;
-  width: 200px;
-  height: 200px;
+  width: ${(props) => props.width + "px"};
+  height: ${(props) => props.width + "px"};
   background-image: url(${Profile});
   background-repeat: no-repeat;
   background-size: contain;
   background-position: center;
   > img {
     border-radius: 100px;
-    width: 164px;
-    height: 164px;
+    width: 80%;
+    height: 80%;
     position: absolute;
-    top: 17px;
-    left: 18px;
+    top: 10%;
+    left: 10%;
   }
 `;
 

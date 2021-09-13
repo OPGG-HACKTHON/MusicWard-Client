@@ -1,18 +1,17 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import styled from "styled-components";
-import { useRecoilState } from "recoil";
-import { reportModalState } from "recoil/modal";
+import ReportModal from "components/ReportModal";
 
 type IProps = {
   tags?: [];
 };
 
 const Champion = ({ tags }: IProps) => {
-  const [, setOpenReportModal] = useRecoilState<boolean>(reportModalState);
+  const [modal, setModal] = useState<boolean>(false);
 
-  const handleOpenReportModal = useCallback(() => {
-    setOpenReportModal(true);
-  }, [setOpenReportModal]);
+  const handleOpenModal = useCallback(() => {
+    setModal(true);
+  }, [setModal]);
 
   return (
     <Container>
@@ -23,9 +22,11 @@ const Champion = ({ tags }: IProps) => {
       </Tags>
 
       <Functions>
-        <FunctionButton onClick={handleOpenReportModal}>신고</FunctionButton>
+        <FunctionButton onClick={handleOpenModal}>신고</FunctionButton>
         <FunctionButton>수정</FunctionButton>
       </Functions>
+
+      {modal && <ReportModal setModal={setModal} />}
     </Container>
   );
 };

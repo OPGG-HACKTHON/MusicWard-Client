@@ -1,10 +1,11 @@
 import React, { useState, useCallback } from "react";
 import styled from "styled-components";
-import ThumbnailEdge from "assets/img/playlistpage/thumbnail-edge.svg";
+import ThumbnailEdge from "assets/img/playlistpage/thumbnail-edge-new.svg";
+import ThumbnailBg from "assets/img/playlistpage/thumbnail-bg.svg";
 import PlayButton from "assets/img/playlistpage/play-button.png";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useRecoilState } from "recoil";
 import { accessToken } from "recoil/auth";
-// import Axios from "axios";
+import { uploadCommentState } from "recoil/comments";
 import axiosInstance from "utils/axiosConfig";
 
 type IProps = {
@@ -43,58 +44,66 @@ const PlayList = ({ playInfo }: IProps) => {
     [setCommentContent]
   );
 
-  const userToken = useRecoilValue(accessToken);
+  const jwtToken = useRecoilValue(accessToken);
 
-  const handleEnterPress = (e: any) => {
+  const handleEnterPress = async (e: any) => {
     if (e.key === "Enter") {
-      console.log(userToken);
-      uploadComment(playInfo?.playlist_id);
+      await postComment();
     }
   };
 
-  // TODO: 플레리스트 삭제 알럿이 우선 떠야한다.
-  const uploadComment = useCallback(
-    (id) => async () => {
-      const { data } = await axiosInstance({
-        url: "playlists/comment",
-        data: {
-          comment: commentContent,
-          playList_id: id,
-        },
-        method: "post",
-        headers: {
-          Authorization: `Bearer ${userToken}`,
-        },
-      });
-      console.log(data);
-    },
-    []
-  );
+  const [, setCommentsState] = useRecoilState<boolean>(uploadCommentState);
+  const postComment = async () => {
+    const response = await axiosInstance({
+      url: "playlists/comment",
+      method: "post",
+      headers: {
+        Authorization: `Bearer ${jwtToken}`,
+      },
+      data: {
+        comment: commentContent,
+        playlist_id: playInfo?.playlist_id,
+      },
+    });
+    console.log(response, "성공일거야?");
+    setCommentsState(true);
+  };
 
   return (
     <Container>
-      <PlayListThumbnail onClick={clickToPlay}>
+      <PlayListThumbnail>
+        <img
+          src={ThumbnailBg}
+          style={{
+            position: "absolute",
+            left: "-87px",
+            top: "-50px",
+            borderRadius: "7px",
+          }}
+        />
         <img
           src={playInfo?.image.url}
-          width="628px"
-          height="628px"
           style={{
             position: "absolute",
             clipPath: "circle()",
             margin: "15px",
-            // width: playInfo?.image.width,
-            // height: playInfo?.image.height,
+            left: `${playInfo?.image.width == 1280 ? "-244px" : "0"}`,
+            width: `${playInfo?.image.width == 1280 ? "auto" : "628px"}`,
+            height: "628px",
           }}
         />
         <img
           src={ThumbnailEdge}
-          width="658px"
-          height="658px"
-          style={{ position: "absolute" }}
+          style={{
+            position: "absolute",
+            width: "658px",
+            height: "658px",
+          }}
         />
         <img
           src={PlayButton}
           style={{ position: "absolute", top: "266px", left: "274px" }}
+          onClick={clickToPlay}
         ></img>
       </PlayListThumbnail>
       <PlayListThumbnailShadow />
@@ -111,11 +120,16 @@ const PlayList = ({ playInfo }: IProps) => {
           <CommentText>댓글</CommentText>
         </CommentTitle>
         <CommentBox>
+          {/* {comments.items.map((item: any) => ( */}
           {playInfo?.comments.items &&
-            playInfo?.comments.items.map((item: any) => {
-              console.log(playInfo?.comments, "댓글 나요냐~", item);
-              <Comment>{item.item}</Comment>;
-            })}
+            playInfo?.comments.items.map((item: any) => (
+              <CommentAlign key={item.item_id}>
+                <Comment>
+                  {/* {console.log(item)} */}
+                  {item.content}
+                </Comment>
+              </CommentAlign>
+            ))}
         </CommentBox>
         <CommentEdit
           type="textarea"
@@ -141,6 +155,7 @@ const PlayListInfo = styled.section`
   position: absolute;
   top: 183.5px;
   left: 0px;
+  width: 273px;
 `;
 
 const PlayListTitle = styled.div`
@@ -221,8 +236,15 @@ const CommentText = styled.span`
 `;
 
 const CommentBox = styled.section`
-  height: 313px;
-  width: 261px;
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  height: 333px;
+`;
+
+const CommentAlign = styled.div`
+  display: flex;
+  justify-content: end;
 `;
 
 const Comment = styled.span`
