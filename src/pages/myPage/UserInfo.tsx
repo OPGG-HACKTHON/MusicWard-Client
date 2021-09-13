@@ -2,25 +2,16 @@ import React, { useCallback, useState } from "react";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import UserIcon from "components/user/UserIcon";
-
-// import PlayYoutube from "assets/img/mypage/play-youtube.png";
-// import PlaySpotify from "assets/img/mypage/play-spotify.png";
 import YoutubeMusicIcon from "assets/icon/i-youtube-music.svg";
 import SpotifyMusicIcon from "assets/icon/i-spotify-music.svg";
 import GoogleAccount from "assets/img/mypage/google-account.png";
-import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
-import { accessToken, AuthType, auth, token } from "recoil/auth";
-import { useEffect } from "react";
-import axiosInstance from "utils/axiosConfig";
+import { useRecoilValueLoadable, useResetRecoilState } from "recoil";
+import { token, getAuth } from "recoil/auth";
 
 const UserInfo = () => {
-  // TODO: atom 사용해도 좋을듯?
-  const [nickName, setNickName] = useState("");
-  const [googleEmail, setGoogleEmail] = useState("");
-  const [spotifyEmail, setSpotifyEmail] = useState("");
+  const { contents: userInfo } = useRecoilValueLoadable(getAuth);
+  const { nickname, googleEmail, spotifyEmail } = userInfo;
   const [userProfile] = useState(""); // TODO: 구글 프로필 추가
-  const jwtToken = useRecoilValue(accessToken);
-  const [, setAuth] = useRecoilState<AuthType>(auth);
 
   const history = useHistory();
   const clickToEdit = () => {
@@ -32,27 +23,6 @@ const UserInfo = () => {
   const handleLogout = useCallback(() => {
     logout();
   }, [history]);
-  const getMyPageInfo = useCallback(async () => {
-    const { data } = await axiosInstance({
-      url: "users/me",
-      headers: {
-        Authorization: `Bearer ${jwtToken}`,
-      },
-    });
-    const { google_email, spotify_email, nickname, name } = data;
-    setGoogleEmail(google_email);
-    setSpotifyEmail(spotify_email);
-    setNickName(nickname);
-    setAuth({
-      name,
-      nickname: nickname,
-      googleEmail: google_email,
-      spotifyEmail: spotify_email,
-    });
-  }, []);
-  useEffect(() => {
-    getMyPageInfo();
-  }, []);
 
   return (
     <Container>
@@ -70,7 +40,7 @@ const UserInfo = () => {
               <img style={{ width: "24px" }} src={SpotifyMusicIcon} />
             )}
           </div>
-          <MyId>{nickName}</MyId>
+          <MyId>{nickname}</MyId>
           <MyInfoLine />
           <MyInfoAccount>
             <EmailWrapper>
@@ -82,14 +52,14 @@ const UserInfo = () => {
               <UserEmail>{googleEmail}</UserEmail>
             </EmailWrapper>
             {spotifyEmail && (
-              <div>
+              <EmailWrapper>
                 <img
                   style={{ width: "23px", marginRight: "15px" }}
                   src={SpotifyMusicIcon}
                   alt="account icon"
                 />
                 <UserEmail>{spotifyEmail}</UserEmail>
-              </div>
+              </EmailWrapper>
             )}
           </MyInfoAccount>
         </MyInfoBox>
@@ -157,6 +127,7 @@ const MyInfoAccount = styled.div`
 const EmailWrapper = styled.div`
   display: flex;
   align-items: center;
+  margin-bottom: 5px;
 `;
 
 const UserEmail = styled.div`

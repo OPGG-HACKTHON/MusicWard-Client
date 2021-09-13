@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useState } from "react";
-import styled from "styled-components";
+import React, { useCallback, useState } from "react";
+import styled, { css } from "styled-components";
 import UserIcon from "components/user/UserIcon";
 
 import GoogleIcon from "assets/icon/i-google.svg";
@@ -7,17 +7,19 @@ import SpotifyFull from "assets/img/spotify-full.svg";
 import YoutubeFull from "assets/img/youtube-full.svg";
 import PlaySpotify from "assets/img/mypage/play-spotify.png";
 import axiosInstance from "utils/axiosConfig";
-import { useRecoilValue } from "recoil";
-import { accessToken } from "recoil/auth";
+import {
+  useRecoilValue,
+  useRecoilValueLoadable,
+  useResetRecoilState,
+} from "recoil";
+import { accessToken, getAuth, token } from "recoil/auth";
 import { useHistory } from "react-router-dom";
 
 const EditPage = () => {
+  const { contents: userInfo } = useRecoilValueLoadable(getAuth);
+  const { name, nickname, googleEmail, spotifyEmail } = userInfo;
   const jwtToken = useRecoilValue(accessToken);
-  const [name, setName] = useState("");
-  const [nickName, setNickName] = useState("");
-  const [googleEmail, setGoogleEmail] = useState("");
-  const [spotifyEmail, setSpotifyEmail] = useState("");
-  // const [userProfile, setUserProfile] = useState("");
+  const [nickName, setNickName] = useState(nickname);
   const history = useHistory();
   const handleSubmitClick = async () => {
     await axiosInstance({
@@ -34,27 +36,32 @@ const EditPage = () => {
       pathname: "/mypage",
     });
   };
-  const getMyPageInfo = useCallback(async () => {
-    const { data } = await axiosInstance({
-      url: "users/me",
-      headers: {
-        Authorization: `Bearer ${jwtToken}`,
-      },
-    });
-    setGoogleEmail(data.google_email);
-    setSpotifyEmail(data.spotify_email);
-    setNickName(data.nickname);
-    setName(data.name);
-  }, []);
   const handleChange = useCallback(
     (e) => {
       setNickName(e.target.value);
     },
     [setNickName]
   );
-  useEffect(() => {
-    getMyPageInfo();
+  const handleSpotifyLogin = useCallback(async () => {
+    const { data } = await axiosInstance({
+      url: "users/auth/spotify",
+    });
+    console.log(data);
+    window.location.assign(data.link);
   }, []);
+  const handleWithdrawal = useCallback(async () => {
+    await axiosInstance({
+      url: "users/withdrawal",
+      method: "delete",
+      headers: {
+        Authorization: `Bearer ${jwtToken}`,
+      },
+    }).then((res) => {
+      console.log(res);
+      logout();
+    });
+  }, []);
+  const logout = useResetRecoilState(token);
 
   return (
     <Container>
@@ -83,33 +90,45 @@ const EditPage = () => {
       </EditBox>
       <EditBox>
         <EditTitle>연동플랫폼</EditTitle>
-        <SpotifyButton>
+        <SpotifyButton
+          isComplete={!!spotifyEmail}
+          disabled={!!spotifyEmail}
+          type="button"
+          onClick={handleSpotifyLogin}
+        >
           <img src={SpotifyFull} />
         </SpotifyButton>
-        <YoutubeButton>
+        <YoutubeButton disabled type="button">
           <img src={YoutubeFull} />
         </YoutubeButton>
       </EditBox>
       <BottomLine />
-      <Functions>
-        <FunctionButton onClick={handleSubmitClick}>수정완료</FunctionButton>
-        <FunctionButton>회원탈퇴</FunctionButton>
-      </Functions>
+      <div>
+        <FunctionButton type="button" onClick={handleSubmitClick}>
+          수정완료
+        </FunctionButton>
+        <FunctionButton type="button" onClick={handleWithdrawal}>
+          회원탈퇴
+        </FunctionButton>
+      </div>
     </Container>
   );
 };
 
 const Container = styled.section`
   width: auto;
-  margin: 10vw 30% 0 30%;
+  margin-top: 100px;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 const MyInfoBox = styled.section`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  margin: 3vw 0;
+  margin: 29px 0 72px 0;
   flex: none;
 `;
 
@@ -136,18 +155,18 @@ const MyInfoLine = styled.hr`
 const MyInfoAccount = styled.div`
   display: flex;
   justify-content: center;
-
-  font-family: Noto Sans KR;
   font-style: normal;
   font-weight: 300;
   font-size: 16px;
   line-height: 24px;
-  color: #ffffff;
+  flex-direction: column;
+  align-items: center;
 `;
 
 const AccountWrapper = styled.div`
   display: flex;
   align-items: center;
+  margin-bottom: 5px;
 `;
 
 const AccountIcon = styled.img`
@@ -170,18 +189,18 @@ const EditBox = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 23px;
+  position: relative;
 `;
 
 const EditTitle = styled.div`
+  position: absolute;
+  top: 10px;
+  left: -118px;
   width: 100px;
-  margin-right: 20px;
-  font-family: Noto Sans KR;
-  font-style: normal;
   font-weight: 300;
   font-size: 16px;
   line-height: 24px;
   text-align: right;
-  color: #ffffff;
 `;
 
 const Nickname = styled.input`
@@ -194,53 +213,46 @@ const Nickname = styled.input`
   padding: 0 15px;
 `;
 
-const SpotifyButton = styled.div`
+const SpotifyButton = styled.button<{ isComplete: boolean }>`
   width: 180px;
   height: 45px;
   margin-right: 15px;
-  background: #12191c;
-
+  background-color: ${({ isComplete }) => (isComplete ? "#5f6cbb" : "#12191c")};
   display: flex;
   justify-content: center;
   align-items: center;
-
-  /* gold/deepdark */
   border: 2px solid #64583a;
   box-sizing: border-box;
   border-radius: 3px;
+  ${({ isComplete }) =>
+    isComplete &&
+    css`
+      cursor: not-allowed;
+    `}
 `;
 
-const YoutubeButton = styled.div`
+const YoutubeButton = styled.button`
   width: 180px;
   height: 45px;
   background: #5f6cbb;
-
   display: flex;
   justify-content: center;
   align-items: center;
-
-  /* gold/deepdark */
   border: 2px solid #64583a;
   box-sizing: border-box;
   border-radius: 3px;
+  cursor: not-allowed;
 `;
 
 const BottomLine = styled.hr`
-  margin: 100px 0 40px -50%;
-  width: 200%;
+  width: 1160px;
   opacity: 0.5;
-  /* gold/primary */
   border: 1px solid #bb8c3c;
-  transform: rotate(180deg);
+  margin: 0;
+  margin: 76px 0 40px 0;
 `;
 
-const Functions = styled.section`
-  position: relative;
-  margin: 40px 0;
-  margin-left: auto;
-`;
-
-const FunctionButton = styled.div`
+const FunctionButton = styled.button`
   display: inline-block;
   padding: 5px 15px;
   margin: 0 4px;
@@ -248,13 +260,10 @@ const FunctionButton = styled.div`
     linear-gradient(180deg, #c9ac6a 0%, #72572a 100%);
   border: 1px solid transparent;
   border-radius: 8px;
-  font-family: Noto Sans KR;
-  font-style: normal;
   font-weight: 300;
   font-size: 16px;
   line-height: 24px;
   text-align: center;
-  color: #ffffff;
   opacity: 0.8;
 `;
 

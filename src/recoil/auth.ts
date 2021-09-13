@@ -34,6 +34,7 @@ export const auth = atom<AuthType>({
     googleEmail: undefined,
     spotifyEmail: undefined,
   },
+  effects_UNSTABLE: [localStorageEffect("musicward_auth")],
 });
 
 export const isLogined = selector({
@@ -54,5 +55,12 @@ export const isSpotify = selector({
   key: "isSpotify",
   get: ({ get }) => {
     return !!get(auth).spotifyEmail;
+  },
+});
+
+export const getAuth = selector({
+  key: "getAuth",
+  get: ({ get }) => {
+    return get(auth);
   },
 });
