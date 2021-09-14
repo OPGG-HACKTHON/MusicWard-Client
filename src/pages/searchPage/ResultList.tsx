@@ -208,7 +208,6 @@ const ResultList = () => {
         </>
       ) : (
         <>
-          소환사다잉
           <SearchResultList
             title={
               <>
