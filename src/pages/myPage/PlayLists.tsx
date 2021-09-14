@@ -26,6 +26,7 @@ interface UploadPlayListType extends PlayListType {
   created_date: string;
   tracks: { total: string };
   wards: { total: string };
+  provider: string;
 }
 
 const PlayLists = () => {
@@ -38,6 +39,7 @@ const PlayLists = () => {
   const [playList, setPlayList] = useState([]);
   const [playListId, setPlayListId] = useState("");
   const [playListUrl, setPlayListUrl] = useState("");
+  const [provider, setProvider] = useState("");
   const [, setAlertState] = useRecoilState<AlertType>(alertState);
 
   const handleOpenModal = useCallback(
@@ -54,11 +56,12 @@ const PlayLists = () => {
     [setOpenModal]
   );
   const handleAddPlayList = useCallback(
-    ({ original_id: id, external_url: url }) =>
+    ({ original_id: id, external_url: url }, provider) =>
       () => {
         setOpenModal(true);
         setPlayListId(id);
         setPlayListUrl(url);
+        setProvider(provider);
       },
     [setOpenModal, setPlayListUrl]
   );
@@ -134,6 +137,7 @@ const PlayLists = () => {
         <PlayListAddModal
           id={playListId}
           link={playListUrl}
+          provider={provider}
           onClose={handleOpenModal(false)}
         />
       )}
@@ -153,7 +157,11 @@ const PlayLists = () => {
                   />
                   <Info>
                     <img
-                      src={YoutubeMusicIcon}
+                      src={
+                        i.provider === "YOUTUBE"
+                          ? YoutubeMusicIcon
+                          : SpotifyMusicIcon
+                      }
                       style={{
                         width: "20px",
                         position: "absolute",
@@ -181,7 +189,7 @@ const PlayLists = () => {
             {spotifyPlayList.map((i: UploadPlayListType) => (
               <PlayListWrapper
                 key={`play-list-${i.original_id}`}
-                onClick={handleAddPlayList(i)}
+                onClick={handleAddPlayList(i, "SPOTIFY")}
               >
                 <PlayListWrapperFilter />
                 <PlusIcon />
@@ -205,7 +213,7 @@ const PlayLists = () => {
             {playList.map((i: PlayListType) => (
               <PlayListWrapper
                 key={`play-list-${i.original_id}`}
-                onClick={handleAddPlayList(i)}
+                onClick={handleAddPlayList(i, "YOUTUBE")}
               >
                 <PlayListWrapperFilter />
                 <PlusIcon />
