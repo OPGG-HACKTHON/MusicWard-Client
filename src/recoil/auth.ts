@@ -51,6 +51,13 @@ export const accessToken = selector({
   },
 });
 
+export const refreshToken = selector({
+  key: "refreshToken",
+  get: ({ get }) => {
+    return get(token).refreshToken;
+  },
+});
+
 export const isSpotify = selector({
   key: "isSpotify",
   get: ({ get }) => {
