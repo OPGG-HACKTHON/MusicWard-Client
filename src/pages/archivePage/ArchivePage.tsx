@@ -114,9 +114,11 @@ const ArchivePage = () => {
 
   return (
     <Container height={calcHeight}>
-      <WardLists />
-      <PlayCircle />
-      <ArchiveInfo />
+      <Wrapper>
+        <WardLists />
+        <PlayCircle />
+        <ArchiveInfo />
+      </Wrapper>
     </Container>
   );
 };
@@ -126,10 +128,15 @@ const Container = styled.section<{ height: number }>`
   height: ${(props) => props.height + "px"};
   padding: 44px 140px;
   box-sizing: border-box;
-  display: flex;
   background: url(${Champion}), rgba(0, 0, 0, 0.8);
   background-blend-mode: multiply;
   background-repeat: round;
+`;
+
+const Wrapper = styled.div`
+  width: 1160px;
+  margin: 0 auto;
+  display: flex;
 `;
 
 export default ArchivePage;

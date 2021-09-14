@@ -116,8 +116,8 @@ const EditPage = () => {
 };
 
 const Container = styled.section`
-  width: auto;
-  margin-top: 100px;
+  width: 1160px;
+  margin: 100px auto 0;
   text-align: center;
   display: flex;
   flex-direction: column;

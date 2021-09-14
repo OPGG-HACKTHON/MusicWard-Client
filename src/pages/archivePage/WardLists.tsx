@@ -200,6 +200,7 @@ const Title = styled.div`
 `;
 
 const Popu = styled.div`
+  display: flex;
   font-family: Noto Sans KR;
   font-style: normal;
   font-weight: normal;
@@ -207,6 +208,10 @@ const Popu = styled.div`
   line-height: 20px;
   color: #ffffff;
   opacity: 0.6;
+
+  & > img {
+    margin: 3px 3px 0 36px;
+  }
 `;
 
 export default WardLists;
