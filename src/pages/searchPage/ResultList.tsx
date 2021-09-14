@@ -28,7 +28,8 @@ const ResultList = () => {
     options.filter((i) => i.value === type)[0] || options[0]
   );
   const [searchText, setSearchText] = useState(text || "");
-  console.log(type, text);
+  const [winText, setWinText] = useState("");
+  const [emptyText, setEmptyText] = useState("");
   const handleChangeSelect = useCallback(
     (value) => {
       const [selected] = options.filter((i) => i.value === value);
@@ -47,6 +48,10 @@ const ResultList = () => {
       pathname: "/search/list",
       search: `type=${searchType.value}&text=${searchText}`,
     });
+    if (searchType.value === "summoner") {
+      getSummoner();
+      return;
+    }
     getPlayListByRank();
     getPlayListByCreatedDate();
   }, [searchType, searchText]);
@@ -58,11 +63,11 @@ const ResultList = () => {
     },
     [search]
   );
-  const getPlayListByRank = async () => {
+  const getPlayListByRank = async (champion?: string) => {
     const { data } = await axiosInstance({
-      url: `search/${searchType.value}`,
+      url: `search/${champion !== undefined ? "champion" : searchType.value}`,
       params: {
-        query: searchText,
+        query: champion || searchText,
         sort: "view",
         page: 1,
         size: 50,
@@ -78,11 +83,11 @@ const ResultList = () => {
       }))
     );
   };
-  const getPlayListByCreatedDate = async () => {
+  const getPlayListByCreatedDate = async (champion?: string) => {
     const { data } = await axiosInstance({
-      url: `search/${searchType.value}`,
+      url: `search/${champion !== undefined ? "champion" : searchType.value}`,
       params: {
-        query: searchText,
+        query: champion || searchText,
         sort: "created_date",
         page: 1,
         size: 50,
@@ -115,10 +120,40 @@ const ResultList = () => {
       }))
     );
   };
+  const getSummoner = async () => {
+    await axiosInstance({
+      url: "search/summoner",
+      params: {
+        summoner_name: text,
+      },
+    })
+      .then(({ data }) => {
+        const { favorite_champion, win_type } = data;
+        setWinText(win_type);
+        getPlayListByRank(favorite_champion);
+        getPlayListByCreatedDate(favorite_champion);
+      })
+      .catch((err) => {
+        setListByRank([]);
+        setListByCreatedDate([]);
+        if (err.response.status === 404) {
+          setEmptyText("검색하신 결과가 없습니다.");
+          return;
+        }
+        if (err.response.sataus === 403) {
+          setEmptyText("일치하는 소환사 결과가 없습니다.");
+          return;
+        }
+      });
+  };
   useEffect(() => {
+    getRanking();
+    if (type === "summoner") {
+      getSummoner();
+      return;
+    }
     getPlayListByRank();
     getPlayListByCreatedDate();
-    getRanking();
   }, []);
   return (
     <Wrapper>
@@ -141,33 +176,68 @@ const ResultList = () => {
           />
         </SearchBar>
       </SearchWrapper>
-      <SearchResultList
-        title={
-          <>
-            <SearchText>{text}</SearchText> (으)로 검색하신 검색결과입니다.
-          </>
-        }
-        subTitle={
-          listByRank.length === 0
-            ? "검색하신 결과가 없습니다."
-            : `${text} (으)로 검색하신 분들이 즐겨 듣는 플레이리스트에요!`
-        }
-        items={listByRank}
-      />
-      <SearchResultList
-        title={
-          listByRank.length === 0
-            ? "인기 플레이리스트 검색결과입니다."
-            : "플레이리스트 검색결과입니다."
-        }
-        subTitle={
-          listByRank.length === 0
-            ? "감상을 추천드려요!"
-            : "최근 추가된 플레이리스트를 감상해보세요!"
-        }
-        // FIXME: 결과가 있는 경우 확인 필요
-        items={listByRank.length === 0 ? rankList : listByCreatedDate}
-      />
+      {type !== "summoner" ? (
+        <>
+          <SearchResultList
+            title={
+              <>
+                <SearchText>{text}</SearchText> (으)로 검색하신 검색결과입니다.{" "}
+              </>
+            }
+            subTitle={
+              listByRank.length === 0
+                ? "검색하신 결과가 없습니다."
+                : `${text} (으)로 검색하신 분들이 즐겨 듣는 플레이리스트에요!`
+            }
+            items={listByRank}
+          />
+          <SearchResultList
+            title={
+              listByRank.length === 0
+                ? "인기 플레이리스트 검색결과입니다."
+                : "플레이리스트 검색결과입니다."
+            }
+            subTitle={
+              listByRank.length === 0
+                ? "감상을 추천드려요!"
+                : "최근 추가된 플레이리스트를 감상해보세요!"
+            }
+            // FIXME: 결과가 있는 경우 확인 필요
+            items={listByRank.length === 0 ? rankList : listByCreatedDate}
+          />
+        </>
+      ) : (
+        <>
+          소환사다잉
+          <SearchResultList
+            title={
+              <>
+                <SearchText>{text}</SearchText> (으)로 검색하신 검색결과입니다.{" "}
+              </>
+            }
+            subTitle={
+              listByRank.length === 0
+                ? emptyText
+                : `${text} 님 ${winText} 중이시네요. 연승을 위한 플레이리스트에요!`
+            }
+            items={listByRank}
+          />
+          <SearchResultList
+            title={
+              listByRank.length === 0
+                ? "인기 플레이리스트 검색결과입니다."
+                : "플레이리스트 검색결과입니다."
+            }
+            subTitle={
+              listByRank.length === 0
+                ? "감상을 추천드려요!"
+                : "최근 추가된 플레이리스트를 감상해보세요!"
+            }
+            // FIXME: 결과가 있는 경우 확인 필요
+            items={listByRank.length === 0 ? rankList : listByCreatedDate}
+          />
+        </>
+      )}
     </Wrapper>
   );
 };
