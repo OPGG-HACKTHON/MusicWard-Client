@@ -3,6 +3,9 @@ import styled from "styled-components";
 import Slider from "react-slick";
 import RightButton from "assets/img/playlistpage/list-arrow-right.svg";
 import LeftButton from "assets/img/playlistpage/list-arrow-left.svg";
+import EmptyImg from "assets/img/empty-img.svg";
+import { useRecoilState } from "recoil";
+import { playlistImgState } from "recoil/playlistImg";
 
 type IProps = {
   others?: {
@@ -39,19 +42,34 @@ const OtherLists = ({ others }: IProps) => {
     swipeToSlide: true,
   };
 
+  const [, setImgUrl] = useRecoilState<string>(playlistImgState);
+  const slideItems = document.querySelectorAll(".slick-slide.slick-active");
   useEffect(() => {
-    const slideItems = document.querySelectorAll(".slick-slide.slick-active");
-    slideItems.forEach((item) => {
-      item.firstElementChild?.firstElementChild?.setAttribute(
-        "style",
-        "width: auto;"
-      );
-      item.firstElementChild?.setAttribute(
-        "style",
-        "display: flex; justify-content: center;"
-      );
-    });
-  });
+    const slideCustomCss = () => {
+      slideItems.forEach((item) => {
+        item.firstElementChild?.firstElementChild?.setAttribute(
+          "style",
+          "width: auto;"
+        );
+        item.firstElementChild?.setAttribute(
+          "style",
+          "display: flex; justify-content: center;"
+        );
+      });
+    };
+    slideCustomCss();
+
+    const setFirstImg = async () => {
+      console.log(others?.tracks.items[0].image.url, "없니?");
+      await setImgUrl(others?.tracks.items[0].image.url || EmptyImg);
+    };
+    setFirstImg();
+  }, []);
+
+  const getActiveItemAttr = (e: any) => {
+    console.log("클릭했을 때..");
+    setImgUrl(e.target.src);
+  };
 
   return (
     <Container>
@@ -63,11 +81,18 @@ const OtherLists = ({ others }: IProps) => {
       >
         {others?.tracks.items.map((item) => (
           <OtherPlayList key={item.id}>
-            <img
-              src={item.image?.url}
-              width="112px" //{item.image?.width}
-              height="112px" //{item.image?.height}
-            />
+            <ImgBox>
+              <img
+                src={item.image?.url || EmptyImg}
+                style={{
+                  height: "112px",
+                  width: `${item.image?.width == 1280 ? "180%" : "122px"}`,
+                  marginLeft: `${item.image?.width == 1280 ? "-40%" : "0"}`,
+                }}
+                onClick={getActiveItemAttr}
+                id="playTarget"
+              />
+            </ImgBox>
             <OtherTitle>{item.title}</OtherTitle>
             <OtherSinger>{item.artists}</OtherSinger>
           </OtherPlayList>
@@ -109,6 +134,12 @@ const OtherPlayList = styled.div`
   flex-direction: column;
 `;
 
+const ImgBox = styled.div`
+  overflow: hidden;
+  width: 112px;
+  margin: 0 auto;
+`;
+
 const OtherTitle = styled.div`
   font-family: Noto Sans KR;
   font-style: normal;
@@ -120,6 +151,7 @@ const OtherTitle = styled.div`
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
+  margin: 0 auto;
 `;
 
 const OtherSinger = styled.div`
@@ -133,6 +165,7 @@ const OtherSinger = styled.div`
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
+  margin: 0 auto;
 `;
 
 export default OtherLists;

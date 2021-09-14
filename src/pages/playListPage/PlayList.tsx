@@ -1,13 +1,14 @@
-import React, { useState, useCallback, useRef } from "react";
+import React, { useState, useCallback } from "react";
 import styled from "styled-components";
 import ThumbnailEdge from "assets/img/playlistpage/thumbnail-edge-new.svg";
 import ThumbnailBg from "assets/img/playlistpage/thumbnail-bg.svg";
-import PlayButton from "assets/img/playlistpage/play-button.png";
+import PlayButton from "assets/img/playlistpage/play-button.svg";
+import EmptyImg from "assets/img/empty-img.svg";
 import { useRecoilValue, useRecoilState } from "recoil";
 import { accessToken } from "recoil/auth";
 import { uploadCommentState } from "recoil/comments";
 import axiosInstance from "utils/axiosConfig";
-import { NONAME } from "dns";
+import { playlistImgState } from "recoil/playlistImg";
 
 type IProps = {
   playInfo?: {
@@ -70,6 +71,10 @@ const PlayList = ({ playInfo }: IProps) => {
     setCommentContent("");
   };
 
+  const imgUrl = useRecoilValue(playlistImgState);
+
+  console.log(playInfo?.image, "dnlem");
+
   return (
     <Container>
       <PlayListThumbnail>
@@ -83,7 +88,7 @@ const PlayList = ({ playInfo }: IProps) => {
           }}
         />
         <img
-          src={playInfo?.image.url}
+          src={imgUrl || EmptyImg}
           style={{
             position: "absolute",
             clipPath: "circle()",

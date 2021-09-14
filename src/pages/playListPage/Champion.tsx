@@ -47,8 +47,8 @@ const Champion = ({ tags, playListId, wardState, setWardState }: IProps) => {
   return (
     <Container>
       <Tags>
-        {tags?.map((tag: any) => (
-          <TagButton key={0}>{`#${tag}`}</TagButton>
+        {tags?.map((tag: any, idx) => (
+          <TagButton key={idx}>{`#${tag}`}</TagButton>
         ))}
       </Tags>
 
