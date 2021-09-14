@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import Champion from "./Champion";
 import PlayList from "./PlayList";
 import OtherLists from "./OtherLists";
-import Axios from "axios";
-import { useRecoilState } from "recoil";
+// import Axios from "axios";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { uploadCommentState } from "recoil/comments";
+import axiosInstance from "utils/axiosConfig";
+import { accessToken } from "recoil/auth";
 
 type IProps = {
   tags: [];
@@ -59,51 +61,76 @@ const PlayListPage = () => {
   const [others, setOthers] = useState<IProps["others"] | undefined>();
   const [commentsState, setCommentsState] =
     useRecoilState<boolean>(uploadCommentState);
+  const jwtToken = useRecoilValue(accessToken);
+
+  const [wardState, setWardState] = useState(false);
+
+  const pathName: string = window.location.pathname;
+  const playListId = parseInt(pathName.substring(10));
 
   useEffect(() => {
-    const pathName: string = window.location.pathname;
-    const playListId = parseInt(pathName.substring(10));
+    async function getPlayList() {
+      const { data } = await axiosInstance({
+        url: `playlists/${playListId}`,
+      });
 
-    Axios.get(`https://server.music-ward.com/playlists/${playListId}`).then(
-      (res) => {
-        const resData = res.data.data;
-        console.log(resData);
+      const tags: IProps["tags"] = data.tags;
+      setTags(tags);
 
-        const tags: IProps["tags"] = resData.tags;
-        setTags(tags);
+      const playListData: IProps["playInfo"] = {
+        title: data.title,
+        description: data.description,
+        external_url: data.external_url,
+        playlist_id: data.playlist_id,
+        image: {
+          url: data.image.url,
+          width: data.image.width,
+          height: data.image.height,
+        },
+        comments: {
+          total: data.comments.total,
+          items: data.comments.items,
+        },
+      };
+      setPlayListInfo(playListData);
 
-        const playListData: IProps["playInfo"] = {
-          title: resData.title,
-          description: resData.description,
-          external_url: resData.external_url,
-          playlist_id: resData.playlist_id,
-          image: {
-            url: resData.image.url,
-            width: resData.image.width,
-            height: resData.image.height,
-          },
-          comments: {
-            total: resData.comments.total,
-            items: resData.comments.items,
-          },
-        };
-        setPlayListInfo(playListData);
+      const othersData: IProps["others"] = {
+        tracks: {
+          total: data.tracks.total,
+          items: data.tracks.items,
+        },
+      };
+      setOthers(othersData);
 
-        const othersData: IProps["others"] = {
-          tracks: {
-            total: resData.tracks.total,
-            items: resData.tracks.items,
-          },
-        };
-        setOthers(othersData);
-      }
-    );
-    setCommentsState(false);
+      setCommentsState(false);
+    }
+    getPlayList();
+
+    async function getArchive() {
+      const { data } = await axiosInstance({
+        url: `playlists/wards/me?page=1&size=5&sort=created_date`,
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      });
+      data.map((i: any) => {
+        if (playListId == i.playlist_id) {
+          setWardState(true);
+          return;
+        }
+      });
+    }
+    getArchive();
   }, [commentsState]);
 
   return (
     <>
-      <Champion tags={tags} />
+      <Champion
+        tags={tags}
+        playListId={playListId}
+        wardState={wardState}
+        setWardState={setWardState}
+      />
       <PlayList playInfo={playListInfo} />
       <OtherLists others={others} />
     </>

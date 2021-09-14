@@ -65,7 +65,6 @@ const PlayList = ({ playInfo }: IProps) => {
         playlist_id: playInfo?.playlist_id,
       },
     });
-    console.log(response, "성공일거야?");
     setCommentsState(true);
   };
 
