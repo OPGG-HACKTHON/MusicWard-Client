@@ -23,9 +23,7 @@ const PlayListItem: FC<PlayListItemProps> = ({
   imgUrl,
 }) => {
   const history = useHistory();
-  // FIXME: 임시로 플레이리스트 페이지로 이동
   const goPlayList = useCallback(() => {
-    console.log(id);
     history.push({
       pathname: `/playlist/${id}`,
     });
