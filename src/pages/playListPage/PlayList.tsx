@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useRef } from "react";
 import styled from "styled-components";
 import ThumbnailEdge from "assets/img/playlistpage/thumbnail-edge-new.svg";
 import ThumbnailBg from "assets/img/playlistpage/thumbnail-bg.svg";
@@ -7,6 +7,7 @@ import { useRecoilValue, useRecoilState } from "recoil";
 import { accessToken } from "recoil/auth";
 import { uploadCommentState } from "recoil/comments";
 import axiosInstance from "utils/axiosConfig";
+import { NONAME } from "dns";
 
 type IProps = {
   playInfo?: {
@@ -54,7 +55,7 @@ const PlayList = ({ playInfo }: IProps) => {
 
   const [, setCommentsState] = useRecoilState<boolean>(uploadCommentState);
   const postComment = async () => {
-    const response = await axiosInstance({
+    await axiosInstance({
       url: "playlists/comment",
       method: "post",
       headers: {
@@ -66,6 +67,7 @@ const PlayList = ({ playInfo }: IProps) => {
       },
     });
     setCommentsState(true);
+    setCommentContent("");
   };
 
   return (
@@ -119,19 +121,18 @@ const PlayList = ({ playInfo }: IProps) => {
           <CommentText>댓글</CommentText>
         </CommentTitle>
         <CommentBox>
-          {/* {comments.items.map((item: any) => ( */}
-          {playInfo?.comments.items &&
-            playInfo?.comments.items.map((item: any) => (
-              <CommentAlign key={item.item_id}>
-                <Comment>
-                  {/* {console.log(item)} */}
-                  {item.content}
-                </Comment>
-              </CommentAlign>
-            ))}
+          <div>
+            {playInfo?.comments.items &&
+              playInfo?.comments.items.map((item: any) => (
+                <CommentAlign key={item.item_id}>
+                  <Comment>{item.content}</Comment>
+                </CommentAlign>
+              ))}
+          </div>
         </CommentBox>
         <CommentEdit
           type="textarea"
+          placeholder="댓글을 입력해주세요."
           onChange={handleChange}
           onKeyPress={handleEnterPress}
           value={commentContent}
@@ -236,9 +237,11 @@ const CommentText = styled.span`
 
 const CommentBox = styled.section`
   margin-top: 14px;
+  padding-right: 5px;
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse;
   height: 333px;
+  overflow: auto;
 `;
 
 const CommentAlign = styled.div`

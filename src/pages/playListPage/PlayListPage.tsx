@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import Champion from "./Champion";
 import PlayList from "./PlayList";
 import OtherLists from "./OtherLists";
-// import Axios from "axios";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { uploadCommentState } from "recoil/comments";
 import axiosInstance from "utils/axiosConfig";

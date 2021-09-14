@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import styled from "styled-components";
 import ReportModal from "components/ReportModal";
 import axiosInstance from "utils/axiosConfig";
@@ -23,7 +23,7 @@ const Champion = ({ tags, playListId, wardState, setWardState }: IProps) => {
 
   const jwtToken = useRecoilValue(accessToken);
   const handleWard = async (method: any) => {
-    const { data } = await axiosInstance({
+    await axiosInstance({
       url: "playlists/ward",
       method: method,
       headers: {
