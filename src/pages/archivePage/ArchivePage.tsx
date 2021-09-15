@@ -61,7 +61,6 @@ const ArchivePage = () => {
         Authorization: `Bearer ${jwtToken}`,
       },
     });
-    console.log(data, "보관함 리스트");
 
     const wardData: IProps["wardBox"] = data.map(
       (i: {

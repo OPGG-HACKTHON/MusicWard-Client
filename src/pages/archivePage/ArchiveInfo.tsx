@@ -23,25 +23,10 @@ const ArchiveInfo = () => {
   const [playInfo, setPlayInfo] = useState<PlayInfo>();
 
   useEffect(() => {
-    async function getFirstPlayList() {
-      const { data } = await axiosInstance({
-        url: `playlists/${playlistId}`,
-      });
-      const playListData: PlayInfo = {
-        tags: data.tags,
-        title: data.title,
-        description: data.description,
-      };
-    }
-    getFirstPlayList();
-  }, []);
-
-  useEffect(() => {
     async function getPlayList() {
       const { data } = await axiosInstance({
         url: `playlists/${playlistId}`,
       });
-      // console.log(data, "플리데이터로");
       const playListData: PlayInfo = {
         tags: data.tags,
         title: data.title,
@@ -54,7 +39,7 @@ const ArchiveInfo = () => {
   }, [playlistId]);
 
   const handleWard = async (method: any) => {
-    const { data } = await axiosInstance({
+    await axiosInstance({
       url: "playlists/ward",
       method: method,
       headers: {
@@ -64,7 +49,6 @@ const ArchiveInfo = () => {
         playlist_id: playlistId,
       },
     });
-    console.log(data, " 와드삭제?");
   };
 
   const handleWardState = () => {
@@ -78,6 +62,13 @@ const ArchiveInfo = () => {
   };
 
   const history = useHistory();
+  const clickToSearch = (tag: string) => {
+    history.push({
+      pathname: "/search/list",
+      search: `type=tag&text=${tag}`,
+    });
+  };
+
   const goToDetail = () => {
     history.push({
       pathname: `/playlist/${playlistId}`,
@@ -88,8 +79,10 @@ const ArchiveInfo = () => {
     <Container>
       <Tags>
         {playInfo?.tags &&
-          playInfo?.tags.map((tag: any, idx) => (
-            <TagButton key={idx}>{`#${tag}`}</TagButton>
+          playInfo?.tags.map((tag: string, idx) => (
+            <TagButton key={idx} onClick={() => clickToSearch(tag)}>
+              {`#${tag}`}
+            </TagButton>
           ))}
       </Tags>
 

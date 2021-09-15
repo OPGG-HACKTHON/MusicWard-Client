@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from "react";
 import styled from "styled-components";
+import { useHistory } from "react-router-dom";
 import ReportModal from "components/ReportModal";
 import { useRecoilValue } from "recoil";
 import { accessToken } from "recoil/auth";
@@ -44,11 +45,21 @@ const Champion = ({ tags, playListId, wardState, setWardState }: IProps) => {
     }
   };
 
+  const history = useHistory();
+  const clickToSearch = (tag: string) => {
+    history.push({
+      pathname: "/search/list",
+      search: `type=tag&text=${tag}`,
+    });
+  };
+
   return (
     <Container>
       <Tags>
         {tags?.map((tag: any, idx) => (
-          <TagButton key={idx}>{`#${tag}`}</TagButton>
+          <TagButton key={idx} onClick={() => clickToSearch(tag)}>
+            {`#${tag}`}
+          </TagButton>
         ))}
       </Tags>
 

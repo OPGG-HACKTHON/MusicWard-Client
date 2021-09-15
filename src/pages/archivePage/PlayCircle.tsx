@@ -26,7 +26,6 @@ const PlayCircle = ({ currentPlayImg }: IProps) => {
 
   useEffect(() => {
     async function getPlayList() {
-      console.log(playlistId, "이거id");
       const { data } = await axiosInstance({
         url: `playlists/${playlistId}`,
       });
