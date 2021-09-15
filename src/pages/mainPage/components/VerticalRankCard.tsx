@@ -117,6 +117,7 @@ const Profile = styled.div<{ isFirstPlace: boolean; url?: string }>`
   left: ${({ isFirstPlace }) => `calc(50% - ${isFirstPlace ? 77 : 62}px)`};
   top: ${({ isFirstPlace }) => (isFirstPlace ? "76px" : "59px")};
   border-radius: 100px;
+  background-position: center;
 `;
 
 const Title = styled.div<{ isFirstPlace: boolean }>`
