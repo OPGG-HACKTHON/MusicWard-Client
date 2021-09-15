@@ -15,7 +15,7 @@ const GlobalNavBar = () => {
 
   const handleRankFocus = useCallback(() => {
     setTimeout(() => {
-      window.scrollTo({ top: 1970, left: 0, behavior: "smooth" });
+      window.scrollTo({ top: 1970, behavior: "smooth" });
     }, 100);
   }, []);
 
