@@ -46,7 +46,6 @@ const EditPage = () => {
     const { data } = await axiosInstance({
       url: "users/auth/spotify",
     });
-    console.log(data);
     window.location.assign(data.link);
   }, []);
   const handleWithdrawal = useCallback(async () => {
@@ -56,8 +55,7 @@ const EditPage = () => {
       headers: {
         Authorization: `Bearer ${jwtToken}`,
       },
-    }).then((res) => {
-      console.log(res);
+    }).then(() => {
       logout();
     });
   }, []);

@@ -48,7 +48,8 @@ const Launchpad: FC<LaunchpadProps> = ({ selectedChampion, onChange }) => {
   const [championList, setChampionList] = useState<Array<ChampionList>>([]);
   const [selectedIcon, setSelectedIcon] = useState<IconType>();
   const [searchText, setSearchText] = useState<string>();
-  const [position, setPosition] = useState<Array<number>>([0, 0]);
+  const [position, setPosition] = useState<Array<number>>([]);
+  const [flag, setFlag] = useState(false);
   const handleClickChampion =
     ({ champion_id, matrix }: ChampionList) =>
     () => {
@@ -106,7 +107,15 @@ const Launchpad: FC<LaunchpadProps> = ({ selectedChampion, onChange }) => {
   useEffect(() => {
     getChampionList();
   }, [selectedChampion, selectedIcon]);
-
+  useEffect(() => {
+    if (!flag) {
+      setFlag(position[0] !== undefined);
+      setTimeout(() => {
+        const pad = document.getElementById("launchpad");
+        pad?.scrollTo({ top: 77 * position[0], behavior: "smooth" });
+      }, 100);
+    }
+  }, [position, flag, setFlag]);
   return (
     <LaunchpadSection>
       <HorizontalLine />
@@ -141,7 +150,7 @@ const Launchpad: FC<LaunchpadProps> = ({ selectedChampion, onChange }) => {
                 />
               </RightFilter>
             </LaunchpadFilter>
-            <LaunchpadWrapper>
+            <LaunchpadWrapper id="launchpad">
               {championList.map((i) => (
                 <LaunchpadItem
                   key={i.champion_id}

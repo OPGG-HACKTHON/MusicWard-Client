@@ -16,10 +16,16 @@ type InfoType = {
 interface PlayListAddModalProps {
   id: string;
   link: string;
+  provider: string;
   onClose: () => void;
 }
 
-const PlayListAddModal: FC<PlayListAddModalProps> = ({ onClose, id, link }) => {
+const PlayListAddModal: FC<PlayListAddModalProps> = ({
+  onClose,
+  id,
+  link,
+  provider,
+}) => {
   const jwtToken = useRecoilValue(accessToken);
   const [info, setInfo] = useState<InfoType>({
     title: "",
@@ -39,7 +45,7 @@ const PlayListAddModal: FC<PlayListAddModalProps> = ({ onClose, id, link }) => {
       },
       data: {
         original_id: id,
-        provider: "YOUTUBE",
+        provider,
         title: info.title,
         description: info.description,
         champion_name: info.champion,
