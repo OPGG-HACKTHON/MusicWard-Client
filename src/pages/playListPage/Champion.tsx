@@ -2,8 +2,9 @@ import React, { useCallback, useState } from "react";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import ReportModal from "components/ReportModal";
-import { useRecoilValue } from "recoil";
-import { accessToken } from "recoil/auth";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { accessToken, isLogined } from "recoil/auth";
+import { modalState } from "recoil/modal";
 import axiosInstance from "utils/axiosConfig";
 
 type IProps = {
@@ -15,14 +16,18 @@ type IProps = {
 
 const Champion = ({ tags, playListId, wardState, setWardState }: IProps) => {
   const [modal, setModal] = useState<boolean>(false);
+  const [, setOpenModal] = useRecoilState<boolean>(modalState);
+
   const handleOpenModal = useCallback(() => {
-    setModal(true);
-  }, [setModal]);
+    wasLogined ? setModal(true) : setOpenModal(true);
+  }, [setModal, setOpenModal]);
 
   const functionBasicColor = "#010407";
   const functionActiveColor = "#2a4d6d";
 
   const jwtToken = useRecoilValue(accessToken);
+  const wasLogined = useRecoilValue(isLogined);
+
   const handleWard = async (method: any) => {
     await axiosInstance({
       url: "playlists/ward",
@@ -36,12 +41,16 @@ const Champion = ({ tags, playListId, wardState, setWardState }: IProps) => {
     });
   };
   const handleWardState = () => {
-    if (wardState) {
-      setWardState(false);
-      handleWard("delete");
+    if (wasLogined) {
+      if (wardState) {
+        setWardState(false);
+        handleWard("delete");
+      } else {
+        setWardState(true);
+        handleWard("post");
+      }
     } else {
-      setWardState(true);
-      handleWard("post");
+      setOpenModal(true);
     }
   };
 
@@ -112,6 +121,7 @@ const TagButton = styled.div`
   text-align: center;
   color: #ffffff;
   opacity: 0.8;
+  cursor: pointer;
 `;
 
 const Functions = styled.section`
@@ -139,6 +149,7 @@ const FunctionButton = styled.div<{ colorProps: string }>`
   text-align: center;
   color: #ffffff;
   opacity: 0.8;
+  cursor: pointer;
 `;
 
 export default Champion;

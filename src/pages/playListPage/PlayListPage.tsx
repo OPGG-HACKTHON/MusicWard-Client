@@ -15,6 +15,7 @@ type IProps = {
     description: string;
     external_url: string;
     playlist_id: number;
+    provider: string;
     image: {
       url: string;
       width: number;
@@ -26,6 +27,7 @@ type IProps = {
         {
           item_id: number;
           content: string;
+          user: { nickname: string };
         }
       ];
     };
@@ -73,6 +75,7 @@ const PlayListPage = () => {
       const { data } = await axiosInstance({
         url: `playlists/${playListId}`,
       });
+      console.log(data);
 
       const tags: IProps["tags"] = data.tags;
       setTags(tags);
@@ -82,6 +85,7 @@ const PlayListPage = () => {
         description: data.description,
         external_url: data.external_url,
         playlist_id: data.playlist_id,
+        provider: data.provider,
         image: {
           url: data.image.url,
           width: data.image.width,
@@ -122,6 +126,8 @@ const PlayListPage = () => {
     }
     getArchive();
   }, [commentsState]);
+
+  console.log();
 
   return (
     <>

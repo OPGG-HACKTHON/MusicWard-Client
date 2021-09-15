@@ -3,8 +3,11 @@ import styled from "styled-components";
 import ThumbnailEdge from "assets/img/playlistpage/thumbnail-edge-new.svg";
 import ThumbnailBg from "assets/img/playlistpage/thumbnail-bg.svg";
 import PlayButton from "assets/img/playlistpage/play-button.svg";
-import { useRecoilValue, useRecoilState } from "recoil";
-import { accessToken } from "recoil/auth";
+import SpotifyIcon from "assets/icon/i-spotify-music.svg";
+import YoutubeIcon from "assets/icon/i-youtube-music.svg";
+import LoginSpotifyModal from "components/LoginSpotifyModal";
+import { useRecoilValue, useRecoilState, useRecoilValueLoadable } from "recoil";
+import { accessToken, getAuth, isLogined } from "recoil/auth";
 import { uploadCommentState } from "recoil/comments";
 import axiosInstance from "utils/axiosConfig";
 
@@ -14,6 +17,7 @@ type IProps = {
     description: string;
     external_url: string;
     playlist_id: number;
+    provider: string;
     image: {
       url: string;
       width: number;
@@ -25,6 +29,7 @@ type IProps = {
         {
           item_id: number;
           content: string;
+          user: { nickname: string };
         }
       ];
     };
@@ -32,11 +37,25 @@ type IProps = {
 };
 
 const PlayList = ({ playInfo }: IProps) => {
+  const { contents: userInfo } = useRecoilValueLoadable(getAuth);
+  const { spotifyEmail } = userInfo;
+
+  const [modal, setModal] = useState<boolean>(false);
   const clickToPlay = () => {
-    window.open(playInfo?.external_url, "_blank");
+    if (playInfo?.provider === "SPOTIFY") {
+      console.log(playInfo.provider);
+      if (!spotifyEmail) {
+        console.log(modal);
+        <LoginSpotifyModal modal={modal} setModal={setModal} />;
+      }
+    } else {
+      window.open(playInfo?.external_url, "_blank");
+    }
   };
 
   const jwtToken = useRecoilValue(accessToken);
+  const wasLogined = useRecoilValue(isLogined);
+
   const [commentContent, setCommentContent] = useState("");
   const [, setCommentsState] = useRecoilState<boolean>(uploadCommentState);
 
@@ -95,9 +114,8 @@ const PlayList = ({ playInfo }: IProps) => {
           src={ThumbnailBg}
           style={{
             position: "absolute",
-            left: "-87px",
-            top: "-50px",
-            borderRadius: "7px",
+            left: "-67px",
+            top: "-30px",
           }}
         />
         <img
@@ -107,7 +125,7 @@ const PlayList = ({ playInfo }: IProps) => {
           style={{
             position: "absolute",
             clipPath: "circle()",
-            margin: "15px",
+            margin: "17px 15px 0 14.7px",
             height: "628px",
           }}
         />
@@ -121,13 +139,25 @@ const PlayList = ({ playInfo }: IProps) => {
         />
         <img
           src={PlayButton}
-          style={{ position: "absolute", top: "266px", left: "274px" }}
+          style={{
+            position: "absolute",
+            top: "266px",
+            left: "274px",
+            cursor: "pointer",
+          }}
           onClick={clickToPlay}
         ></img>
       </PlayListThumbnail>
       <PlayListThumbnailShadow />
 
       <PlayListInfo>
+        <IconBox>
+          {playInfo?.provider == "SPOTIFY" ? (
+            <img src={SpotifyIcon} style={{ marginBottom: "5px" }} />
+          ) : (
+            <img src={YoutubeIcon} style={{ marginBottom: "5px" }} />
+          )}
+        </IconBox>
         <PlayListTitle>{playInfo?.title}</PlayListTitle>
         <PlayListHr />
         <PlayListDescription>{playInfo?.description}</PlayListDescription>
@@ -143,7 +173,7 @@ const PlayList = ({ playInfo }: IProps) => {
             {playInfo?.comments.items &&
               playInfo?.comments.items.map((item: any) => (
                 <CommentAlign key={item.item_id}>
-                  <Comment>{item.content}</Comment>
+                  <Comment>{item.user.nickname + ": " + item.content}</Comment>
                 </CommentAlign>
               ))}
           </div>
@@ -151,10 +181,15 @@ const PlayList = ({ playInfo }: IProps) => {
         <CommentEdit
           isHide={isHide}
           type="textarea"
-          placeholder="댓글을 입력해주세요."
+          placeholder={
+            wasLogined
+              ? "댓글을 입력해주세요."
+              : "로그인 후 댓글 작성이 가능합니다."
+          }
           onChange={handleChange}
           onKeyPress={handleEnterPress}
           value={commentContent}
+          disabled={wasLogined ? false : true}
         />
       </PlayListComments>
     </Container>
@@ -177,6 +212,10 @@ const PlayListInfo = styled.section`
   width: 273px;
 `;
 
+const IconBox = styled.div`
+  display: flex;
+`;
+
 const PlayListTitle = styled.div`
   word-break: keep-all;
   font-family: Noto Sans KR;
@@ -193,6 +232,7 @@ const PlayListHr = styled.hr`
   opacity: 0.5;
   border: 1px solid #bb8c3c;
   transform: rotate(180deg);
+  background-color: #bb8c3c;
 `;
 
 const PlayListDescription = styled.div`
@@ -214,8 +254,8 @@ const PlayListThumbnailShadow = styled.div`
   position: absolute;
   width: 629px;
   height: 216px;
-  left: 271px;
-  top: 518.5px;
+  left: 261px;
+  top: 458.5px;
 
   background: linear-gradient(0deg, #010407 28.25%, rgba(1, 4, 7, 0) 91.32%);
 `;
@@ -241,6 +281,7 @@ const HideText = styled.span`
   line-height: 24px;
   color: #ffffff;
   opacity: 0.5;
+  cursor: pointer;
 `;
 
 const CommentText = styled.span`
@@ -261,7 +302,18 @@ const CommentBox = styled.section<{ isHide: boolean }>`
   flex-direction: column-reverse;
   height: 333px;
   overflow: auto;
-  display: ${(props) => (props.isHide ? "none" : "block")};
+  display: ${(props) => (props.isHide ? "none" : "flex")};
+
+  ::-webkit-scrollbar {
+    width: 2px;
+  }
+  ::-webkit-scrollbar-thumb {
+    height: 17%;
+    background: linear-gradient(180deg, #bb8c3c 0%, #73592c 100%);
+  }
+  ::-webkit-scrollbar-track {
+    background: #1b1b1b;
+  }
 `;
 
 const CommentAlign = styled.div`
@@ -297,7 +349,8 @@ const CommentEdit = styled.input<{ isHide: boolean }>`
   border: 2px solid #64583a;
   box-sizing: border-box;
   border-radius: 3px;
-  display: ${(props) => (props.isHide ? "none" : "block")};
+  display: ${(props) => (props.isHide ? "none" : "flex")};
+  margin-left: 15px;
 `;
 
 export default PlayList;

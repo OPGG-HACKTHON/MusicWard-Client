@@ -71,24 +71,26 @@ const OtherLists = ({ others }: IProps) => {
         prevArrow={<LeftButtonImg src={LeftButton} className="slick-prev" />}
         nextArrow={<RightButtonImg src={RightButton} className="slick-next" />}
       >
-        {others?.tracks.items.map((item) => (
-          <OtherPlayList key={item.id}>
-            <ImgBox>
-              <img
-                src={item.image?.url || EmptyImg}
-                style={{
-                  height: "112px",
-                  width: `${item.image?.width == 1280 ? "180%" : "122px"}`,
-                  marginLeft: `${item.image?.width == 1280 ? "-40%" : "0"}`,
-                }}
-                onClick={getActiveItemAttr}
-                id="playTarget"
-              />
-            </ImgBox>
-            <OtherTitle>{item.title}</OtherTitle>
-            <OtherSinger>{item.artists}</OtherSinger>
-          </OtherPlayList>
-        ))}
+        {others?.tracks.items &&
+          others?.tracks.items.map((item) => (
+            <OtherPlayList key={item.id}>
+              <ImgBox>
+                <img
+                  src={item.image?.url || EmptyImg}
+                  style={{
+                    height: "112px",
+                    width: `${item.image?.width == 1280 ? "180%" : "122px"}`,
+                    marginLeft: `${item.image?.width == 1280 ? "-40%" : "0"}`,
+                    cursor: "pointer",
+                  }}
+                  onClick={getActiveItemAttr}
+                  id="playTarget"
+                />
+              </ImgBox>
+              <OtherTitle>{item.title}</OtherTitle>
+              <OtherSinger>{item.artists}</OtherSinger>
+            </OtherPlayList>
+          ))}
       </Slider>
     </Container>
   );
@@ -144,6 +146,12 @@ const OtherTitle = styled.div`
   overflow: hidden;
   white-space: nowrap;
   margin: 0 auto;
+
+  &: hover {
+    text-overflow: clip;
+    overflow: visible;
+    white-space: normal;
+  }
 `;
 
 const OtherSinger = styled.div`
@@ -158,6 +166,12 @@ const OtherSinger = styled.div`
   overflow: hidden;
   white-space: nowrap;
   margin: 0 auto;
+
+  &: hover {
+    text-overflow: clip;
+    overflow: visible;
+    white-space: normal;
+  }
 `;
 
 export default OtherLists;

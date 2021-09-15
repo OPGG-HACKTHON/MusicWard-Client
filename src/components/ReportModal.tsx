@@ -132,8 +132,8 @@ const ModalWrapper = styled.div`
   position: absolute;
   width: 558px;
   height: 555px;
-  left: 441px;
-  top: 269px;
+  left: calc(50% - 279px);
+  top: calc(50% - 277px);
 
   background: #041321;
   /* gold/soft */
