@@ -5,8 +5,10 @@ import Eclipse from "assets/img/archivepage/eclipse.png";
 import PlayButton from "assets/img/playlistpage/play-button.png";
 import axiosInstance from "utils/axiosConfig";
 
-import { useRecoilValue } from "recoil";
-import { playlistIdState } from "recoil/playlist";
+import { useRecoilValue, useRecoilState } from "recoil";
+import { playlistIdState, playlistImgState } from "recoil/playlist";
+
+type IProps = { currentPlayImg: string };
 
 type PlayInfo = {
   external_url: string;
@@ -17,13 +19,14 @@ type PlayInfo = {
   };
 };
 
-const PlayCircle = () => {
+const PlayCircle = ({ currentPlayImg }: IProps) => {
   const playlistId = useRecoilValue(playlistIdState);
+  const [, setCurrentPlayImg] = useRecoilState(playlistImgState);
   const [playInfo, setPlayInfo] = useState<PlayInfo>();
 
   useEffect(() => {
     async function getPlayList() {
-      console.log(playlistId, "이거왜이랭");
+      console.log(playlistId, "이거id");
       const { data } = await axiosInstance({
         url: `playlists/${playlistId}`,
       });
@@ -37,6 +40,7 @@ const PlayCircle = () => {
         },
       };
       setPlayInfo(playListData);
+      setCurrentPlayImg(playListData.image.url);
     }
     getPlayList();
   }, [playlistId]);
@@ -48,7 +52,17 @@ const PlayCircle = () => {
   return (
     <Container>
       <PlayListContainer>
-        <WardPlayListImg src={playInfo?.image.url} />
+        <img
+          src={currentPlayImg}
+          id="currentPlay"
+          style={{
+            position: "absolute",
+            height: "458px",
+            width: `${playInfo?.image.width == 1280 ? "160%" : "458px"}`,
+            marginLeft: `${playInfo?.image.width == 1280 ? "-30.7%" : "0"}`,
+            clipPath: "circle()",
+          }}
+        />
         <img src={Eclipse} style={{ position: "absolute" }} />
         <img
           src={PlayButton}
@@ -72,13 +86,6 @@ const Container = styled.section`
 
 const PlayListContainer = styled.section`
   position: relative;
-`;
-
-const WardPlayListImg = styled.img`
-  position: absolute;
-  width: 458px;
-  height: 458px;
-  clip-path: circle();
 `;
 
 export default PlayCircle;

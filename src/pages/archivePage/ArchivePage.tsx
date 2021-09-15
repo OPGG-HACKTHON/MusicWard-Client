@@ -3,11 +3,10 @@ import styled from "styled-components";
 import WardLists from "./WardLists";
 import PlayCircle from "./PlayCircle";
 import ArchiveInfo from "./ArchiveInfo";
-// import Champion from "assets/img/archivepage/background-champion.png";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { accessToken } from "recoil/auth";
+import { playlistIdState, playlistImgState } from "recoil/playlist";
 import axiosInstance from "utils/axiosConfig";
-import { playlistIdState } from "recoil/playlist";
 
 type IProps = {
   wardBox: [
@@ -23,7 +22,9 @@ type IProps = {
     }
   ];
   playBox: {
-    profile_image_url: string;
+    champion: {
+      profile_image_url: string;
+    };
     external_url: string;
     image: {
       url: string;
@@ -50,8 +51,9 @@ const ArchivePage = () => {
 
   const [champion, setChampion] = useState("");
   const [currentPlayId] = useRecoilState(playlistIdState);
-  const jwtToken = useRecoilValue(accessToken);
+  const [currentPlayImg, setCurrentPlayImg] = useRecoilState(playlistImgState);
 
+  const jwtToken = useRecoilValue(accessToken);
   const getMyArchive = async () => {
     const { data } = await axiosInstance({
       url: `playlists/wards/me?page=1&size=50&sort=created_date`,
@@ -59,7 +61,7 @@ const ArchivePage = () => {
         Authorization: `Bearer ${jwtToken}`,
       },
     });
-    setChampion(data[0].champion.profile_image_url);
+    console.log(data, "보관함 리스트");
 
     const wardData: IProps["wardBox"] = data.map(
       (i: {
@@ -85,7 +87,9 @@ const ArchivePage = () => {
 
     const playData: IProps["playBox"] = data.map(
       (i: {
-        profile_image_url: string;
+        champion: {
+          profile_image_url: string;
+        };
         external_url: string;
         image: {
           url: string;
@@ -105,8 +109,11 @@ const ArchivePage = () => {
         };
       }) => {
         if (currentPlayId == i.playlist_id) {
+          setChampion(i.champion.profile_image_url);
           return {
-            profile_image_url: i.profile_image_url,
+            champion: {
+              image_url: i.champion.profile_image_url,
+            },
             external_url: i.external_url,
             image: {
               url: i.image.url,
@@ -135,22 +142,37 @@ const ArchivePage = () => {
     getMyArchive();
   }, [currentPlayId]);
 
+  useEffect(() => {
+    async function getFirstArchive() {
+      const { data } = await axiosInstance({
+        url: `playlists/wards/me?page=1&size=50&sort=created_date`,
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      });
+      setChampion(data[0].champion.profile_image_url);
+      setCurrentPlayImg(data[0].image.url);
+    }
+    getFirstArchive();
+  }, []);
+
   const calcHeight = innerHeight - 80;
 
   return (
     <Container height={calcHeight} champion={champion}>
       <Wrapper>
         <WardLists wardBox={wardBox} />
-        <PlayCircle />
+        <PlayCircle currentPlayImg={currentPlayImg} />
         <ArchiveInfo />
       </Wrapper>
     </Container>
   );
 };
 
+// ${(props) => props.height + "px"};
 const Container = styled.section<{ height: number; champion: string }>`
   width: auto;
-  height: ${(props) => props.height + "px"};
+  height: 100%;
   padding: 44px 140px;
   box-sizing: border-box;
   background: url(${(props) => props.champion}), rgba(0, 0, 0, 0.8);

@@ -20,8 +20,17 @@ type IProps = {
   ];
 };
 
+// height: "112px",
+// width: `${item.image?.width == 1280 ? "180%" : "122px"}`,
+// marginLeft: `${item.image?.width == 1280 ? "-40%" : "0"}`,
 const WardLists = ({ wardBox }: IProps) => {
   const [, setCurrentPlayId] = useRecoilState(playlistIdState);
+
+  const setFirstActive = () => {
+    document
+      .querySelectorAll("#wardGradient")[0]
+      .setAttribute("style", "display: block");
+  };
 
   const getActiveItemAttr = (e: any) => {
     let targetElement = e.target;
@@ -29,9 +38,6 @@ const WardLists = ({ wardBox }: IProps) => {
       targetElement = targetElement.parentNode;
     }
 
-    document.querySelectorAll("#wardTarget").forEach((item) => {
-      item.classList.remove("active");
-    });
     document.querySelectorAll("#wardGradient").forEach((item) => {
       item.setAttribute("style", "display: none;");
     });
@@ -50,6 +56,7 @@ const WardLists = ({ wardBox }: IProps) => {
         {wardBox?.map((i) => (
           <ItemsBox key={i.playlist_id}>
             <Items
+              onLoad={setFirstActive}
               onClick={getActiveItemAttr}
               id="wardTarget"
               data-id={i.playlist_id}

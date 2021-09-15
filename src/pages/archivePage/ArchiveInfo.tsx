@@ -1,10 +1,16 @@
-import React, { useCallback, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import axiosInstance from "utils/axiosConfig";
+import { useHistory } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { accessToken } from "recoil/auth";
 import { playlistIdState } from "recoil/playlist";
-import { useHistory } from "react-router-dom";
+import axiosInstance from "utils/axiosConfig";
+
+type PlayInfo = {
+  tags: [];
+  title: string;
+  description: string;
+};
 
 const ArchiveInfo = () => {
   const playlistId = useRecoilValue(playlistIdState);
@@ -14,31 +20,60 @@ const ArchiveInfo = () => {
   const functionActiveColor = "#2a4d6d";
 
   const [wardState, setWardState] = useState(true);
+  const [playInfo, setPlayInfo] = useState<PlayInfo>();
 
-  const handleWard = useCallback(
-    (id, method) => async () => {
+  useEffect(() => {
+    async function getFirstPlayList() {
       const { data } = await axiosInstance({
-        url: "playlists/ward",
-        method: method,
-        headers: {
-          Authorization: `Bearer ${jwtToken}`,
-        },
-        data: {
-          playlist_id: id,
-        },
+        url: `playlists/${playlistId}`,
       });
-      console.log(data);
-    },
-    []
-  );
+      const playListData: PlayInfo = {
+        tags: data.tags,
+        title: data.title,
+        description: data.description,
+      };
+    }
+    getFirstPlayList();
+  }, []);
+
+  useEffect(() => {
+    async function getPlayList() {
+      const { data } = await axiosInstance({
+        url: `playlists/${playlistId}`,
+      });
+      // console.log(data, "플리데이터로");
+      const playListData: PlayInfo = {
+        tags: data.tags,
+        title: data.title,
+        description: data.description,
+      };
+      setPlayInfo(playListData);
+    }
+    getPlayList();
+    setWardState(true);
+  }, [playlistId]);
+
+  const handleWard = async (method: any) => {
+    const { data } = await axiosInstance({
+      url: "playlists/ward",
+      method: method,
+      headers: {
+        Authorization: `Bearer ${jwtToken}`,
+      },
+      data: {
+        playlist_id: playlistId,
+      },
+    });
+    console.log(data, " 와드삭제?");
+  };
 
   const handleWardState = () => {
     if (wardState) {
       setWardState(false);
-      handleWard(playlistId, "delete");
+      handleWard("delete");
     } else {
       setWardState(true);
-      handleWard(playlistId, "post");
+      handleWard("post");
     }
   };
 
@@ -52,17 +87,16 @@ const ArchiveInfo = () => {
   return (
     <Container>
       <Tags>
-        <TagButton>#가렌</TagButton>
-        <TagButton>#데마시아</TagButton>
-        <TagButton>#매드무비</TagButton>
-        <TagButton>#전사</TagButton>
-        <TagButton>#가요</TagButton>
+        {playInfo?.tags &&
+          playInfo?.tags.map((tag: any, idx) => (
+            <TagButton key={idx}>{`#${tag}`}</TagButton>
+          ))}
       </Tags>
 
       <PlayListInfo>
-        <PlayListTitle>{}</PlayListTitle>
+        <PlayListTitle>{playInfo?.title}</PlayListTitle>
         <PlayListHr />
-        <PlayListDescription>{}</PlayListDescription>
+        <PlayListDescription>{playInfo?.description}</PlayListDescription>
       </PlayListInfo>
 
       <Functions>
