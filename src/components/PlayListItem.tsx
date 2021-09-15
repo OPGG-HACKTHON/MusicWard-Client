@@ -65,6 +65,7 @@ const SliderItem = styled.div`
   padding: 12px;
   box-sizing: border-box;
   margin: 0 22px;
+  cursor: pointer;
 `;
 
 const SliderItemBox = styled.div<{ imgUrl?: string }>`
