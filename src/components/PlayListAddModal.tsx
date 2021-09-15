@@ -49,7 +49,7 @@ const PlayListAddModal: FC<PlayListAddModalProps> = ({
         title: info.title,
         description: info.description,
         champion_name: info.champion,
-        tags: tagList,
+        tags: Array.from(new Set([info.champion, ...tagList])),
       },
     })
       .then(() => {

@@ -95,6 +95,7 @@ const Profile = styled.div<{ url?: string }>`
   top: 27px;
   left: 153px;
   border-radius: 100px;
+  background-position: center;
 `;
 
 const Title = styled.div<{ full: boolean }>`

@@ -39,6 +39,7 @@ const PlayList: FC<PlayListProps> = ({ champion }) => {
         sort: "view",
       },
     });
+    setPlayList([]);
     setPlayList(
       data.map(
         (i: {
