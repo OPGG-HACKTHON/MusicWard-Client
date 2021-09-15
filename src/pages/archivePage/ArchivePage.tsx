@@ -45,11 +45,11 @@ type IProps = {
 };
 
 const ArchivePage = () => {
-  const [playBox, setPlayBox] = useState<IProps["playBox"] | undefined>();
+  const [, setPlayBox] = useState<IProps["playBox"] | undefined>();
   const [wardBox, setWardBox] = useState<IProps["wardBox"] | undefined>();
 
   const [champion, setChampion] = useState("");
-  const [currentPlayId, setCurrentPlayId] = useRecoilState(playlistIdState);
+  const [currentPlayId] = useRecoilState(playlistIdState);
   const jwtToken = useRecoilValue(accessToken);
 
   const getMyArchive = async () => {

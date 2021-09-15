@@ -8,10 +8,6 @@ import axiosInstance from "utils/axiosConfig";
 import { useRecoilValue } from "recoil";
 import { playlistIdState } from "recoil/playlist";
 
-type IProps = {
-  currentPlayId: number;
-};
-
 type PlayInfo = {
   external_url: string;
   image: {

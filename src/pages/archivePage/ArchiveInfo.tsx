@@ -6,30 +6,6 @@ import { accessToken } from "recoil/auth";
 import { playlistIdState } from "recoil/playlist";
 import { useHistory } from "react-router-dom";
 
-type IProps = {
-  currentPlayId: number;
-  playBox?: {
-    profile_image_url: string;
-    external_url: string;
-    image: {
-      url: string;
-      width: number;
-      height: number;
-    };
-    tags: [];
-    provider: string;
-    title: string;
-    description: string;
-    playlist_id: number;
-    tracks: {
-      total: number;
-    };
-    wards: {
-      total: number;
-    };
-  };
-};
-
 const ArchiveInfo = () => {
   const playlistId = useRecoilValue(playlistIdState);
   const jwtToken = useRecoilValue(accessToken);
