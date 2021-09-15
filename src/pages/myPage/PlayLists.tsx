@@ -4,6 +4,7 @@ import DeleteButton from "assets/img/delete-button.svg";
 import Ward from "assets/img/mypage/ward.png";
 import YoutubeMusicIcon from "assets/icon/i-youtube-music.svg";
 import SpotifyMusicIcon from "assets/icon/i-spotify-music.svg";
+import SyncIcon from "assets/icon/i-sync.svg";
 import EmptyImg from "assets/img/empty-img.svg";
 import PlayListAddModal from "components/PlayListAddModal";
 import { useEffect } from "react";
@@ -123,6 +124,25 @@ const PlayLists = () => {
     },
     []
   );
+  const handleSync = useCallback(
+    (id) => async (e: MouseEvent<HTMLElement>) => {
+      e.stopPropagation();
+      await axiosInstance({
+        url: `playlists/${id}`,
+        method: "post",
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      }).then(() => {
+        getUploadPlayList();
+        getPlayList();
+        if (useSpotify) {
+          getPlayList("SPOTIFY");
+        }
+      });
+    },
+    []
+  );
   useEffect(() => {
     getUploadPlayList();
     getPlayList();
@@ -156,32 +176,34 @@ const PlayLists = () => {
                     onClick={handleDelete(i.playlist_id)}
                   />
                   <Info>
-                    <img
-                      src={
-                        i.provider === "YOUTUBE"
-                          ? YoutubeMusicIcon
-                          : SpotifyMusicIcon
-                      }
-                      style={{
-                        width: "20px",
-                        position: "absolute",
-                        left: "15px",
-                        top: "40px",
-                      }}
-                    />
+                    <IconWrapper>
+                      <Icon
+                        src={
+                          i.provider === "YOUTUBE"
+                            ? YoutubeMusicIcon
+                            : SpotifyMusicIcon
+                        }
+                      />
+                      <Icon
+                        src={SyncIcon}
+                        onClick={handleSync(i.playlist_id)}
+                      />
+                    </IconWrapper>
                     <Title>{i.title}</Title>
                     <TagsWrapper>
                       {i.tags?.map((t) => (
                         <Tags key={t}>#{t} </Tags>
                       ))}
                     </TagsWrapper>
-                    <Popu>
-                      <span>{i.tracks?.total}곡</span>
-                      <VHr />
-                      <img src={Ward} />
-                      <span>{i.wards?.total}</span>
-                    </Popu>
-                    <Date>{i.created_date.split(" ")[0]}</Date>
+                    <BottomInfoWrapper>
+                      <Popu>
+                        <span>{i.tracks?.total}곡</span>
+                        <Hr />
+                        <img src={Ward} />
+                        <span>{i.wards?.total}</span>
+                      </Popu>
+                      <Date>{i.created_date.split(" ")[0]}</Date>
+                    </BottomInfoWrapper>
                   </Info>
                 </PlayListBox>
               </PlayListWrapper>
@@ -197,12 +219,7 @@ const PlayLists = () => {
                   <PlayListGradient>
                     <PlayListTitle>
                       <div>
-                        <img
-                          src={SpotifyMusicIcon}
-                          style={{
-                            width: "20px",
-                          }}
-                        />
+                        <Icon src={SpotifyMusicIcon} />
                       </div>
                       <div>{i.original_title}</div>
                     </PlayListTitle>
@@ -221,12 +238,7 @@ const PlayLists = () => {
                   <PlayListGradient>
                     <PlayListTitle>
                       <div>
-                        <img
-                          src={YoutubeMusicIcon}
-                          style={{
-                            width: "20px",
-                          }}
-                        />
+                        <Icon />
                       </div>
                       <div>{i.original_title}</div>
                     </PlayListTitle>
@@ -285,7 +297,7 @@ const PlayListWrapper = styled.div`
     #d3bf89,
     #755c28
   );
-  padding: 12px;
+  padding: 15px;
   box-sizing: border-box;
   margin: 30px;
   cursor: pointer;
@@ -310,6 +322,8 @@ const PlayListGradient = styled.div`
   bottom: 0;
   left: 0;
   background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 69.05%);
+  padding: 10px;
+  box-sizing: border-box;
 `;
 
 const PlayListTitle = styled.div`
@@ -373,12 +387,24 @@ const Info = styled.div`
   width: 100%;
   height: 160px;
   background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 69.05%);
+  padding: 10px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+`;
+
+const IconWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  height: 20px;
+  margin-bottom: 5px;
+  img {
+    margin-right: 5px;
+  }
 `;
 
 const Title = styled.div`
-  position: absolute;
-  left: 15px;
-  top: 67px;
   font-style: normal;
   font-weight: bold;
   font-size: 18px;
@@ -387,10 +413,8 @@ const Title = styled.div`
 `;
 
 const TagsWrapper = styled.div`
-  position: absolute;
   display: flex;
-  left: 15px;
-  bottom: 45px;
+  flex-wrap: wrap;
 `;
 
 const Tags = styled.div`
@@ -404,29 +428,33 @@ const Tags = styled.div`
 `;
 
 const Popu = styled.div`
-  position: absolute;
-  left: 15px;
-  bottom: 15px;
   font-style: normal;
   font-weight: 500;
   font-size: 12px;
   line-height: 17px;
   color: #ffffff;
   opacity: 0.6;
+  display: flex;
+  align-items: center;
 `;
 
-const VHr = styled.hr`
+const BottomInfoWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const Hr = styled.hr`
   opacity: 0.5;
   border: 1px solid #666666;
   transform: rotate(90deg);
   display: inline;
-  margin: 10px;
+  margin: 0;
+  height: 100%;
+  width: 10px;
 `;
 
 const Date = styled.div`
-  position: absolute;
-  right: 15px;
-  bottom: 15px;
   font-style: normal;
   font-weight: 500;
   font-size: 12px;
@@ -434,6 +462,10 @@ const Date = styled.div`
   text-align: right;
   color: #ffffff;
   opacity: 0.6;
+`;
+
+const Icon = styled.img`
+  width: 20px;
 `;
 
 export default PlayLists;
