@@ -3,23 +3,41 @@ import styled from "styled-components";
 import axiosInstance from "utils/axiosConfig";
 import { useRecoilValue } from "recoil";
 import { accessToken } from "recoil/auth";
+import { playlistIdState } from "recoil/playlist";
 import { useHistory } from "react-router-dom";
 
-const ArchiveInfo = () => {
-  const [title] = useState("데마시아의 힘을 느껴보자");
-  const [description] = useState(`
-    가렌은 불굴의 선봉대를 이끄는 고결하고 자긍심 강한 전사다. 
-    선봉대 내에서 인망이 두터울 뿐 아니라 심지어 적에게도 존경을 받지만, 
-    그가 대대로 데마시아와 데마시아의 이상을
-    `);
+type IProps = {
+  currentPlayId: number;
+  playBox?: {
+    profile_image_url: string;
+    external_url: string;
+    image: {
+      url: string;
+      width: number;
+      height: number;
+    };
+    tags: [];
+    provider: string;
+    title: string;
+    description: string;
+    playlist_id: number;
+    tracks: {
+      total: number;
+    };
+    wards: {
+      total: number;
+    };
+  };
+};
 
+const ArchiveInfo = () => {
+  const playlistId = useRecoilValue(playlistIdState);
   const jwtToken = useRecoilValue(accessToken);
 
   const functionBasicColor = "#010407";
   const functionActiveColor = "#2a4d6d";
 
   const [wardState, setWardState] = useState(true);
-  const playlistId = 2;
 
   const handleWard = useCallback(
     (id, method) => async () => {
@@ -66,9 +84,9 @@ const ArchiveInfo = () => {
       </Tags>
 
       <PlayListInfo>
-        <PlayListTitle>{title}</PlayListTitle>
+        <PlayListTitle>{}</PlayListTitle>
         <PlayListHr />
-        <PlayListDescription>{description}</PlayListDescription>
+        <PlayListDescription>{}</PlayListDescription>
       </PlayListInfo>
 
       <Functions>

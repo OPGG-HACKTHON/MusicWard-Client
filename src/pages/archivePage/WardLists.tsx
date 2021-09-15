@@ -1,14 +1,43 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
-
 import Ward from "assets/img/archivepage/ward.svg";
 import SmallWard from "assets/img/mypage/ward.png";
-import WardListSample from "assets/img/archivepage/ward-list-sample.png";
+import { useRecoilState } from "recoil";
+import { playlistIdState } from "recoil/playlist";
 
-const WardLists = () => {
-  const [positionTop, setPositionTop] = useState(272);
+type IProps = {
+  wardBox?: [
+    {
+      playlist_id: number;
+      tracks: { total: number };
+      wards: { total: number };
+      title: string;
+      image: {
+        url: string;
+        width: number;
+      };
+    }
+  ];
+};
+
+const WardLists = ({ wardBox }: IProps) => {
+  const [, setCurrentPlayId] = useRecoilState(playlistIdState);
+
   const getActiveItemAttr = (e: any) => {
-    setPositionTop(e.target.offsetTop);
+    let targetElement = e.target;
+    while (targetElement.id != "wardTarget") {
+      targetElement = targetElement.parentNode;
+    }
+
+    document.querySelectorAll("#wardTarget").forEach((item) => {
+      item.classList.remove("active");
+    });
+    document.querySelectorAll("#wardGradient").forEach((item) => {
+      item.setAttribute("style", "display: none;");
+    });
+    targetElement.nextElementSibling.style = "display: block;";
+
+    setCurrentPlayId(targetElement.dataset.id);
   };
 
   return (
@@ -17,107 +46,36 @@ const WardLists = () => {
       <WardText>와드함</WardText>
       <WardHr />
 
-      <ActiveGradi positionTop={positionTop} />
       <Lists>
-        <Items onClick={getActiveItemAttr}>
-          <img src={WardListSample} style={{ marginRight: "28px" }} />
-          <ItemAlign>
-            <Title>데마시아의 힘을 느껴보자</Title>
-            <Popu>
-              <span>23곡</span>
-              <img src={SmallWard} />
-              <span>133</span>
-            </Popu>
-          </ItemAlign>
-        </Items>
-        <Items>
-          <img src={WardListSample} style={{ marginRight: "28px" }} />
-          <ItemAlign>
-            <Title>데마시아의 힘을 느껴보자</Title>
-            <Popu>
-              <span>23곡</span>
-              <img src={SmallWard} />
-              <span>133</span>
-            </Popu>
-          </ItemAlign>
-        </Items>
-        <Items>
-          <img src={WardListSample} style={{ marginRight: "28px" }} />
-          <ItemAlign>
-            <Title>데마시아의 힘을 느껴보자</Title>
-            <Popu>
-              <span>23곡</span>
-              <img src={SmallWard} />
-              <span>133</span>
-            </Popu>
-          </ItemAlign>
-        </Items>
-        <Items>
-          <img src={WardListSample} style={{ marginRight: "28px" }} />
-          <ItemAlign>
-            <Title>데마시아의 힘을 느껴보자</Title>
-            <Popu>
-              <span>23곡</span>
-              <img src={SmallWard} />
-              <span>133</span>
-            </Popu>
-          </ItemAlign>
-        </Items>
-        <Items>
-          <img src={WardListSample} style={{ marginRight: "28px" }} />
-          <ItemAlign>
-            <Title>데마시아의 힘을 느껴보자</Title>
-            <Popu>
-              <span>23곡</span>
-              <img src={SmallWard} />
-              <span>133</span>
-            </Popu>
-          </ItemAlign>
-        </Items>
-        <Items>
-          <img src={WardListSample} style={{ marginRight: "28px" }} />
-          <span>
-            <Title>데마시아의 힘을 느껴보자</Title>
-            <Popu>
-              <span>23곡</span>
-              <img src={SmallWard} />
-              <span>133</span>
-            </Popu>
-          </span>
-        </Items>
-        <Items>
-          <img src={WardListSample} style={{ marginRight: "28px" }} />
-          <span>
-            <Title>데마시아의 힘을 느껴보자</Title>
-            <Popu>
-              <span>23곡</span>
-              <img src={SmallWard} />
-              <span>133</span>
-            </Popu>
-          </span>
-        </Items>
-        <Items>
-          <img src={WardListSample} style={{ marginRight: "28px" }} />
-          <span>
-            <Title>데마시아의 힘을 느껴보자</Title>
-            <Popu>
-              <span>23곡</span>
-              <img src={SmallWard} />
-              <span>133</span>
-            </Popu>
-          </span>
-        </Items>
-        <Items>
-          <img src={WardListSample} style={{ marginRight: "28px" }} />
-          <span>
-            <Title>데마시아의 힘을 느껴보자</Title>
-            <Popu>
-              <span>23곡</span>
-              <img src={SmallWard} />
-              <span>133</span>
-            </Popu>
-          </span>
-        </Items>
+        {wardBox?.map((i) => (
+          <ItemsBox key={i.playlist_id}>
+            <Items
+              onClick={getActiveItemAttr}
+              id="wardTarget"
+              data-id={i.playlist_id}
+            >
+              <ImgBox>
+                <img
+                  src={i.image.url}
+                  style={{
+                    marginRight: "28px",
+                    width: "93px",
+                    height: "95px",
+                  }}
+                />
+              </ImgBox>
+              <ItemAlign>
+                <Title>{i.title}</Title>
+                <Popu>
+                  <span>{i.tracks}곡</span>
+                  <img src={SmallWard} />
+                  <span>{i.wards}</span>
+                </Popu>
+              </ItemAlign>
+            </Items>
+            <ActiveGradi displayvalue="false" id="wardGradient" />
+          </ItemsBox>
+        ))}
       </Lists>
     </Container>
   );
@@ -127,12 +85,24 @@ const Container = styled.section`
   width: 340px;
 `;
 
-const ActiveGradi = styled.div<{ positionTop: number }>`
+const ItemsBox = styled.div`
+  position: relative;
+`;
+
+const ImgBox = styled.div`
+  width: 93px;
+  height: 95px;
+  margin-right: 28px;
+  z-index: 20;
+`;
+
+const ActiveGradi = styled.div<{ displayvalue: string }>`
+  display: ${(props) => (props.displayvalue == "true" ? "block" : "none")};
   position: absolute;
-  width: 460px;
+  width: 100%;
   height: 112px;
   left: 0px;
-  top: ${(props) => props.positionTop};
+  top: 0px;
 
   background: radial-gradient(
     100% 1686.86% at 0% 64.73%,
@@ -145,6 +115,7 @@ const ItemAlign = styled.span`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  z-index: 20;
 `;
 
 const WardText = styled.div`
@@ -185,7 +156,7 @@ const Lists = styled.section`
 const Items = styled.div`
   display: flex;
   height: 112px;
-  padding: 10px 7px 10px 0;
+  padding: 10px 7px;
   box-sizing: border-box;
 `;
 

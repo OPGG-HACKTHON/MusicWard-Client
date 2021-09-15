@@ -1,121 +1,146 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import WardLists from "./WardLists";
 import PlayCircle from "./PlayCircle";
 import ArchiveInfo from "./ArchiveInfo";
-import Champion from "assets/img/archivepage/background-champion.png";
-import { useRecoilValue } from "recoil";
+// import Champion from "assets/img/archivepage/background-champion.png";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { accessToken } from "recoil/auth";
 import axiosInstance from "utils/axiosConfig";
+import { playlistIdState } from "recoil/playlist";
 
-// type IProps = {
-//   tags: [];
-
-//   playInfo: {
-//     title: string;
-//     description: string;
-//     external_url: string;
-//     playlist_id: number;
-//     image: {
-//       url: string;
-//       width: number;
-//       height: number;
-//     };
-//     comments: {
-//       total: number;
-//       items: [
-//         {
-//           item_id: number;
-//           content: string;
-//         }
-//       ];
-//     };
-//   };
-
-//   others: {
-//     tracks: {
-//       total: number;
-//       items: [
-//         {
-//           artists: string;
-//           id: number;
-//           image: {
-//             url: string;
-//             width: number;
-//             height: number;
-//           };
-//           original_id: string;
-//           preview_url: string;
-//           title: string;
-//         }
-//       ];
-//     };
-//   };
-// };
+type IProps = {
+  wardBox: [
+    {
+      playlist_id: number;
+      tracks: { total: number };
+      wards: { total: number };
+      title: string;
+      image: {
+        url: string;
+        width: number;
+      };
+    }
+  ];
+  playBox: {
+    profile_image_url: string;
+    external_url: string;
+    image: {
+      url: string;
+      width: number;
+      height: number;
+    };
+    tags: [];
+    provider: string;
+    title: string;
+    description: string;
+    playlist_id: number;
+    tracks: {
+      total: number;
+    };
+    wards: {
+      total: number;
+    };
+  };
+};
 
 const ArchivePage = () => {
-  // const [tags, setTags] = useState<IProps["tags"] | undefined>();
-  // const [playListInfo, setPlayListInfo] = useState<
-  //   IProps["playInfo"] | undefined
-  // >();
-  // const [others, setOthers] = useState<IProps["others"] | undefined>();
+  const [playBox, setPlayBox] = useState<IProps["playBox"] | undefined>();
+  const [wardBox, setWardBox] = useState<IProps["wardBox"] | undefined>();
 
+  const [champion, setChampion] = useState("");
+  const [currentPlayId, setCurrentPlayId] = useRecoilState(playlistIdState);
   const jwtToken = useRecoilValue(accessToken);
-  console.log(jwtToken, "access_token");
 
-  const getMyArchive = useCallback(
-    (provider) => async () => {
-      const { data } = await axiosInstance({
-        url: `playlists/wards/me?page=1&size=5&sort=created_date&provider=${provider}`,
-        headers: {
-          Authorization: `Bearer ${jwtToken}`,
-        },
-      });
-      console.log(data);
-    },
-    []
-  );
+  const getMyArchive = async () => {
+    const { data } = await axiosInstance({
+      url: `playlists/wards/me?page=1&size=50&sort=created_date`,
+      headers: {
+        Authorization: `Bearer ${jwtToken}`,
+      },
+    });
+    setChampion(data[0].champion.profile_image_url);
+
+    const wardData: IProps["wardBox"] = data.map(
+      (i: {
+        playlist_id: number;
+        tracks: { total: number };
+        wards: { total: number };
+        title: string;
+        image: {
+          url: string;
+          width: number;
+        };
+      }) => {
+        return {
+          playlist_id: i.playlist_id,
+          tracks: i.tracks.total,
+          wards: i.wards.total,
+          title: i.title,
+          image: i.image,
+        };
+      }
+    );
+    setWardBox(wardData);
+
+    const playData: IProps["playBox"] = data.map(
+      (i: {
+        profile_image_url: string;
+        external_url: string;
+        image: {
+          url: string;
+          width: number;
+          height: number;
+        };
+        tags: [];
+        provider: string;
+        title: string;
+        description: string;
+        playlist_id: number;
+        tracks: {
+          total: number;
+        };
+        wards: {
+          total: number;
+        };
+      }) => {
+        if (currentPlayId == i.playlist_id) {
+          return {
+            profile_image_url: i.profile_image_url,
+            external_url: i.external_url,
+            image: {
+              url: i.image.url,
+              width: i.image.width,
+              height: i.image.height,
+            },
+            tags: i.tags,
+            provider: i.provider,
+            title: i.title,
+            description: i.description,
+            playlist_id: i.playlist_id,
+            tracks: {
+              total: i.tracks.total,
+            },
+            wards: {
+              total: i.wards.total,
+            },
+          };
+        }
+      }
+    );
+    setPlayBox(playData);
+  };
 
   useEffect(() => {
-    getMyArchive("SPOTIFY");
-    getMyArchive("YOUTUBE");
-    //     const tags: IProps["tags"] = resData.tags;
-    //     setTags(tags);
-
-    //     const playListData: IProps["playInfo"] = {
-    //       title: resData.title,
-    //       description: resData.description,
-    //       external_url: resData.external_url,
-    //       playlist_id: resData.playlist_id,
-    //       image: {
-    //         url: resData.image.url,
-    //         width: resData.image.width,
-    //         height: resData.image.height,
-    //       },
-    //       comments: {
-    //         total: resData.comments.total,
-    //         items: resData.comments.items,
-    //       },
-    //     };
-    //     setPlayListInfo(playListData);
-
-    //     const othersData: IProps["others"] = {
-    //       tracks: {
-    //         total: resData.tracks.total,
-    //         items: resData.tracks.items,
-    //       },
-    //     };
-    //     setOthers(othersData);
-    //   }
-    // );
-  }, []);
+    getMyArchive();
+  }, [currentPlayId]);
 
   const calcHeight = innerHeight - 80;
 
   return (
-    <Container height={calcHeight}>
+    <Container height={calcHeight} champion={champion}>
       <Wrapper>
-        <WardLists />
+        <WardLists wardBox={wardBox} />
         <PlayCircle />
         <ArchiveInfo />
       </Wrapper>
@@ -123,12 +148,12 @@ const ArchivePage = () => {
   );
 };
 
-const Container = styled.section<{ height: number }>`
+const Container = styled.section<{ height: number; champion: string }>`
   width: auto;
   height: ${(props) => props.height + "px"};
   padding: 44px 140px;
   box-sizing: border-box;
-  background: url(${Champion}), rgba(0, 0, 0, 0.8);
+  background: url(${(props) => props.champion}), rgba(0, 0, 0, 0.8);
   background-blend-mode: multiply;
   background-repeat: round;
 `;

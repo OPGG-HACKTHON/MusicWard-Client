@@ -1,15 +1,58 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import Eclipse from "assets/img/archivepage/eclipse.png";
-import WardListSample from "assets/img/archivepage/ward-list-sample.png";
 import PlayButton from "assets/img/playlistpage/play-button.png";
+import axiosInstance from "utils/axiosConfig";
+
+import { useRecoilValue } from "recoil";
+import { playlistIdState } from "recoil/playlist";
+
+type IProps = {
+  currentPlayId: number;
+};
+
+type PlayInfo = {
+  external_url: string;
+  image: {
+    url: string;
+    width: number;
+    height: number;
+  };
+};
 
 const PlayCircle = () => {
+  const playlistId = useRecoilValue(playlistIdState);
+  const [playInfo, setPlayInfo] = useState<PlayInfo>();
+
+  useEffect(() => {
+    async function getPlayList() {
+      console.log(playlistId, "이거왜이랭");
+      const { data } = await axiosInstance({
+        url: `playlists/${playlistId}`,
+      });
+
+      const playListData: PlayInfo = {
+        external_url: data.external_url,
+        image: {
+          url: data.image.url,
+          width: data.image.width,
+          height: data.image.height,
+        },
+      };
+      setPlayInfo(playListData);
+    }
+    getPlayList();
+  }, [playlistId]);
+
+  const clickToPlay = () => {
+    window.open(playInfo?.external_url, "_blank");
+  };
+
   return (
     <Container>
       <PlayListContainer>
-        <WardPlayListImg src={WardListSample} />
+        <WardPlayListImg src={playInfo?.image.url} />
         <img src={Eclipse} style={{ position: "absolute" }} />
         <img
           src={PlayButton}
@@ -18,6 +61,7 @@ const PlayCircle = () => {
             top: "178px",
             left: "178px",
           }}
+          onClick={clickToPlay}
         />
       </PlayListContainer>
     </Container>

@@ -1,9 +1,9 @@
 import React, { useCallback, useState } from "react";
 import styled from "styled-components";
 import ReportModal from "components/ReportModal";
-import axiosInstance from "utils/axiosConfig";
-import { accessToken } from "recoil/auth";
 import { useRecoilValue } from "recoil";
+import { accessToken } from "recoil/auth";
+import axiosInstance from "utils/axiosConfig";
 
 type IProps = {
   tags?: [];

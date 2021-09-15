@@ -4,8 +4,8 @@ import PlayList from "./PlayList";
 import OtherLists from "./OtherLists";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { uploadCommentState } from "recoil/comments";
-import axiosInstance from "utils/axiosConfig";
 import { accessToken } from "recoil/auth";
+import axiosInstance from "utils/axiosConfig";
 
 type IProps = {
   tags: [];
@@ -58,11 +58,12 @@ const PlayListPage = () => {
     IProps["playInfo"] | undefined
   >();
   const [others, setOthers] = useState<IProps["others"] | undefined>();
+
   const [commentsState, setCommentsState] =
     useRecoilState<boolean>(uploadCommentState);
-  const jwtToken = useRecoilValue(accessToken);
-
   const [wardState, setWardState] = useState(false);
+
+  const jwtToken = useRecoilValue(accessToken);
 
   const pathName: string = window.location.pathname;
   const playListId = parseInt(pathName.substring(10));
@@ -107,7 +108,7 @@ const PlayListPage = () => {
 
     async function getArchive() {
       const { data } = await axiosInstance({
-        url: `playlists/wards/me?page=1&size=5&sort=created_date`,
+        url: `playlists/wards/me?page=1&size=50&sort=created_date`,
         headers: {
           Authorization: `Bearer ${jwtToken}`,
         },

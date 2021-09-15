@@ -3,12 +3,10 @@ import styled from "styled-components";
 import ThumbnailEdge from "assets/img/playlistpage/thumbnail-edge-new.svg";
 import ThumbnailBg from "assets/img/playlistpage/thumbnail-bg.svg";
 import PlayButton from "assets/img/playlistpage/play-button.svg";
-import EmptyImg from "assets/img/empty-img.svg";
 import { useRecoilValue, useRecoilState } from "recoil";
 import { accessToken } from "recoil/auth";
 import { uploadCommentState } from "recoil/comments";
 import axiosInstance from "utils/axiosConfig";
-import { playlistImgState } from "recoil/playlistImg";
 
 type IProps = {
   playInfo?: {
@@ -38,7 +36,10 @@ const PlayList = ({ playInfo }: IProps) => {
     window.open(playInfo?.external_url, "_blank");
   };
 
+  const jwtToken = useRecoilValue(accessToken);
   const [commentContent, setCommentContent] = useState("");
+  const [, setCommentsState] = useRecoilState<boolean>(uploadCommentState);
+
   const handleChange = useCallback(
     (e) => {
       setCommentContent(e.target.value);
@@ -46,15 +47,6 @@ const PlayList = ({ playInfo }: IProps) => {
     [setCommentContent]
   );
 
-  const jwtToken = useRecoilValue(accessToken);
-
-  const handleEnterPress = async (e: any) => {
-    if (e.key === "Enter") {
-      await postComment();
-    }
-  };
-
-  const [, setCommentsState] = useRecoilState<boolean>(uploadCommentState);
   const postComment = async () => {
     await axiosInstance({
       url: "playlists/comment",
@@ -71,9 +63,30 @@ const PlayList = ({ playInfo }: IProps) => {
     setCommentContent("");
   };
 
-  const imgUrl = useRecoilValue(playlistImgState);
+  const handleEnterPress = async (e: any) => {
+    if (e.key === "Enter") {
+      await postComment();
+    }
+  };
 
-  console.log(playInfo?.image, "dnlem");
+  const setBigImgSize = (e: any) => {
+    if (e.target.naturalWidth == 1280) {
+      e.target.style.width = "auto";
+      e.target.style.left = "-244px";
+    } else {
+      e.target.style.width = "628px";
+      e.target.style.left = 0;
+    }
+  };
+
+  const [isHide, setIsHide] = useState(false);
+  const hideComment = () => {
+    if (isHide) {
+      setIsHide(false);
+    } else {
+      setIsHide(true);
+    }
+  };
 
   return (
     <Container>
@@ -88,13 +101,13 @@ const PlayList = ({ playInfo }: IProps) => {
           }}
         />
         <img
-          src={imgUrl || EmptyImg}
+          id="playListBigImg"
+          src={playInfo?.image.url}
+          onLoad={setBigImgSize}
           style={{
             position: "absolute",
             clipPath: "circle()",
             margin: "15px",
-            left: `${playInfo?.image.width == 1280 ? "-244px" : "0"}`,
-            width: `${playInfo?.image.width == 1280 ? "auto" : "628px"}`,
             height: "628px",
           }}
         />
@@ -122,10 +135,10 @@ const PlayList = ({ playInfo }: IProps) => {
 
       <PlayListComments>
         <CommentTitle>
-          <HideText>숨기기</HideText>
+          <HideText onClick={hideComment}>숨기기</HideText>
           <CommentText>댓글</CommentText>
         </CommentTitle>
-        <CommentBox>
+        <CommentBox isHide={isHide}>
           <div>
             {playInfo?.comments.items &&
               playInfo?.comments.items.map((item: any) => (
@@ -136,6 +149,7 @@ const PlayList = ({ playInfo }: IProps) => {
           </div>
         </CommentBox>
         <CommentEdit
+          isHide={isHide}
           type="textarea"
           placeholder="댓글을 입력해주세요."
           onChange={handleChange}
@@ -240,13 +254,14 @@ const CommentText = styled.span`
   opacity: 0.8;
 `;
 
-const CommentBox = styled.section`
+const CommentBox = styled.section<{ isHide: boolean }>`
   margin-top: 14px;
   padding-right: 5px;
   display: flex;
   flex-direction: column-reverse;
   height: 333px;
   overflow: auto;
+  display: ${(props) => (props.isHide ? "none" : "block")};
 `;
 
 const CommentAlign = styled.div`
@@ -273,7 +288,7 @@ const Comment = styled.span`
   opacity: 0.8;
 `;
 
-const CommentEdit = styled.input`
+const CommentEdit = styled.input<{ isHide: boolean }>`
   width: 260px;
   height: 69px;
   margin-top: 12.5px;
@@ -282,6 +297,7 @@ const CommentEdit = styled.input`
   border: 2px solid #64583a;
   box-sizing: border-box;
   border-radius: 3px;
+  display: ${(props) => (props.isHide ? "none" : "block")};
 `;
 
 export default PlayList;

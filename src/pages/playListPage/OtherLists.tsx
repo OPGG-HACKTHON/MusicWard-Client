@@ -4,8 +4,6 @@ import Slider from "react-slick";
 import RightButton from "assets/img/playlistpage/list-arrow-right.svg";
 import LeftButton from "assets/img/playlistpage/list-arrow-left.svg";
 import EmptyImg from "assets/img/empty-img.svg";
-import { useRecoilState } from "recoil";
-import { playlistImgState } from "recoil/playlistImg";
 
 type IProps = {
   others?: {
@@ -42,7 +40,6 @@ const OtherLists = ({ others }: IProps) => {
     swipeToSlide: true,
   };
 
-  const [, setImgUrl] = useRecoilState<string>(playlistImgState);
   const slideItems = document.querySelectorAll(".slick-slide.slick-active");
   useEffect(() => {
     const slideCustomCss = () => {
@@ -58,17 +55,12 @@ const OtherLists = ({ others }: IProps) => {
       });
     };
     slideCustomCss();
-
-    const setFirstImg = async () => {
-      console.log(others?.tracks.items[0].image.url, "없니?");
-      await setImgUrl(others?.tracks.items[0].image.url || EmptyImg);
-    };
-    setFirstImg();
   }, []);
 
   const getActiveItemAttr = (e: any) => {
-    console.log("클릭했을 때..");
-    setImgUrl(e.target.src);
+    document
+      .querySelector("#playListBigImg")
+      ?.setAttribute("src", e.target.src);
   };
 
   return (
