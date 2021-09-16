@@ -2,7 +2,7 @@ import { atom } from "recoil";
 
 export const playlistIdState = atom<number>({
   key: "playlistIdState",
-  default: 0,
+  default: 1,
 });
 
 export const playlistImgState = atom<string>({
