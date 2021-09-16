@@ -43,10 +43,8 @@ const PlayList = ({ playInfo }: IProps) => {
   const [modal, setModal] = useState<boolean>(false);
   const clickToPlay = () => {
     if (playInfo?.provider === "SPOTIFY") {
-      console.log(playInfo.provider);
-      if (!spotifyEmail) {
-        console.log(modal);
-        <LoginSpotifyModal modal={modal} setModal={setModal} />;
+      if (spotifyEmail == undefined) {
+        setModal(true);
       }
     } else {
       window.open(playInfo?.external_url, "_blank");
@@ -192,6 +190,8 @@ const PlayList = ({ playInfo }: IProps) => {
           disabled={wasLogined ? false : true}
         />
       </PlayListComments>
+
+      {modal && <LoginSpotifyModal modal={modal} setModal={setModal} />}
     </Container>
   );
 };
