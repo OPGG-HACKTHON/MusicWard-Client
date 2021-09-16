@@ -45,10 +45,10 @@ const PlayList = ({ playInfo }: IProps) => {
     if (playInfo?.provider === "SPOTIFY") {
       if (spotifyEmail == undefined) {
         setModal(true);
+        return;
       }
-    } else {
-      window.open(playInfo?.external_url, "_blank");
     }
+    window.open(playInfo?.external_url, "_blank");
   };
 
   const jwtToken = useRecoilValue(accessToken);

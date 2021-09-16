@@ -20,9 +20,6 @@ type IProps = {
   ];
 };
 
-// height: "112px",
-// width: `${item.image?.width == 1280 ? "180%" : "122px"}`,
-// marginLeft: `${item.image?.width == 1280 ? "-40%" : "0"}`,
 const WardLists = ({ wardBox }: IProps) => {
   const [, setCurrentPlayId] = useRecoilState(playlistIdState);
 
@@ -94,6 +91,7 @@ const Container = styled.section`
 
 const ItemsBox = styled.div`
   position: relative;
+  cursor: pointer;
 `;
 
 const ImgBox = styled.div`

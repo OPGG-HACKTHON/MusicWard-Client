@@ -75,7 +75,6 @@ const PlayListPage = () => {
       const { data } = await axiosInstance({
         url: `playlists/${playListId}`,
       });
-      console.log(data);
 
       const tags: IProps["tags"] = data.tags;
       setTags(tags);
@@ -126,8 +125,6 @@ const PlayListPage = () => {
     }
     getArchive();
   }, [commentsState]);
-
-  console.log();
 
   return (
     <>

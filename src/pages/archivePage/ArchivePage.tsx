@@ -4,8 +4,8 @@ import WardLists from "./WardLists";
 import PlayCircle from "./PlayCircle";
 import ArchiveInfo from "./ArchiveInfo";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { accessToken } from "recoil/auth";
 import { playlistIdState, playlistImgState } from "recoil/playlist";
+import { accessToken } from "recoil/auth";
 import axiosInstance from "utils/axiosConfig";
 
 type IProps = {
@@ -50,7 +50,7 @@ const ArchivePage = () => {
   const [wardBox, setWardBox] = useState<IProps["wardBox"] | undefined>();
 
   const [champion, setChampion] = useState("");
-  const [currentPlayId] = useRecoilState(playlistIdState);
+  const [currentPlayId, setCurrentPlayId] = useRecoilState(playlistIdState);
   const [currentPlayImg, setCurrentPlayImg] = useRecoilState(playlistImgState);
 
   const jwtToken = useRecoilValue(accessToken);
@@ -61,7 +61,6 @@ const ArchivePage = () => {
         Authorization: `Bearer ${jwtToken}`,
       },
     });
-
     const wardData: IProps["wardBox"] = data.map(
       (i: {
         playlist_id: number;
@@ -150,6 +149,7 @@ const ArchivePage = () => {
         },
       });
       setChampion(data[0].champion.profile_image_url);
+      setCurrentPlayId(data[0].playlist_id);
       setCurrentPlayImg(data[0].image.url);
     }
     getFirstArchive();
@@ -168,9 +168,8 @@ const ArchivePage = () => {
   );
 };
 
-// ${(props) => props.height + "px"};
 const Container = styled.section<{ height: number; champion: string }>`
-  width: auto;
+  width: 100%;
   height: 100%;
   padding: 44px 140px;
   box-sizing: border-box;

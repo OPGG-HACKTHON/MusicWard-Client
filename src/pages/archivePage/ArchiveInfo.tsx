@@ -135,6 +135,7 @@ const TagButton = styled.div`
   text-align: center;
   color: #ffffff;
   opacity: 0.8;
+  cursor: pointer;
 `;
 
 const PlayListInfo = styled.section`
@@ -195,6 +196,7 @@ const FunctionButton = styled.div<{ colorProps: string }>`
   text-align: center;
   color: #ffffff;
   opacity: 0.8;
+  cursor: pointer;
 `;
 
 export default ArchiveInfo;
