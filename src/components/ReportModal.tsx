@@ -150,6 +150,7 @@ const ModalWrapper = styled.div`
   /* gold/soft */
 
   border: 3px solid #c9ac6a;
+  border-radius: 10px;
 `;
 
 const ModalContent = styled.div`
