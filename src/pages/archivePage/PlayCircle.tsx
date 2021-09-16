@@ -69,6 +69,7 @@ const PlayCircle = ({ currentPlayImg }: IProps) => {
             position: "absolute",
             top: "178px",
             left: "178px",
+            cursor: "pointer",
           }}
           onClick={clickToPlay}
         />

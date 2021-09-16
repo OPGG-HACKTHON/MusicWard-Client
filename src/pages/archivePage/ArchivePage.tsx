@@ -170,7 +170,7 @@ const ArchivePage = () => {
 
 // ${(props) => props.height + "px"};
 const Container = styled.section<{ height: number; champion: string }>`
-  width: auto;
+  width: 100%;
   height: 100%;
   padding: 44px 140px;
   box-sizing: border-box;
