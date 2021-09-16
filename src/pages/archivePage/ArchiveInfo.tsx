@@ -139,8 +139,10 @@ const TagButton = styled.div`
 `;
 
 const PlayListInfo = styled.section`
-  position: relative;
-  margin: 5vw 0;
+  position: absolute;
+  right: 140px;
+  top: 417px;
+  width: 248px;
 `;
 
 const PlayListTitle = styled.div`
@@ -173,7 +175,9 @@ const PlayListDescription = styled.div`
 `;
 
 const Functions = styled.section`
-  position: relative;
+  position: absolute;
+  top: 728px;
+  right: 140px;
 `;
 
 const FunctionButton = styled.div<{ colorProps: string }>`
