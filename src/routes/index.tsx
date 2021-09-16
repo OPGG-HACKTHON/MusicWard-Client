@@ -8,8 +8,15 @@ import PlayListPage from "pages/playListPage/PlayListPage";
 import { SearchCategory, SearchResultList } from "pages/searchPage";
 import { Redirect, Route, Switch } from "react-router-dom";
 import PrivateRoute from "router/PrivateRoute";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { accessToken, token, TokenType } from "recoil/auth";
+import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
+import {
+  accessToken,
+  auth,
+  AuthType,
+  refreshToken,
+  token,
+  TokenType,
+} from "recoil/auth";
 import queryString from "query-string";
 import axiosInstance from "utils/axiosConfig";
 import Layout from "Layout";
@@ -20,6 +27,10 @@ const Routes = () => {
   const jwtToken = useRecoilValue(accessToken);
   const [, setToken] = useRecoilState<TokenType>(token);
   const parsed = queryString.parse(location.search);
+  const resetToken = useResetRecoilState(token);
+  const resetAuth = useResetRecoilState(auth);
+  const refresh = useRecoilValue(refreshToken);
+  const [, setAuth] = useRecoilState<AuthType>(auth);
   const getToken = async () => {
     const { data } = await axiosInstance({
       url: "users/auth/google",
@@ -36,6 +47,7 @@ const Routes = () => {
       type: type,
     });
     localStorage.setItem("musicward_token", JSON.parse(data));
+    await getMyPageInfo();
   };
   const getSpotifyToken = async () => {
     const { data } = await axiosInstance({
@@ -56,6 +68,47 @@ const Routes = () => {
       type: type,
     });
     localStorage.setItem("musicward_token", JSON.parse(data));
+  };
+  const getMyPageInfo = async () => {
+    await axiosInstance({
+      url: "users/me",
+      headers: {
+        Authorization: `Bearer ${jwtToken}`,
+      },
+    })
+      .then(({ data }) => {
+        const { google_email, spotify_email, nickname, name } = data;
+        setAuth({
+          name,
+          nickname: nickname,
+          googleEmail: google_email,
+          spotifyEmail: spotify_email,
+        });
+        localStorage.setItem("musicward_auth", JSON.parse(data));
+      })
+      .catch(async (err) => {
+        if (err?.response?.status === 401) {
+          await axiosInstance({
+            url: "user/auth",
+            method: "put",
+            data: {
+              refresh_token: refresh,
+            },
+          })
+            .then(({ data }) => {
+              const { access_token, refresh_token } = data;
+              setToken({
+                accessToken: access_token,
+                refreshToken: refresh_token,
+              });
+              localStorage.setItem("musicward_token", JSON.parse(data));
+            })
+            .catch(() => {
+              resetToken();
+              resetAuth();
+            });
+        }
+      });
   };
   useEffect(() => {
     if (parsed.code && jwtToken) {

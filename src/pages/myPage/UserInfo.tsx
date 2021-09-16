@@ -6,7 +6,7 @@ import YoutubeMusicIcon from "assets/icon/i-youtube-music.svg";
 import SpotifyMusicIcon from "assets/icon/i-spotify-music.svg";
 import GoogleAccount from "assets/img/mypage/google-account.png";
 import { useRecoilValueLoadable, useResetRecoilState } from "recoil";
-import { token, getAuth } from "recoil/auth";
+import { token, getAuth, auth } from "recoil/auth";
 
 const UserInfo = () => {
   const { contents: userInfo } = useRecoilValueLoadable(getAuth);
@@ -19,9 +19,11 @@ const UserInfo = () => {
       pathname: "/editpage",
     });
   };
-  const logout = useResetRecoilState(token);
+  const resetToken = useResetRecoilState(token);
+  const resetAuth = useResetRecoilState(auth);
   const handleLogout = useCallback(() => {
-    logout();
+    resetToken();
+    resetAuth();
   }, [history]);
 
   return (
