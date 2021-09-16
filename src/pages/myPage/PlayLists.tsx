@@ -114,6 +114,11 @@ const PlayLists = () => {
       setAlertState({
         show: false,
       });
+      getUploadPlayList();
+      getPlayList();
+      if (useSpotify) {
+        getPlayList("SPOTIFY");
+      }
     });
   };
   const handleGoPlayList = useCallback(
