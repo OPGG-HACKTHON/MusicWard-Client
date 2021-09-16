@@ -76,9 +76,20 @@ const ReportModal = ({
             </ModalContent>
           </ModalWrapper>
         ) : (
-          <ChangeDisplay>
-            신고가 정상적으로 접수되었습니다. 이용해 주셔서 감사합니다.
-          </ChangeDisplay>
+          <ModalWrapper>
+            <CloseBtn onClick={() => setModal(false)} />
+            <ModalContent>
+              <ModalHeader>
+                <UserIcon width={106} height={108} />
+                <ModalTitle>플레이리스트 신고하기</ModalTitle>
+              </ModalHeader>
+              <ReportContainer>
+                <ChkBoxTitle>신고가 정상적으로 접수되었습니다.</ChkBoxTitle>
+                <ChkBoxTitle>이용해 주셔서 감사합니다.</ChkBoxTitle>
+              </ReportContainer>
+              <SubmitButton onClick={() => setModal(false)}>닫기</SubmitButton>
+            </ModalContent>
+          </ModalWrapper>
         )}
       </Wrapper>
     </>
@@ -265,6 +276,9 @@ const SubmitButton = styled.button`
   border-radius: 6px;
 `;
 
-const ChangeDisplay = styled.div`
-  display: block;
+const ReportContainer = styled.div`
+  text-align: center;
+  margin: 145.5px 70px;
+  display: flex;
+  flex-direction: column;
 `;
