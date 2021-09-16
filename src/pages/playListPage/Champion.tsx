@@ -103,6 +103,7 @@ const Container = styled.section`
 
 const Tags = styled.section`
   position: relative;
+  width: 350px;
 `;
 
 const TagButton = styled.div`
