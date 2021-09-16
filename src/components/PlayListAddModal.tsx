@@ -154,7 +154,7 @@ export default PlayListAddModal;
 
 const ModalWrapper = styled.div<{ long: boolean }>`
   position: absolute;
-  left: calc(50% - 276px);
+  left: calc(50% - 279px);
   top: calc(50% - 288px);
   background-repeat: no-repeat;
   width: 558px;
