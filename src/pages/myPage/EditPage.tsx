@@ -77,7 +77,7 @@ const EditPage = () => {
           {spotifyEmail && (
             <AccountWrapper>
               <AccountIcon src={PlaySpotify} alt="account icon" />
-              <UserEmail>{googleEmail}</UserEmail>
+              <UserEmail>{spotifyEmail}</UserEmail>
             </AccountWrapper>
           )}
         </MyInfoAccount>

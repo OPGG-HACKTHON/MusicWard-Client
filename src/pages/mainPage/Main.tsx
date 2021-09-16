@@ -27,15 +27,17 @@ const Main = () => {
     story: "",
     title: "",
   });
+  const audio = new Audio();
   const getChampion = async (id: number) => {
     const { data } = await axiosInstance.get(`champion/${id}`);
     setSelectedChampion(data);
     setTimeout(() => {
-      const audio = new Audio(data.voice_url);
+      audio.src = data.voice_url;
       audio.play();
     }, 100);
   };
   const handleChangeChampion = useCallback((id: number) => {
+    audio.pause();
     getChampion(id);
   }, []);
   useEffect(() => {
