@@ -47,7 +47,6 @@ const Ranking: FC<RankingProps> = ({ onChange }) => {
       const isChampionCategory = category === "champion";
       window.scrollTo({
         top: 0,
-        left: 0,
         behavior: isChampionCategory ? "smooth" : "auto",
       });
       if (isChampionCategory) {

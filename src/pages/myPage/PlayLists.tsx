@@ -114,6 +114,11 @@ const PlayLists = () => {
       setAlertState({
         show: false,
       });
+      getUploadPlayList();
+      getPlayList();
+      if (useSpotify) {
+        getPlayList("SPOTIFY");
+      }
     });
   };
   const handleGoPlayList = useCallback(
@@ -238,7 +243,7 @@ const PlayLists = () => {
                   <PlayListGradient>
                     <PlayListTitle>
                       <div>
-                        <Icon />
+                        <Icon src={YoutubeMusicIcon} />
                       </div>
                       <div>{i.original_title}</div>
                     </PlayListTitle>
