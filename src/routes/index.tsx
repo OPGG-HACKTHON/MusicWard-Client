@@ -27,7 +27,8 @@ const Routes = () => {
   const jwtToken = useRecoilValue(accessToken);
   const [, setToken] = useRecoilState<TokenType>(token);
   const parsed = queryString.parse(location.search);
-  const logout = useResetRecoilState(token);
+  const resetToken = useResetRecoilState(token);
+  const resetAuth = useResetRecoilState(auth);
   const refresh = useRecoilValue(refreshToken);
   const [, setAuth] = useRecoilState<AuthType>(auth);
   const getToken = async () => {
@@ -103,7 +104,8 @@ const Routes = () => {
               localStorage.setItem("musicward_token", JSON.parse(data));
             })
             .catch(() => {
-              logout();
+              resetToken();
+              resetAuth();
             });
         }
       });

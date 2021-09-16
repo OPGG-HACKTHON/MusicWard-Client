@@ -14,7 +14,8 @@ import axiosInstance from "utils/axiosConfig";
 
 const MyPage = () => {
   const jwtToken = useRecoilValue(accessToken);
-  const logout = useResetRecoilState(token);
+  const resetToken = useResetRecoilState(token);
+  const resetAuth = useResetRecoilState(auth);
   const refresh = useRecoilValue(refreshToken);
   const [, setAuth] = useRecoilState<AuthType>(auth);
   const [, setToken] = useRecoilState<TokenType>(token);
@@ -53,7 +54,8 @@ const MyPage = () => {
               localStorage.setItem("musicward_token", JSON.parse(data));
             })
             .catch(() => {
-              logout();
+              resetToken();
+              resetAuth();
             });
         }
       });
