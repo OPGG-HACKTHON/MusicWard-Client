@@ -1,6 +1,7 @@
 import React, { FC, useCallback, useState } from "react";
-import PlayListModalBg from "assets/img/playlist-modal.svg";
-import PlayListModalLongBg from "assets/img/playlist-modal-long.svg";
+import PlayListModalTop from "assets/img/playlist-modal-top.png";
+import PlayListModalCenter from "assets/img/playlist-modal-center.png";
+import PlayListModalBottom from "assets/img/playlist-modal-bottom.png";
 import styled from "styled-components";
 import { CloseBtn, Wrapper } from "./LoginModal";
 import axiosInstance from "utils/axiosConfig";
@@ -97,47 +98,53 @@ const PlayListAddModal: FC<PlayListAddModalProps> = ({
     <Wrapper>
       <ModalWrapper long={tagList.length > 0}>
         <CloseBtn onClick={onClose} />
-        <ModalContent>
-          <Title>플레이리스트 생성</Title>
-          <InputWrapper>
-            <Label>링크</Label>
-            <Input type="text" value={link} disabled />
-          </InputWrapper>
-          <InputWrapper>
-            <Label>제목</Label>
-            <Input type="text" onChange={handleChange("title")} />
-          </InputWrapper>
-          <ErrorMsg>{titleErrorMsg}</ErrorMsg>
-          <InputWrapper>
-            <Label>설명</Label>
-            <Input type="text" onChange={handleChange("description")} />
-          </InputWrapper>
-          <InputWrapper>
-            <Label>챔피언</Label>
-            <Input type="text" onChange={handleChange("champion")} />
-          </InputWrapper>
-          <ErrorMsg>{championErrorMsg}</ErrorMsg>
-          <InputWrapper>
-            <Label>태그</Label>
-            <Input
-              type="text"
-              value={tag}
-              onChange={handleChangeTag}
-              onKeyPress={handleAddTag}
-            />
-          </InputWrapper>
-          <HintText>최대 5개 까지 가능합니다.</HintText>
-          {tagList.length > 0 && (
-            <TagWrapper>
-              {tagList.map((i, index) => (
-                <TagCloud key={index}>#{i}</TagCloud>
-              ))}
-            </TagWrapper>
-          )}
-          <Button type="button" onClick={handleCreate}>
-            생성하기
-          </Button>
-        </ModalContent>
+        <div>
+          <TopSection>
+            <Title>플레이리스트 생성</Title>
+          </TopSection>
+          <CenterSection>
+            <InputWrapper>
+              <Label>링크</Label>
+              <Input type="text" value={link} disabled />
+            </InputWrapper>
+            <InputWrapper>
+              <Label>제목</Label>
+              <Input type="text" onChange={handleChange("title")} />
+            </InputWrapper>
+            <ErrorMsg>{titleErrorMsg}</ErrorMsg>
+            <InputWrapper>
+              <Label>설명</Label>
+              <Input type="text" onChange={handleChange("description")} />
+            </InputWrapper>
+            <InputWrapper>
+              <Label>챔피언</Label>
+              <Input type="text" onChange={handleChange("champion")} />
+            </InputWrapper>
+            <ErrorMsg>{championErrorMsg}</ErrorMsg>
+            <InputWrapper>
+              <Label>태그</Label>
+              <Input
+                type="text"
+                value={tag}
+                onChange={handleChangeTag}
+                onKeyPress={handleAddTag}
+              />
+            </InputWrapper>
+            <HintText>최대 5개 까지 가능합니다.</HintText>
+            {tagList.length > 0 && (
+              <TagWrapper>
+                {tagList.map((i, index) => (
+                  <TagCloud key={index}>#{i}</TagCloud>
+                ))}
+              </TagWrapper>
+            )}
+          </CenterSection>
+          <BottomSection>
+            <Button type="button" onClick={handleCreate}>
+              생성하기
+            </Button>
+          </BottomSection>
+        </div>
       </ModalWrapper>
     </Wrapper>
   );
@@ -149,8 +156,6 @@ const ModalWrapper = styled.div<{ long: boolean }>`
   position: absolute;
   left: calc(50% - 276px);
   top: calc(50% - 288px);
-  background-image: ${({ long }) =>
-    long ? `url(${PlayListModalLongBg})` : `url(${PlayListModalBg})`};
   background-repeat: no-repeat;
   width: 558px;
   height: ${({ long }) => (long ? "663px" : "577px")};
@@ -158,17 +163,12 @@ const ModalWrapper = styled.div<{ long: boolean }>`
   background-size: contain;
 `;
 
-const ModalContent = styled.div`
-  height: 520px;
-  padding: 37px 65px 37px 50px;
-`;
-
 const Title = styled.div`
   font-weight: bold;
   font-size: 28px;
   line-height: 41px;
   letter-spacing: -0.01em;
-  margin-bottom: 43px;
+  padding-top: 43px;
   text-align: center;
 `;
 
@@ -177,7 +177,7 @@ const InputWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 20px;
+  padding-top: 20px;
 `;
 
 const Label = styled.div`
@@ -195,7 +195,7 @@ const Input = styled.input`
   box-shadow: none;
   color: #f4ecd987;
   font-size: 16px;
-  padding-left: 25px;
+  padding: 0 12px;
   box-sizing: border-box;
   background-color: #12191c;
   border-radius: 3px;
@@ -224,13 +224,12 @@ const Button = styled.button`
   background-color: #384a5b;
   border: none;
   margin: 0 auto;
-  margin-top: 34px;
 `;
 
 const TagWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
-  margin-top: 16px;
+  padding-top: 16px;
 `;
 
 const TagCloud = styled.div`
@@ -250,4 +249,35 @@ const ErrorMsg = styled.p`
   margin: 5px 0 0 82px;
   font-size: 13px;
   color: #b52d2d;
+`;
+
+const TopSection = styled.div`
+  width: 443px;
+  background-image: url(${PlayListModalTop});
+  background-position: center;
+  height: 101px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  padding: 0px 65px 0 50px;
+  background-position-y: 1px;
+`;
+
+const CenterSection = styled.div`
+  background-image: url(${PlayListModalCenter});
+  width: 443px;
+  background-size: contain;
+  padding: 0px 65px 0 50px;
+`;
+
+const BottomSection = styled.div`
+  background-image: url(${PlayListModalBottom});
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: center;
+  width: 560px;
+  height: 117px;
+  background-position-x: -2px;
+  background-position-y: -32px;
 `;

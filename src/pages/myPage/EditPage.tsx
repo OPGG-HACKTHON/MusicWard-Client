@@ -63,9 +63,9 @@ const EditPage = () => {
 
   return (
     <Container>
-      <div style={{ display: "flex", justifyContent: "center" }}>
+      <UserIconWrapper>
         <UserIcon width={200} height={200} />
-      </div>
+      </UserIconWrapper>
       <MyInfoBox>
         <MyId>{name}</MyId>
         <MyInfoLine />
@@ -120,6 +120,11 @@ const Container = styled.section`
   display: flex;
   flex-direction: column;
   align-items: center;
+`;
+
+const UserIconWrapper = styled.div`
+  display: flex;
+  justify-content: center;
 `;
 
 const MyInfoBox = styled.section`
