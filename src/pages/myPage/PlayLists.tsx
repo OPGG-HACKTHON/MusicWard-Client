@@ -238,7 +238,7 @@ const PlayLists = () => {
                   <PlayListGradient>
                     <PlayListTitle>
                       <div>
-                        <Icon />
+                        <Icon src={YoutubeMusicIcon} />
                       </div>
                       <div>{i.original_title}</div>
                     </PlayListTitle>
