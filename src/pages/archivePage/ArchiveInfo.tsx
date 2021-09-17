@@ -75,6 +75,31 @@ const ArchiveInfo = () => {
     });
   };
 
+  const goToShare = () => {
+    window.Kakao.Link.sendDefault({
+      objectType: "feed",
+      content: {
+        title: "내 플레이리스트 같이 들어볼래?",
+        description: `[${playInfo?.title}] ${
+          playInfo?.description ? playInfo?.description : ""
+        }`,
+        imageUrl:
+          "https://music-ward.s3.ap-northeast-2.amazonaws.com/share-kakao-img-2.png",
+        link: {
+          webUrl: `https://https://site.music-ward.com/playlist/${playlistId}`,
+        },
+      },
+      buttons: [
+        {
+          title: "플레이리스트 페이지로 이동",
+          link: {
+            webUrl: `https://https://site.music-ward.com/playlist/${playlistId}`,
+          },
+        },
+      ],
+    });
+  };
+
   return (
     <Container>
       <Tags>
@@ -99,7 +124,9 @@ const ArchiveInfo = () => {
         >
           와드
         </FunctionButton>
-        <FunctionButton colorProps={functionBasicColor}>공유</FunctionButton>
+        <FunctionButton colorProps={functionBasicColor} onClick={goToShare}>
+          공유
+        </FunctionButton>
         <FunctionButton colorProps={functionBasicColor} onClick={goToDetail}>
           상세
         </FunctionButton>
