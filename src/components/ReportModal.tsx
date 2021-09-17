@@ -15,9 +15,14 @@ const ReportModal = ({
   const playListId = parseInt(pathName.substring(10));
   const jwtToken = useRecoilValue(accessToken);
   const [display, setDisplay] = useState(true);
+  const [checkboxGroup, setChackbotGroup] = useState<Record<string, boolean>>({
+    no1: false,
+    no2: false,
+    no3: false,
+  });
 
   const handleSubmit = async () => {
-    const response = await axiosInstance({
+    await axiosInstance({
       url: "playlists/report",
       method: "post",
       headers: {
@@ -27,8 +32,13 @@ const ReportModal = ({
         playlist_id: playListId,
       },
     });
-    console.log(response, "리폿결과");
     setDisplay(false);
+  };
+  const handleChange = (key: string) => () => {
+    setChackbotGroup({
+      ...checkboxGroup,
+      [key]: !checkboxGroup[key],
+    });
   };
 
   return (
@@ -45,24 +55,39 @@ const ReportModal = ({
 
               <ModalChkBoxContainer>
                 <ChkBoxBox data-id="0">
-                  <HiddenChkBox type="checkbox" checked={true} />
-                  <StyledChkBox checked={true}>
+                  <HiddenChkBox
+                    id="checkbox1"
+                    type="checkbox"
+                    checked={checkboxGroup.no1}
+                    onChange={handleChange("no1")}
+                  />
+                  <StyledChkBox htmlFor="checkbox1" checked={checkboxGroup.no1}>
                     <img src={Check} />
                   </StyledChkBox>
                   <ChkBoxTitle>욕설이 담긴 이름 사용</ChkBoxTitle>
                 </ChkBoxBox>
 
                 <ChkBoxBox data-id="1">
-                  <HiddenChkBox type="checkbox" checked={false} />
-                  <StyledChkBox checked={false}>
+                  <HiddenChkBox
+                    id="checkbox2"
+                    type="checkbox"
+                    checked={checkboxGroup.no2}
+                    onChange={handleChange("no2")}
+                  />
+                  <StyledChkBox htmlFor="checkbox2" checked={checkboxGroup.no2}>
                     <img src={Check} />
                   </StyledChkBox>
                   <ChkBoxTitle>혐오/차별적인 이름 및 내용</ChkBoxTitle>
                 </ChkBoxBox>
 
                 <ChkBoxBox data-id="2">
-                  <HiddenChkBox type="checkbox" checked={false} />
-                  <StyledChkBox checked={false}>
+                  <HiddenChkBox
+                    id="checkbox3"
+                    type="checkbox"
+                    checked={checkboxGroup.no3}
+                    onChange={handleChange("no3")}
+                  />
+                  <StyledChkBox htmlFor="checkbox3" checked={checkboxGroup.no3}>
                     <img src={Check} />
                   </StyledChkBox>
                   <ChkBoxTitle>
@@ -199,7 +224,7 @@ const ChkBoxBox = styled.div`
 const HiddenChkBox = styled.input`
   border: 0;
   clip: rect(0 0 0 0);
-  clippath: inset(50%);
+  clip-path: inset(50%);
   height: 1px;
   margin: -1px;
   overflow: hidden;
@@ -209,7 +234,7 @@ const HiddenChkBox = styled.input`
   width: 1px;
 `;
 
-const StyledChkBox = styled.div<{ checked: boolean }>`
+const StyledChkBox = styled.label<{ checked: boolean }>`
   box-sizing: border-box;
   border-radius: 2px;
   display: inline-block;

@@ -146,8 +146,7 @@ const OtherTitle = styled.div`
   overflow: hidden;
   white-space: nowrap;
   margin: 0 auto;
-
-  &: hover {
+  &:hover {
     text-overflow: clip;
     overflow: visible;
     white-space: normal;
@@ -166,8 +165,7 @@ const OtherSinger = styled.div`
   overflow: hidden;
   white-space: nowrap;
   margin: 0 auto;
-
-  &: hover {
+  &:hover {
     text-overflow: clip;
     overflow: visible;
     white-space: normal;
