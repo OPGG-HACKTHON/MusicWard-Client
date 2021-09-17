@@ -76,7 +76,6 @@ const ArchiveInfo = () => {
   };
 
   const goToShare = () => {
-    console.log("카카오링크 클릭");
     window.Kakao.Link.sendDefault({
       objectType: "feed",
       content: {
