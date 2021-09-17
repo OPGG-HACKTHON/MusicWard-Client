@@ -86,14 +86,14 @@ const ArchiveInfo = () => {
         imageUrl:
           "https://music-ward.s3.ap-northeast-2.amazonaws.com/share-kakao-img-2.png",
         link: {
-          webUrl: `https://https://site.music-ward.com/playlist/${playlistId}`,
+          webUrl: `https://site.music-ward.com/playlist/${playlistId}`,
         },
       },
       buttons: [
         {
           title: "플레이리스트 페이지로 이동",
           link: {
-            webUrl: `https://https://site.music-ward.com/playlist/${playlistId}`,
+            webUrl: `https://site.music-ward.com/playlist/${playlistId}`,
           },
         },
       ],
