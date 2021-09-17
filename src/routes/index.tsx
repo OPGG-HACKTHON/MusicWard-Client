@@ -119,6 +119,11 @@ const Routes = () => {
       getToken();
     }
   }, [parsed]);
+  useEffect(() => {
+    if (jwtToken) {
+      getMyPageInfo();
+    }
+  }, []);
   return (
     <Layout>
       <Switch>
