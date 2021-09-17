@@ -112,6 +112,7 @@ const Container = styled.section`
   width: 320px;
   margin: 142px 0 0;
   text-align: right;
+  position: relative;
 `;
 
 const Tags = styled.section`
@@ -139,8 +140,10 @@ const TagButton = styled.div`
 `;
 
 const PlayListInfo = styled.section`
-  position: relative;
-  margin: 5vw 0;
+  position: absolute;
+  right: 0px;
+  top: 200px;
+  width: 248px;
 `;
 
 const PlayListTitle = styled.div`
@@ -173,7 +176,9 @@ const PlayListDescription = styled.div`
 `;
 
 const Functions = styled.section`
-  position: relative;
+  position: absolute;
+  top: 470px;
+  right: 0px;
 `;
 
 const FunctionButton = styled.div<{ colorProps: string }>`
